@@ -95,6 +95,7 @@ class _LoginformState extends State<Loginform> {
                       borderRadius: BorderRadius.circular(
                           8.0), // Border radius when focused
                     ),
+                    contentPadding: EdgeInsets.symmetric(vertical: 15.0),
                   ),
                 ),
               ],
@@ -147,6 +148,7 @@ class _LoginformState extends State<Loginform> {
                       borderRadius: BorderRadius.circular(
                           10.0), // Border radius when focused
                     ),
+                    contentPadding: EdgeInsets.symmetric(vertical: 15.0),
                   ),
                   obscureText: _obscureText,
                 ),
