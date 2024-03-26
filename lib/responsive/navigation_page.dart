@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:adaptive_navigation/adaptive_navigation.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../screens/HomeScreen.dart';
 import '../screens/LearnScreen.dart';
@@ -73,23 +74,23 @@ class _NavigationPageState extends State<NavigationPage> {
     ),
     const NavigationDestination(
       icon: Icon(
-        Icons.camera_alt_outlined,
+        Icons.menu_book_rounded,
         color: AppColors.primaryColor,
       ),
       label: 'Learn',
       selectedIcon: Icon(
-        Icons.document_scanner,
+        FontAwesomeIcons.bookOpen,
         color: AppColors.primaryColor,
       ),
     ),
     const NavigationDestination(
       icon: Icon(
-        Icons.book_outlined,
+        Icons.person_outline_rounded,
         color: AppColors.primaryColor,
       ),
       label: 'Profile',
       selectedIcon: Icon(
-        Icons.book_rounded,
+        Icons.person,
         color: AppColors.primaryColor,
       ),
     ),
