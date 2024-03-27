@@ -17,7 +17,7 @@ class _LearnScreenState extends State<LearnScreen> {
     return Scaffold(
       body: ResponsiveLayout(
         mobileScaffold: LearnScreenMobile(),
-        tabletScaffold: LearnScreenTablet(),
+        tabletScaffold: LearnScreenMobile(),
         desktopScaffold: LearnScreenTablet(),
       ),
     );

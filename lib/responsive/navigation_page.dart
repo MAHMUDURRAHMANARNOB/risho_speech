@@ -52,12 +52,6 @@ class _NavigationPageState extends State<NavigationPage> {
         title: 'Courses', imagePath: 'assets/images/risho_guru_icon.png'),
     CustomDestination(
         title: 'StudyBoard', imagePath: 'assets/images/risho_guru_icon.png'),
-    CustomDestination(
-        title: 'Tools', imagePath: 'assets/images/risho_guru_icon.png'),
-    CustomDestination(
-        title: 'Packages', imagePath: 'assets/images/risho_guru_icon.png'),
-    CustomDestination(
-        title: 'Profile', imagePath: 'assets/images/risho_guru_icon.png'),
   ];
 
   final destinationsMobile = <NavigationDestination>[
@@ -277,15 +271,7 @@ class _NavigationPageState extends State<NavigationPage> {
       case 2:
         return ProfileScreen();
         break;
-      case 3:
-        return ProfileScreen();
-        break;
-      case 4:
-        return ProfileScreen();
-        break;
-      case 5:
-        return ProfileScreen();
-        break;
+
       default:
         return Text('Select a screen');
     }
