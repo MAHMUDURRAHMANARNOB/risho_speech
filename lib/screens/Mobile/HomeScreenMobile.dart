@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:risho_speech/screens/PracticeGuidedScreen.dart';
 import 'package:risho_speech/ui/colors.dart';
 
 class HomeScreenMobile extends StatefulWidget {
@@ -146,11 +147,11 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
               margin: EdgeInsets.fromLTRB(8.0, 5.0, 8.0, 5.0),
               child: ElevatedButton(
                 onPressed: () {
-                  /*Navigator.push(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const PackagesScreen()),
-                  );*/
+                        builder: (context) => const PracticeGuidedScreen()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryContainerColor,
