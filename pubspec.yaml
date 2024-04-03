@@ -34,9 +34,14 @@ dependencies:
   intl: ^0.17.0
   flutter_spinkit: ^5.2.0
   shared_preferences: ^2.2.2
-  permission_handler: ^9.1.0
+  permission_handler: ^11.3.1
   markdown_widget: ^2.3.2+6  #MARKDOWN
-  audioplayers: ^5.2.1
+
+  path_provider: ^2.1.2
+  audioplayers: ^6.0.0
+  record: ^4.4.4
+  flutter_ffmpeg: ^0.4.2
+
   shurjopay: ^2.0.3
   liquid_pull_to_refresh: ^3.0.1
   flutter_math_fork: ^0.7.2
@@ -85,6 +90,8 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/fonts/
+    - assets/audio/
 #    - assets/images/icons/
 #    - assets/images/new_icons/
 

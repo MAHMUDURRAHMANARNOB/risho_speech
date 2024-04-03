@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:risho_speech/providers/auth_provider.dart';
+import 'package:risho_speech/providers/doConversationProvider.dart';
 import 'package:risho_speech/screens/LoginScreen.dart';
 import 'package:risho_speech/screens/RegistrationScreen.dart';
 import 'package:risho_speech/screens/SplashScreen.dart';
 import 'package:risho_speech/screens/WelcomeScreen.dart';
 
-void main() {
-  runApp(const RishoSpeech());
+Future<void> main() async {
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(create: (context) => DoConversationProvider()),
+      ],
+      child: RishoSpeech(),
+    ),
+  );
 }
 
 class RishoSpeech extends StatelessWidget {

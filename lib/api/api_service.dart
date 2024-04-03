@@ -17,7 +17,7 @@ import 'responses/login_response.dart';
 
 class ApiService {
   // static const String baseUrl = 'https://testapi.risho.guru';
-  static const String baseUrl = 'https://api.risho.guru';
+  static const String baseUrl = 'https://speech.risho.guru';
 
   /*LOGIN*/
   static Future<LoginResponse> loginApi(
@@ -163,6 +163,45 @@ class ApiService {
       }
     } catch (e) {
       throw Exception(e);
+    }
+  }
+
+  /*Conversation Response*/
+  Future<Map<String, dynamic>> doConversation({
+    required int userId,
+    required int conversationId,
+    required String sessionId,
+    required File audioFile,
+    required String discussionTopic,
+    required String discussTitle,
+    required String isFemale,
+    required String userName,
+  }) async {
+    try {
+      var uri = Uri.parse('$baseUrl/doConversation/');
+      var request = http.MultipartRequest('POST', uri)
+        ..fields['userid'] = userId.toString()
+        ..fields['conversationid'] = conversationId.toString()
+        ..fields['sessionID'] = sessionId.toString()
+        ..fields['discussionTopic'] = discussionTopic.toString()
+        ..fields['discusTitle'] = discussTitle.toString()
+        ..fields['isfemale'] = isFemale.toString()
+        ..fields['userName'] = userName.toString()
+        ..files.add(
+            await http.MultipartFile.fromPath('audioFile', audioFile.path));
+
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        var responseBody = await response.stream.bytesToString();
+        print(json.decode(responseBody));
+        return json.decode(responseBody);
+      } else {
+        // Handle error
+        return {'error': 'Failed to make API call'};
+      }
+    } catch (e) {
+      // Handle exception
+      return {'error': e.toString()};
     }
   }
 }
