@@ -40,7 +40,6 @@ dependencies:
   path_provider: ^2.1.2
   audioplayers: ^6.0.0
   record: ^4.4.4
-  flutter_ffmpeg: ^0.4.2
 
   shurjopay: ^2.0.3
   liquid_pull_to_refresh: ^3.0.1

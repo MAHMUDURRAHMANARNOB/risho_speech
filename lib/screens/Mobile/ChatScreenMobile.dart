@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +23,6 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
   bool _isRecording = false;
   late Record audioRecord;
   late AudioPlayer audioPlayer;
-  FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
 
   List<Widget> _conversationComponents = [];
 
@@ -41,6 +40,7 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
       Provider.of<DoConversationProvider>(context, listen: false);
 
   late String inputText = '';
+
   // late String aiResponseText;
 
   @override
@@ -89,8 +89,11 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
         setState(() {
           _isRecording = false;
           _audioPath = path;
-
+          audioFile = File(_audioPath!);
           _conversationComponents.add(
+            AIResponseBox(audioFile!, sessionId),
+          );
+          /*_conversationComponents.add(
             Container(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -108,16 +111,16 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                 ],
               ),
             ),
-          );
+          );*/
         });
-        await _convertToWav(_audioPath!);
+        // await _convertToWav(_audioPath!);
       }
     } catch (e) {
       print("Error stop recording: $e");
     }
   }
 
-  Future<void> _convertToWav(String inputPath) async {
+  /*Future<void> _convertToWav(String inputPath) async {
     String outputPath = inputPath.replaceAll(RegExp(r'\.m4a*?$'), '.wav');
     await _flutterFFmpeg.execute('-i $inputPath $outputPath');
     setState(() {
@@ -125,7 +128,7 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
       audioFile = File(_audioPath!);
       _conversationComponents.add(AIResponseBox(audioFile!, sessionId));
     });
-  }
+  }*/
 
   Future<void> playRecording() async {
     try {
@@ -330,7 +333,7 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
   Widget AIResponseBox(File? audio, String? sessionId) {
     return FutureBuilder<void>(
         future: doConversationProvider.fetchConversationResponse(
-            59350, 2, sessionId, audio, '', '', '', ''),
+            59350, 2, sessionId, audio, '', '', 'N', 'Risho'),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const SpinKitThreeInOut(
@@ -359,6 +362,34 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
               ),
             );
           } else {
+            String aiDialogAudio =
+                doConversationProvider.conversationResponse!.aiDialogueAudio ??
+                    "";
+            String aiDialogText =
+                doConversationProvider.conversationResponse!.aiDialogue ?? "";
+            String userAudio =
+                doConversationProvider.conversationResponse!.userAudio ?? "";
+            String accuracyScore = doConversationProvider
+                    .conversationResponse!.accuracyScore
+                    .toString() ??
+                "";
+            String fluencyScore = doConversationProvider
+                    .conversationResponse!.fluencyScore
+                    .toString() ??
+                "";
+            String completenessScore = doConversationProvider
+                    .conversationResponse!.completenessScore
+                    .toString() ??
+                "";
+            String prosodyScore = doConversationProvider
+                    .conversationResponse!.prosodyScore
+                    .toString() ??
+                "";
+            String userText =
+                doConversationProvider.conversationResponse!.userText ?? "";
+
+            Source urlSource = UrlSource(aiDialogAudio);
+            audioPlayer.play(urlSource);
             return Container(
               padding: EdgeInsets.all(5.0),
               child: Column(
@@ -370,85 +401,69 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                         flex: 3,
                         child: Container(
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              SizedBox(
-                                width: 1,
-                              ),
                               IconButton(
                                 onPressed: () {
                                   showModalBottomSheet(
-                                      context: context,
-                                      builder: (context) {
-                                        return Container(
-                                          width: double.infinity,
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text("Accuracy Score:"),
-                                                  Text(doConversationProvider
-                                                      .conversationResponse!
-                                                      .accuracyScore
-                                                      .toString()),
-                                                ],
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text("Fluency Score:"),
-                                                  Text(doConversationProvider
-                                                      .conversationResponse!
-                                                      .fluencyScore
-                                                      .toString()),
-                                                ],
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text("Completeness Score:"),
-                                                  Text(doConversationProvider
-                                                      .conversationResponse!
-                                                      .completenessScore
-                                                      .toString()),
-                                                ],
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text("Prosody Score:"),
-                                                  Text(doConversationProvider
-                                                      .conversationResponse!
-                                                      .prosodyScore
-                                                      .toString()),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      });
+                                    context: context,
+                                    builder: (context) {
+                                      return Container(
+                                        width: double.infinity,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text("Accuracy Score:"),
+                                                Text(accuracyScore),
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text("Fluency Score:"),
+                                                Text(fluencyScore),
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text("Completeness Score:"),
+                                                Text(completenessScore),
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text("Prosody Score:"),
+                                                Text(prosodyScore),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  );
                                 },
-                                icon: Icon(
+                                icon: const Icon(
                                   Icons.info_outline,
                                   color: Colors.white,
                                 ),
                               ),
                               IconButton(
                                 onPressed: () {
-                                  Source urlSource = UrlSource(
-                                      doConversationProvider
-                                          .conversationResponse!.userAudio!);
+                                  Source urlSource = UrlSource(userAudio);
                                   audioPlayer.play(urlSource);
-                                  print(urlSource);
+                                  // print(urlSource);
                                 },
-                                icon: Icon(
+                                icon: const Icon(
                                   Icons.volume_down_rounded,
                                   color: Colors.white,
                                 ),
@@ -459,41 +474,123 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                       ),
                       Expanded(
                         flex: 7,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12.0),
-                            color: AppColors.secondaryColor.withOpacity(0.3),
-                          ),
-                          padding: const EdgeInsets.all(10.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Expanded(
-                                flex: 8,
-                                child: Text(
-                                  doConversationProvider
-                                      .conversationResponse!.userText!,
-                                ),
+                        child: Column(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12.0),
+                                color:
+                                    AppColors.secondaryColor.withOpacity(0.3),
                               ),
-                              Expanded(
-                                flex: 1,
-                                child: SizedBox(
-                                  width: 1.0,
-                                ),
+                              padding: const EdgeInsets.all(10.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Expanded(
+                                    flex: 8,
+                                    child: Text(
+                                      userText,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: SizedBox(
+                                      width: 1.0,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Image.asset(
+                                      "assets/images/profile_chat.png",
+                                      height: 30,
+                                      width: 30,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Expanded(
-                                flex: 1,
-                                child: Image.asset(
-                                  "assets/images/profile_chat.png",
-                                  height: 30,
-                                  width: 30,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
+                  ),
+                  /*FEEDBACK*/
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: 2,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return Container(
+                                  width: double.infinity,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "CorrectSentence: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text("CORRECT"),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Explanation: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text("EXPLAINATION"),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Alternate Sentence: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text("ALTERNATE"),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Bangla Explanation: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text("BANGLA"),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          child: Text("Feedback"),
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: 5.0,
@@ -527,8 +624,9 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                               ),
                               Expanded(
                                 flex: 8,
-                                child: Text(doConversationProvider
-                                    .conversationResponse!.aiDialogue!),
+                                child: Text(
+                                  aiDialogText,
+                                ),
                               ),
                             ],
                           ),
@@ -540,22 +638,15 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Column(
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      Source urlSource = UrlSource(
-                                          doConversationProvider
-                                              .conversationResponse!
-                                              .aiDialogueAudio!);
-                                      audioPlayer.play(urlSource);
-                                    },
-                                    icon: Icon(
-                                      Icons.volume_down_rounded,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
+                              IconButton(
+                                onPressed: () {
+                                  Source urlSource = UrlSource(aiDialogAudio);
+                                  audioPlayer.play(urlSource);
+                                },
+                                icon: Icon(
+                                  Icons.volume_down_rounded,
+                                  color: Colors.white,
+                                ),
                               ),
                               SizedBox(
                                 width: 1,
