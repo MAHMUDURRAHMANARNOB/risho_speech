@@ -363,30 +363,25 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
             );
           } else {
             String aiDialogAudio =
-                doConversationProvider.conversationResponse!.aiDialogueAudio ??
-                    "";
+                doConversationProvider.conversationResponse!.aiDialogueAudio!;
             String aiDialogText =
-                doConversationProvider.conversationResponse!.aiDialogue ?? "";
+                doConversationProvider.conversationResponse!.aiDialogue!;
             String userAudio =
-                doConversationProvider.conversationResponse!.userAudio ?? "";
+                doConversationProvider.conversationResponse!.userAudio!;
             String accuracyScore = doConversationProvider
-                    .conversationResponse!.accuracyScore
-                    .toString() ??
-                "";
+                .conversationResponse!.accuracyScore
+                .toString();
             String fluencyScore = doConversationProvider
-                    .conversationResponse!.fluencyScore
-                    .toString() ??
-                "";
+                .conversationResponse!.fluencyScore
+                .toString();
             String completenessScore = doConversationProvider
-                    .conversationResponse!.completenessScore
-                    .toString() ??
-                "";
+                .conversationResponse!.completenessScore
+                .toString();
             String prosodyScore = doConversationProvider
-                    .conversationResponse!.prosodyScore
-                    .toString() ??
-                "";
+                .conversationResponse!.prosodyScore
+                .toString();
             String userText =
-                doConversationProvider.conversationResponse!.userText ?? "";
+                doConversationProvider.conversationResponse!.userText!;
 
             Source urlSource = UrlSource(aiDialogAudio);
             audioPlayer.play(urlSource);
