@@ -5,7 +5,8 @@ import '../responsive/responsive_layout.dart';
 import 'Mobile/ChatScreenMobile.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+  final String id;
+  ChatScreen({super.key, required this.id});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -16,7 +17,9 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ResponsiveLayout(
-        mobileScaffold: ChatScreenMobile(),
+        mobileScaffold: ChatScreenMobile(
+          id: widget.id,
+        ),
         tabletScaffold: ChatScreenTablet(),
         desktopScaffold: ChatScreenTablet(),
       ),

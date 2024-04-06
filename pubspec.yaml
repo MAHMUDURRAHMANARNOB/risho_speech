@@ -86,6 +86,12 @@ flutter:
     - family: Potta
       fonts:
         - asset: assets/fonts/PottaOne-Regular.ttf
+    - family: Mina
+      fonts:
+        - asset: assets/fonts/Mina_Regular.ttf
+    - family: HindS
+      fonts:
+        - asset: assets/fonts/HindSiliguri_Regular.ttf
 
   assets:
     - assets/images/

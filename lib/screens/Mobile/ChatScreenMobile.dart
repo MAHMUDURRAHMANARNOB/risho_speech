@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -10,9 +11,11 @@ import 'package:record/record.dart';
 import 'package:risho_speech/ui/colors.dart';
 
 import '../../providers/doConversationProvider.dart';
+import '../../providers/validateSpokenSentenceProvider.dart';
 
 class ChatScreenMobile extends StatefulWidget {
-  const ChatScreenMobile({super.key});
+  final String id;
+  ChatScreenMobile({super.key, required this.id});
 
   @override
   State<ChatScreenMobile> createState() => _ChatScreenMobileState();
@@ -38,6 +41,8 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
 
   late DoConversationProvider doConversationProvider =
       Provider.of<DoConversationProvider>(context, listen: false);
+  late ValidateSentenceProvider validateSentenceProvider =
+      Provider.of<ValidateSentenceProvider>(context, listen: false);
 
   late String inputText = '';
 
@@ -51,17 +56,23 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
     _askQuescontroller.addListener(_textChangeListener);
     _requestMicrophonePermission();
     fetchSessionId();
+    setState(() {
+      sessionId = doConversationProvider.conversationResponse!.sessionId;
+    });
   }
 
   Future<void> fetchSessionId() async {
     try {
-      Map<String, dynamic> response = await doConversationProvider
-          .fetchConversationResponse(59350, 2, '', null, '', '', '', '');
+      /*Map<String, dynamic> response = await doConversationProvider
+          .fetchConversationResponse(59350, 2, '', null, '', '', '', '');*/
       setState(() {
+        /*_conversationComponents.add(
+          AIResponseBox(null, null),
+        );*/
+        /*sessionId = response['SessionID'];*/ // Extract sessionId from response
         _conversationComponents.add(
           AIResponseBox(null, null),
         );
-        sessionId = response['SessionID']; // Extract sessionId from response
       });
     } catch (error) {
       print('Error fetching session ID: $error');
@@ -93,25 +104,6 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
           _conversationComponents.add(
             AIResponseBox(audioFile!, sessionId),
           );
-          /*_conversationComponents.add(
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: 2,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      playRecording();
-                      print(_audioPath);
-                    },
-                    child: Text("Play recording"),
-                  ),
-                ],
-              ),
-            ),
-          );*/
         });
         // await _convertToWav(_audioPath!);
       }
@@ -331,6 +323,135 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
   }
 
   Widget AIResponseBox(File? audio, String? sessionId) {
+    if (sessionId == null) {
+      return FutureBuilder<void>(
+          future: doConversationProvider.fetchConversationResponse(
+              59350, 2, sessionId, audio, '', '', 'N', 'Risho'),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const SpinKitThreeInOut(
+                color: AppColors.primaryColor,
+              ); // Loading state
+            } else if (snapshot.hasError) {
+              return Container(
+                margin: const EdgeInsets.all(5.0),
+                padding: const EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryCardColor,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        "Sorry: Server error",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            } else {
+              String aiDialogAudio =
+                  doConversationProvider.conversationResponse!.aiDialogueAudio!;
+              String aiDialogText =
+                  doConversationProvider.conversationResponse!.aiDialogue!;
+              String userAudio =
+                  doConversationProvider.conversationResponse!.userAudio!;
+              String accuracyScore = doConversationProvider
+                  .conversationResponse!.accuracyScore
+                  .toString();
+              String fluencyScore = doConversationProvider
+                  .conversationResponse!.fluencyScore
+                  .toString();
+              String completenessScore = doConversationProvider
+                  .conversationResponse!.completenessScore
+                  .toString();
+              String prosodyScore = doConversationProvider
+                  .conversationResponse!.prosodyScore
+                  .toString();
+              String userText =
+                  doConversationProvider.conversationResponse!.userText!;
+              String sessionid =
+                  doConversationProvider.conversationResponse!.sessionId!;
+
+              Source urlSource = UrlSource(aiDialogAudio);
+              audioPlayer.play(urlSource);
+              return Container(
+                padding: EdgeInsets.all(5.0),
+                child: Column(
+                  children: [
+                    /*Ai Row*/
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 7,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.0),
+                              color: AppColors.primaryColor.withOpacity(0.3),
+                            ),
+                            padding: EdgeInsets.all(5.0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: Image.asset(
+                                    "assets/images/risho_guru_icon.png",
+                                    height: 30,
+                                    width: 30,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: SizedBox(
+                                    width: 1.0,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 8,
+                                  child: Text(
+                                    aiDialogText,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    Source urlSource = UrlSource(aiDialogAudio);
+                                    audioPlayer.play(urlSource);
+                                  },
+                                  icon: Icon(
+                                    Icons.volume_down_rounded,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 1,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            }
+          });
+    }
     return FutureBuilder<void>(
         future: doConversationProvider.fetchConversationResponse(
             59350, 2, sessionId, audio, '', '', 'N', 'Risho'),
@@ -362,301 +483,336 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
               ),
             );
           } else {
-            String aiDialogAudio =
-                doConversationProvider.conversationResponse!.aiDialogueAudio!;
-            String aiDialogText =
-                doConversationProvider.conversationResponse!.aiDialogue!;
-            String userAudio =
-                doConversationProvider.conversationResponse!.userAudio!;
-            String accuracyScore = doConversationProvider
-                .conversationResponse!.accuracyScore
-                .toString();
-            String fluencyScore = doConversationProvider
-                .conversationResponse!.fluencyScore
-                .toString();
-            String completenessScore = doConversationProvider
-                .conversationResponse!.completenessScore
-                .toString();
-            String prosodyScore = doConversationProvider
-                .conversationResponse!.prosodyScore
-                .toString();
-            String userText =
-                doConversationProvider.conversationResponse!.userText!;
+            return buildAiResponse(context, snapshot);
+          }
+        });
+  }
 
-            Source urlSource = UrlSource(aiDialogAudio);
-            audioPlayer.play(urlSource);
-            return Container(
-              padding: EdgeInsets.all(5.0),
-              child: Column(
-                children: [
-                  /*UserRow*/
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) {
-                                      return Container(
-                                        width: double.infinity,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text("Accuracy Score:"),
-                                                Text(accuracyScore),
-                                              ],
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text("Fluency Score:"),
-                                                Text(fluencyScore),
-                                              ],
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text("Completeness Score:"),
-                                                Text(completenessScore),
-                                              ],
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text("Prosody Score:"),
-                                                Text(prosodyScore),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  );
-                                },
-                                icon: const Icon(
-                                  Icons.info_outline,
-                                  color: Colors.white,
+  Widget buildAiResponse(BuildContext context, AsyncSnapshot<void> snapshot) {
+    String aiDialogAudio =
+        doConversationProvider.conversationResponse!.aiDialogueAudio!;
+    String aiDialogText =
+        doConversationProvider.conversationResponse!.aiDialogue!;
+    String userAudio = doConversationProvider.conversationResponse!.userAudio!;
+    String accuracyScore =
+        doConversationProvider.conversationResponse!.accuracyScore.toString();
+    String fluencyScore =
+        doConversationProvider.conversationResponse!.fluencyScore.toString();
+    String completenessScore = doConversationProvider
+        .conversationResponse!.completenessScore
+        .toString();
+    String prosodyScore =
+        doConversationProvider.conversationResponse!.prosodyScore.toString();
+    String userText = doConversationProvider.conversationResponse!.userText!;
+
+    Source urlSource = UrlSource(aiDialogAudio);
+    audioPlayer.play(urlSource);
+    return Container(
+      padding: EdgeInsets.all(5.0),
+      child: Column(
+        children: [
+          /*UserRow*/
+          userText != ""
+              ? Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      builder: (context) {
+                                        return Container(
+                                          width: double.infinity,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text("Accuracy Score:"),
+                                                  Text(accuracyScore),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text("Fluency Score:"),
+                                                  Text(fluencyScore),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text("Completeness Score:"),
+                                                  Text(completenessScore),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text("Prosody Score:"),
+                                                  Text(prosodyScore),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                  icon: const Icon(
+                                    Icons.info_outline,
+                                    color: Colors.white,
+                                  ),
                                 ),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  Source urlSource = UrlSource(userAudio);
-                                  audioPlayer.play(urlSource);
-                                  // print(urlSource);
-                                },
-                                icon: const Icon(
-                                  Icons.volume_down_rounded,
-                                  color: Colors.white,
+                                IconButton(
+                                  onPressed: () {
+                                    Source urlSource = UrlSource(userAudio);
+                                    audioPlayer.play(urlSource);
+                                    // print(urlSource);
+                                  },
+                                  icon: const Icon(
+                                    Icons.volume_down_rounded,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 7,
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12.0),
+                                  color:
+                                      AppColors.secondaryColor.withOpacity(0.3),
+                                ),
+                                padding: const EdgeInsets.all(10.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Expanded(
+                                      flex: 8,
+                                      child: Text(
+                                        userText,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: SizedBox(
+                                        width: 1.0,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Image.asset(
+                                        "assets/images/profile_chat.png",
+                                        height: 30,
+                                        width: 30,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 7,
-                        child: Column(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12.0),
-                                color:
-                                    AppColors.secondaryColor.withOpacity(0.3),
-                              ),
-                              padding: const EdgeInsets.all(10.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Expanded(
-                                    flex: 8,
-                                    child: Text(
-                                      userText,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: SizedBox(
-                                      width: 1.0,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Image.asset(
-                                      "assets/images/profile_chat.png",
-                                      height: 30,
-                                      width: 30,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  /*FEEDBACK*/
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          width: 2,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (context) {
-                                return Container(
-                                  width: double.infinity,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "CorrectSentence: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text("CORRECT"),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Explanation: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text("EXPLAINATION"),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Alternate Sentence: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text("ALTERNATE"),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Bangla Explanation: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text("BANGLA"),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                          child: Text("Feedback"),
                         ),
                       ],
                     ),
+                    /*FEEDBACK*/
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: 2,
+                          ),
+                          GestureDetector(
+                            /*style: ButtonStyle(
+                              alignment: AlignmentDirectional.centerEnd,
+                            ),*/
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return FutureBuilder<void>(
+                                    future: validateSentenceProvider
+                                        .fetchValidateSentenceResponse(
+                                            userText),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const Center(
+                                          child: SpinKitThreeInOut(
+                                            color: AppColors.primaryColor,
+                                          ),
+                                        );
+                                      } else if (snapshot.hasError) {
+                                        return Center(
+                                          child:
+                                              Text('Error: ${snapshot.error}'),
+                                        );
+                                      } else {
+                                        return Container(
+                                          width: double.infinity,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              buildRow(
+                                                'Correct Sentence:',
+                                                validateSentenceProvider
+                                                    .validateSentenceResponse!
+                                                    .correctSentence,
+                                              ),
+                                              buildRow(
+                                                'Explanation:',
+                                                validateSentenceProvider
+                                                    .validateSentenceResponse!
+                                                    .explanation,
+                                              ),
+                                              buildRow(
+                                                'Alternate Sentence:',
+                                                validateSentenceProvider
+                                                    .validateSentenceResponse!
+                                                    .alternate,
+                                              ),
+                                              buildRow(
+                                                'Bangla Explanation:',
+                                                validateSentenceProvider
+                                                    .validateSentenceResponse!
+                                                    .banglaExplanation,
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                            child: const Text(
+                              "Feedback",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5.0,
+                    ),
+                  ],
+                )
+              : SizedBox(
+                  width: 2,
+                ),
+          /*Ai Row*/
+          Row(
+            children: [
+              Expanded(
+                flex: 7,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0),
+                    color: AppColors.primaryColor.withOpacity(0.3),
                   ),
-                  SizedBox(
-                    height: 5.0,
-                  ),
-                  /*Ai Row*/
-                  Row(
+                  padding: EdgeInsets.all(5.0),
+                  child: Row(
                     children: [
                       Expanded(
-                        flex: 7,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12.0),
-                            color: AppColors.primaryColor.withOpacity(0.3),
-                          ),
-                          padding: EdgeInsets.all(5.0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Image.asset(
-                                  "assets/images/risho_guru_icon.png",
-                                  height: 30,
-                                  width: 30,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: SizedBox(
-                                  width: 1.0,
-                                ),
-                              ),
-                              Expanded(
-                                flex: 8,
-                                child: Text(
-                                  aiDialogText,
-                                ),
-                              ),
-                            ],
-                          ),
+                        flex: 1,
+                        child: Image.asset(
+                          "assets/images/risho_guru_icon.png",
+                          height: 30,
+                          width: 30,
                         ),
                       ),
                       Expanded(
-                        flex: 3,
-                        child: Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  Source urlSource = UrlSource(aiDialogAudio);
-                                  audioPlayer.play(urlSource);
-                                },
-                                icon: Icon(
-                                  Icons.volume_down_rounded,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 1,
-                              ),
-                            ],
-                          ),
+                        flex: 1,
+                        child: SizedBox(
+                          width: 1.0,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 8,
+                        child: Text(
+                          aiDialogText,
                         ),
                       ),
                     ],
                   ),
-                ],
+                ),
               ),
-            );
-          }
-        });
+              Expanded(
+                flex: 3,
+                child: Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          Source urlSource = UrlSource(aiDialogAudio);
+                          audioPlayer.play(urlSource);
+                        },
+                        icon: Icon(
+                          Icons.volume_down_rounded,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 1,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildRow(String title, String content) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 8.0),
+      margin: EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 2.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          SizedBox(width: 5),
+          Text(
+            content,
+            style: TextStyle(fontFamily: "Mina"),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget UserResponseBox(String text) {

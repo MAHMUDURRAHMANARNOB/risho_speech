@@ -171,7 +171,7 @@ class ApiService {
     required int userId,
     required int conversationId,
     required String sessionId,
-    required File audioFile,
+    required File? audioFile,
     required String discussionTopic,
     required String discussTitle,
     required String isFemale,
@@ -186,15 +186,70 @@ class ApiService {
         ..fields['discussionTopic'] = discussionTopic.toString()
         ..fields['discusTitle'] = discussTitle.toString()
         ..fields['isfemale'] = isFemale.toString()
-        ..fields['userName'] = userName.toString()
-        ..files.add(
+        ..fields['userName'] = userName.toString();
+      /*..files.add(
+            await http.MultipartFile.fromPath('audioFile', audioFile!.path));*/
+      if (audioFile != null) {
+        request.files.add(
             await http.MultipartFile.fromPath('audioFile', audioFile.path));
+      }
 
       var response = await request.send();
       if (response.statusCode == 200) {
         var responseBody = await response.stream.bytesToString();
         print(json.decode(responseBody));
         return json.decode(responseBody);
+      } else {
+        // Handle error
+        return {'error': 'Failed to make API call'};
+      }
+    } catch (e) {
+      // Handle exception
+      return {'error': e.toString()};
+    }
+  }
+
+  /*Validate Spoken Sentence*/
+  Future<Map<String, dynamic>> validateSentence({
+    required String text,
+  }) async {
+    final url = '$baseUrl/validateSpokenSentence';
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: {
+          'text': text.toString(),
+        },
+      );
+      print("Response  $response");
+      if (response.statusCode == 200) {
+        print("Response in api: ${json.decode(response.body)}");
+        return json.decode(Utf8Decoder().convert(response.bodyBytes));
+      } else {
+        // Handle error
+        return {'error': 'Failed to make API call'};
+      }
+    } catch (e) {
+      // Handle exception
+      return {'error': e.toString()};
+    }
+  }
+
+  /*Spoken Lesson List*/
+  Future<Map<String, dynamic>> getSpokenLessonList() async {
+    final url = '$baseUrl/getSpokenLessonList';
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: {
+          'isGuided': "Y",
+        },
+      );
+      print("Response  $response");
+      if (response.statusCode == 200) {
+        final lessonListResponse = json.decode(response.body);
+        print("Response in api: $lessonListResponse");
+        return {'lessonList': lessonListResponse};
       } else {
         // Handle error
         return {'error': 'Failed to make API call'};

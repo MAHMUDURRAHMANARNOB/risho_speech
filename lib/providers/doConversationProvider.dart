@@ -38,15 +38,13 @@ class DoConversationProvider extends ChangeNotifier {
     print("inside fetchConversationResponse $userId $conversationId");
     try {
       // Use default audio file if audioFile is null
-      File selectedAudioFile =
-          audioFile ?? await _loadAssetAsFile('assets/audio/sample.wav');
-      ;
+      // File selectedAudioFile = audioFile;
 
       Map<String, dynamic> response = await _apiService.doConversation(
         userId: userId,
         conversationId: conversationId,
         sessionId: sessionId ?? '',
-        audioFile: selectedAudioFile,
+        audioFile: audioFile,
         discussionTopic: discussionTopic!,
         discussTitle: discussTitle!,
         isFemale: isFemale!,
