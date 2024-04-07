@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:risho_speech/providers/auth_provider.dart';
 import 'package:risho_speech/providers/doConversationProvider.dart';
+import 'package:risho_speech/providers/nextQuestionProvider.dart';
 import 'package:risho_speech/providers/spokenLessonListProvider.dart';
+import 'package:risho_speech/providers/suggestAnswerProvider.dart';
 import 'package:risho_speech/providers/validateSpokenSentenceProvider.dart';
 import 'package:risho_speech/screens/LoginScreen.dart';
 import 'package:risho_speech/screens/RegistrationScreen.dart';
@@ -17,6 +19,8 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => DoConversationProvider()),
         ChangeNotifierProvider(create: (context) => ValidateSentenceProvider()),
         ChangeNotifierProvider(create: (context) => SpokenLessonListProvider()),
+        ChangeNotifierProvider(create: (context) => NextQuestionProvider()),
+        ChangeNotifierProvider(create: (context) => SuggestAnswerProvider()),
       ],
       child: RishoSpeech(),
     ),

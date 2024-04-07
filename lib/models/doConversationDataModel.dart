@@ -3,6 +3,7 @@ class DoConversationDataModel {
   final String? message;
   final String? sessionId;
   final String? aiDialogue;
+  final String? aiDialogueBn;
   final String? aiDialogueAudio;
   final String? userText;
   final String? userTextBn;
@@ -17,6 +18,7 @@ class DoConversationDataModel {
     required this.message,
     required this.sessionId,
     required this.aiDialogue,
+    required this.aiDialogueBn,
     required this.aiDialogueAudio,
     required this.userText,
     required this.userTextBn,
@@ -33,6 +35,7 @@ class DoConversationDataModel {
       message: json['message'],
       sessionId: json['SessionID'],
       aiDialogue: json['AIDialoag'],
+      aiDialogueBn: json['AIDialoagBn'],
       aiDialogueAudio: json['AIDialoagAudio'],
       userText: json['usertext'],
       userTextBn: json['usertextBn'],

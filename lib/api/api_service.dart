@@ -259,4 +259,66 @@ class ApiService {
       return {'error': e.toString()};
     }
   }
+
+  /*Suggest Answer*/
+  Future<Map<String, dynamic>> suggestAnswer({
+    required String text,
+  }) async {
+    final url = '$baseUrl/suggestanswer';
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: {
+          'text': text.toString(),
+        },
+      );
+      print("Response  $response");
+      if (response.statusCode == 200) {
+        print("Response in api: ${json.decode(response.body)}");
+        return json.decode(Utf8Decoder().convert(response.bodyBytes));
+      } else {
+        // Handle error
+        return {'error': 'Failed to make API call'};
+      }
+    } catch (e) {
+      // Handle exception
+      return {'error': e.toString()};
+    }
+  }
+
+  /*Next Conversation*/
+  Future<Map<String, dynamic>> getNextConversation({
+    required int userid,
+    required int conversationid,
+    required String sessionID,
+    required String replyText,
+    required String isfemale,
+    required String userName,
+  }) async {
+    final url = '$baseUrl/getNextConversation/';
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: {
+          'userid': userid.toString(),
+          'conversationid': conversationid.toString(),
+          'sessionID': sessionID.toString(),
+          'replyText': replyText.toString(),
+          'isfemale': isfemale.toString(),
+          'userName': userName.toString(),
+        },
+      );
+      print("Response  $response");
+      if (response.statusCode == 200) {
+        print("Response in api: ${json.decode(response.body)}");
+        return json.decode(Utf8Decoder().convert(response.bodyBytes));
+      } else {
+        // Handle error
+        return {'error': 'Failed to make API call'};
+      }
+    } catch (e) {
+      // Handle exception
+      return {'error': e.toString()};
+    }
+  }
 }

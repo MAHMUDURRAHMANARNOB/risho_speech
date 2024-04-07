@@ -8,6 +8,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:record/record.dart';
+import 'package:risho_speech/models/validateSpokenSentenceDataModel.dart';
+import 'package:risho_speech/providers/nextQuestionProvider.dart';
+import 'package:risho_speech/providers/suggestAnswerProvider.dart';
 import 'package:risho_speech/ui/colors.dart';
 
 import '../../providers/doConversationProvider.dart';
@@ -22,8 +25,12 @@ class ChatScreenMobile extends StatefulWidget {
 }
 
 class _ChatScreenMobileState extends State<ChatScreenMobile> {
+  bool _isFeedbackLoading = false;
+
   String? _audioPath;
   bool _isRecording = false;
+  bool _isAiTranslation = false;
+  bool _isUserTranslation = false;
   late Record audioRecord;
   late AudioPlayer audioPlayer;
 
@@ -43,6 +50,10 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
       Provider.of<DoConversationProvider>(context, listen: false);
   late ValidateSentenceProvider validateSentenceProvider =
       Provider.of<ValidateSentenceProvider>(context, listen: false);
+  late SuggestAnswerProvider suggestAnswerProvider =
+      Provider.of<SuggestAnswerProvider>(context, listen: false);
+  late NextQuestionProvider nextQuestionProvider =
+      Provider.of<NextQuestionProvider>(context, listen: false);
 
   late String inputText = '';
 
@@ -63,13 +74,7 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
 
   Future<void> fetchSessionId() async {
     try {
-      /*Map<String, dynamic> response = await doConversationProvider
-          .fetchConversationResponse(59350, 2, '', null, '', '', '', '');*/
       setState(() {
-        /*_conversationComponents.add(
-          AIResponseBox(null, null),
-        );*/
-        /*sessionId = response['SessionID'];*/ // Extract sessionId from response
         _conversationComponents.add(
           AIResponseBox(null, null),
         );
@@ -111,16 +116,6 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
       print("Error stop recording: $e");
     }
   }
-
-  /*Future<void> _convertToWav(String inputPath) async {
-    String outputPath = inputPath.replaceAll(RegExp(r'\.m4a*?$'), '.wav');
-    await _flutterFFmpeg.execute('-i $inputPath $outputPath');
-    setState(() {
-      _audioPath = outputPath;
-      audioFile = File(_audioPath!);
-      _conversationComponents.add(AIResponseBox(audioFile!, sessionId));
-    });
-  }*/
 
   Future<void> playRecording() async {
     try {
@@ -197,6 +192,10 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                       backgroundColor: AppColors.backgroundColorDark),
                   onPressed: () {
                     // Add your logic to send the message
+                    setState(() {
+                      _conversationComponents
+                          .add(UserTextAIResponse("Ask me another Ques"));
+                    });
                   },
                   child: Text(
                     "New Question",
@@ -281,9 +280,9 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                           // Add your logic to send the message
                           setState(() {
                             _conversationComponents
-                                .add(UserResponseBox(inputText));
-                            _conversationComponents
-                                .add(AIResponseBox(audioFile!, sessionId));
+                                .add(UserTextAIResponse(inputText));
+                            /*_conversationComponents
+                                .add(AIResponseBox(audioFile!, sessionId));*/
 
                             _askQuescontroller.clear();
                           });
@@ -377,6 +376,12 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                   doConversationProvider.conversationResponse!.userText!;
               String sessionid =
                   doConversationProvider.conversationResponse!.sessionId!;
+              String userTranslation =
+                  doConversationProvider.conversationResponse!.userTextBn ??
+                      "Not Found";
+              String aiTranslation =
+                  doConversationProvider.conversationResponse!.aiDialogueBn ??
+                      "Not Found";
 
               Source urlSource = UrlSource(aiDialogAudio);
               audioPlayer.play(urlSource);
@@ -413,9 +418,11 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                                 ),
                                 Expanded(
                                   flex: 8,
-                                  child: Text(
-                                    aiDialogText,
-                                  ),
+                                  child: _isAiTranslation == false
+                                      ? Text(
+                                          aiDialogText,
+                                        )
+                                      : Text(aiTranslation),
                                 ),
                               ],
                             ),
@@ -427,15 +434,36 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                IconButton(
-                                  onPressed: () {
-                                    Source urlSource = UrlSource(aiDialogAudio);
-                                    audioPlayer.play(urlSource);
-                                  },
-                                  icon: Icon(
-                                    Icons.volume_down_rounded,
-                                    color: Colors.white,
-                                  ),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        Source urlSource =
+                                            UrlSource(aiDialogAudio);
+                                        audioPlayer.play(urlSource);
+                                      },
+                                      icon: Icon(
+                                        Icons.volume_down_rounded,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        showDialog<String>(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              AlertDialog(
+                                            title: const Text('Translation'),
+                                            content: Text(aiTranslation),
+                                          ),
+                                        );
+                                      },
+                                      icon: const Icon(
+                                        Icons.translate_rounded,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 SizedBox(
                                   width: 1,
@@ -504,6 +532,11 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
     String prosodyScore =
         doConversationProvider.conversationResponse!.prosodyScore.toString();
     String userText = doConversationProvider.conversationResponse!.userText!;
+    String userTranslation =
+        doConversationProvider.conversationResponse!.userTextBn ?? "Not Found";
+    String aiTranslation =
+        doConversationProvider.conversationResponse!.aiDialogueBn ??
+            "Not Found";
 
     Source urlSource = UrlSource(aiDialogAudio);
     audioPlayer.play(urlSource);
@@ -523,69 +556,53 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                IconButton(
-                                  onPressed: () {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      builder: (context) {
-                                        return Container(
-                                          width: double.infinity,
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text("Accuracy Score:"),
-                                                  Text(accuracyScore),
-                                                ],
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text("Fluency Score:"),
-                                                  Text(fluencyScore),
-                                                ],
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text("Completeness Score:"),
-                                                  Text(completenessScore),
-                                                ],
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Text("Prosody Score:"),
-                                                  Text(prosodyScore),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  },
-                                  icon: const Icon(
-                                    Icons.info_outline,
-                                    color: Colors.white,
+                                Expanded(
+                                  flex: 1,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      ShowInfoDialog(
+                                          accuracyScore,
+                                          fluencyScore,
+                                          completenessScore,
+                                          prosodyScore);
+                                    },
+                                    icon: const Icon(
+                                      Icons.info_outline,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
-                                IconButton(
-                                  onPressed: () {
-                                    Source urlSource = UrlSource(userAudio);
-                                    audioPlayer.play(urlSource);
-                                    // print(urlSource);
-                                  },
-                                  icon: const Icon(
-                                    Icons.volume_down_rounded,
-                                    color: Colors.white,
+                                Expanded(
+                                  flex: 1,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      showDialog<String>(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            AlertDialog(
+                                          title: const Text('Translation'),
+                                          content: Text(userTranslation),
+                                        ),
+                                      );
+                                    },
+                                    icon: const Icon(
+                                      Icons.translate_rounded,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      Source urlSource = UrlSource(userAudio);
+                                      audioPlayer.play(urlSource);
+                                      // print(urlSource);
+                                    },
+                                    icon: const Icon(
+                                      Icons.volume_down_rounded,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -609,7 +626,9 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                                     Expanded(
                                       flex: 8,
                                       child: Text(
-                                        userText,
+                                        _isUserTranslation == false
+                                            ? userText
+                                            : userTranslation,
                                       ),
                                     ),
                                     Expanded(
@@ -644,76 +663,23 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                             width: 2,
                           ),
                           GestureDetector(
-                            /*style: ButtonStyle(
-                              alignment: AlignmentDirectional.centerEnd,
-                            ),*/
                             onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                builder: (context) {
-                                  return FutureBuilder<void>(
-                                    future: validateSentenceProvider
-                                        .fetchValidateSentenceResponse(
-                                            userText),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return const Center(
-                                          child: SpinKitThreeInOut(
-                                            color: AppColors.primaryColor,
-                                          ),
-                                        );
-                                      } else if (snapshot.hasError) {
-                                        return Center(
-                                          child:
-                                              Text('Error: ${snapshot.error}'),
-                                        );
-                                      } else {
-                                        return Container(
-                                          width: double.infinity,
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              buildRow(
-                                                'Correct Sentence:',
-                                                validateSentenceProvider
-                                                    .validateSentenceResponse!
-                                                    .correctSentence,
-                                              ),
-                                              buildRow(
-                                                'Explanation:',
-                                                validateSentenceProvider
-                                                    .validateSentenceResponse!
-                                                    .explanation,
-                                              ),
-                                              buildRow(
-                                                'Alternate Sentence:',
-                                                validateSentenceProvider
-                                                    .validateSentenceResponse!
-                                                    .alternate,
-                                              ),
-                                              buildRow(
-                                                'Bangla Explanation:',
-                                                validateSentenceProvider
-                                                    .validateSentenceResponse!
-                                                    .banglaExplanation,
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      }
-                                    },
-                                  );
-                                },
-                              );
+                              setState(() {
+                                _isFeedbackLoading = true;
+                              });
+                              fetchDataAndShowBottomSheet(userText)
+                                  .whenComplete(() {
+                                setState(() {
+                                  _isFeedbackLoading = false;
+                                });
+                              });
                             },
-                            child: const Text(
-                              "Feedback",
-                              style: TextStyle(color: Colors.white),
-                            ),
+                            child: _isFeedbackLoading
+                                ? CircularProgressIndicator() // Show a loader while loading
+                                : Text(
+                                    "Feedback",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                           ),
                         ],
                       ),
@@ -779,6 +745,24 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                           color: Colors.white,
                         ),
                       ),
+                      Expanded(
+                        flex: 1,
+                        child: IconButton(
+                          onPressed: () {
+                            showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                title: const Text('Translation'),
+                                content: Text(aiTranslation),
+                              ),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.translate_rounded,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                       SizedBox(
                         width: 1,
                       ),
@@ -793,7 +777,312 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
     );
   }
 
-  Widget buildRow(String title, String content) {
+  Widget buildAiTextResponse(
+      BuildContext context, AsyncSnapshot<void> snapshot) {
+    String aiDialogAudio =
+        nextQuestionProvider.nextQuestionResponse!.aiDialogAudio!;
+    String aiDialogText = nextQuestionProvider.nextQuestionResponse!.aiDialog!;
+    String userAudio = nextQuestionProvider.nextQuestionResponse!.userAudio!;
+    String accuracyScore =
+        nextQuestionProvider.nextQuestionResponse!.accuracyScore.toString();
+    String fluencyScore =
+        nextQuestionProvider.nextQuestionResponse!.fluencyScore.toString();
+    String completenessScore =
+        nextQuestionProvider.nextQuestionResponse!.completenessScore.toString();
+    String prosodyScore =
+        nextQuestionProvider.nextQuestionResponse!.prosodyScore.toString();
+    String userText = nextQuestionProvider.nextQuestionResponse!.userText!;
+    String userTranslation =
+        nextQuestionProvider.nextQuestionResponse!.userTextBn ?? "Not Found";
+    String aiTranslation =
+        nextQuestionProvider.nextQuestionResponse!.aiDialogBn ?? "Not Found";
+
+    Source urlSource = UrlSource(aiDialogAudio);
+    audioPlayer.play(urlSource);
+    return Container(
+      padding: EdgeInsets.all(5.0),
+      child: Column(
+        children: [
+          /*UserRow*/
+          userText != ""
+              ? Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      ShowInfoDialog(
+                                          accuracyScore,
+                                          fluencyScore,
+                                          completenessScore,
+                                          prosodyScore);
+                                    },
+                                    icon: const Icon(
+                                      Icons.info_outline,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      showDialog<String>(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            AlertDialog(
+                                          title: const Text('Translation'),
+                                          content: Text(userTranslation),
+                                        ),
+                                      );
+                                    },
+                                    icon: const Icon(
+                                      Icons.translate_rounded,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      Source urlSource = UrlSource(userAudio);
+                                      audioPlayer.play(urlSource);
+                                      // print(urlSource);
+                                    },
+                                    icon: const Icon(
+                                      Icons.volume_down_rounded,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 7,
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12.0),
+                                  color:
+                                      AppColors.secondaryColor.withOpacity(0.3),
+                                ),
+                                padding: const EdgeInsets.all(10.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Expanded(
+                                      flex: 8,
+                                      child: Text(
+                                        _isUserTranslation == false
+                                            ? userText
+                                            : userTranslation,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: SizedBox(
+                                        width: 1.0,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Image.asset(
+                                        "assets/images/profile_chat.png",
+                                        height: 30,
+                                        width: 30,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    /*FEEDBACK*/
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: 2,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _isFeedbackLoading = true;
+                              });
+                              fetchDataAndShowBottomSheet(userText)
+                                  .whenComplete(() {
+                                setState(() {
+                                  _isFeedbackLoading = false;
+                                });
+                              });
+                            },
+                            child: _isFeedbackLoading
+                                ? CircularProgressIndicator() // Show a loader while loading
+                                : Text(
+                                    "Feedback",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5.0,
+                    ),
+                  ],
+                )
+              : SizedBox(
+                  width: 2,
+                ),
+          /*Ai Row*/
+          Row(
+            children: [
+              Expanded(
+                flex: 7,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0),
+                    color: AppColors.primaryColor.withOpacity(0.3),
+                  ),
+                  padding: EdgeInsets.all(5.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Image.asset(
+                          "assets/images/risho_guru_icon.png",
+                          height: 30,
+                          width: 30,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: SizedBox(
+                          width: 1.0,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 8,
+                        child: Text(
+                          aiDialogText,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          Source urlSource = UrlSource(aiDialogAudio);
+                          audioPlayer.play(urlSource);
+                        },
+                        icon: Icon(
+                          Icons.volume_down_rounded,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: IconButton(
+                          onPressed: () {
+                            showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                title: const Text('Translation'),
+                                content: Text(aiTranslation),
+                              ),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.translate_rounded,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 1,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future ShowInfoDialog(String accuracyScore, String fluencyScore,
+      String completenessScore, String prosodyScore) {
+    return showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          width: double.infinity,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Accuracy Score:"),
+                  Text(accuracyScore),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Fluency Score:"),
+                  Text(fluencyScore),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Completeness Score:"),
+                  Text(completenessScore),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Prosody Score:"),
+                  Text(prosodyScore),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  /*Feedback dialog content column*/
+  Widget buildFeedbackContentColumn(String title, String content) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8.0),
       margin: EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 2.0),
@@ -815,52 +1104,99 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
     );
   }
 
-  Widget UserResponseBox(String text) {
-    return Container(
-      padding: const EdgeInsets.all(5.0),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 3,
-            child: Container(),
-          ),
-          Expanded(
-            flex: 7,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12.0),
-                color: AppColors.secondaryColor.withOpacity(0.3),
-              ),
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Expanded(
-                    flex: 8,
-                    child: Text(
-                      text,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: SizedBox(
-                      width: 1.0,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Image.asset(
-                      "assets/images/profile_chat.png",
-                      height: 30,
-                      width: 30,
-                    ),
-                  ),
-                ],
-              ),
+  /*Feedback Bottom*/
+  Future<void> fetchDataAndShowBottomSheet(String userText) async {
+    try {
+      // Fetch data
+      await validateSentenceProvider.fetchValidateSentenceResponse(userText);
+      // Show bottom sheet with fetched data
+      FeedbackBottomDialog(
+        userText,
+        validateSentenceProvider.validateSentenceResponse,
+      );
+    } catch (error) {
+      print('Error fetching data: $error');
+      // Handle error
+    }
+  }
+
+  // Modified FeedbackBottomDialog function to accept data
+  Future<void> FeedbackBottomDialog(
+    String userText,
+    ValidateSentenceDataModel? responseData,
+  ) async {
+    return showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        if (responseData == null) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          return Container(
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildFeedbackContentColumn(
+                  'Correct Sentence:',
+                  responseData.correctSentence,
+                ),
+                buildFeedbackContentColumn(
+                  'Explanation:',
+                  responseData.explanation,
+                ),
+                buildFeedbackContentColumn(
+                  'Alternate Sentence:',
+                  responseData.alternate,
+                ),
+                buildFeedbackContentColumn(
+                  'Bangla Explanation:',
+                  responseData.banglaExplanation,
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
+          );
+        }
+      },
     );
+  }
+
+  Widget UserTextAIResponse(String text) {
+    return FutureBuilder<void>(
+        future: nextQuestionProvider.fetchNextQuestionResponse(
+            59350, 2, sessionId!, text, '', 'N'),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const SpinKitThreeInOut(
+              color: AppColors.primaryColor,
+            ); // Loading state
+          } else if (snapshot.hasError) {
+            return Container(
+              margin: const EdgeInsets.all(5.0),
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                color: AppColors.primaryCardColor,
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Text(
+                      "Sorry: Server error",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          } else {
+            return buildAiTextResponse(context, snapshot);
+          }
+        });
   }
 }
