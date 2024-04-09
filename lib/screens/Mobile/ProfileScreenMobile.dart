@@ -22,8 +22,8 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
 
   @override
   Widget build(BuildContext context) {
-    // final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    // final userId = Provider.of<AuthProvider>(context).user?.id;
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final userId = Provider.of<AuthProvider>(context).user?.id;
     /*subscriptionStatusProvider.fetchSubscriptionData(userId!);*/
 
     return SafeArea(
@@ -81,8 +81,8 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    // "${Provider.of<AuthProvider>(context).user?.userID ?? 'UserName'}",
-                    "username",
+                    "${Provider.of<AuthProvider>(context).user?.userID ?? 'UserName'}",
+                    // "username",
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
@@ -134,8 +134,8 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                               ),
                               Expanded(
                                 child: Text(
-                                  /*"${Provider.of<AuthProvider>(context).user?.name ?? 'John Doe'}",*/
-                                  "John doe",
+                                  "${Provider.of<AuthProvider>(context).user?.name ?? 'John Doe'}",
+                                  // "John doe",
                                   textAlign: TextAlign.right,
                                   softWrap: true,
                                   maxLines: 2,
@@ -170,8 +170,8 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                               ),
                               Expanded(
                                 child: Text(
-                                  /* "${Provider.of<AuthProvider>(context).user?.email ?? 'johndoe@gmail.com'}",*/
-                                  "johndoe@gmail.com",
+                                  "${Provider.of<AuthProvider>(context).user?.email ?? 'johndoe@gmail.com'}",
+                                  // "johndoe@gmail.com",
                                   textAlign: TextAlign.right,
                                   softWrap: true,
                                   maxLines: 2,
@@ -206,8 +206,8 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                               ),
                               Expanded(
                                 child: Text(
-                                  /*"${Provider.of<AuthProvider>(context).user?.mobile ?? '+8801**********'}",*/
-                                  "+8801**********",
+                                  "${Provider.of<AuthProvider>(context).user?.mobile ?? '+8801**********'}",
+                                  // "+8801**********",
                                   textAlign: TextAlign.right,
                                   softWrap: true,
                                   maxLines: 2,
@@ -743,7 +743,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                   // Perform logout action here
                                   // For example: navigate to login screen
                                   Navigator.of(context).pop();
-                                  /*authProvider.logout();*/
+                                  authProvider.logout();
                                   Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(

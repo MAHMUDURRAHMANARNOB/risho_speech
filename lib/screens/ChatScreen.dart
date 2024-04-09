@@ -5,8 +5,18 @@ import '../responsive/responsive_layout.dart';
 import 'Mobile/ChatScreenMobile.dart';
 
 class ChatScreen extends StatefulWidget {
-  final String id;
-  ChatScreen({super.key, required this.id});
+  final int id;
+  final String sessionId;
+  final String aiDialogue;
+  final String aiDialogueAudio;
+  final String aiTranslation;
+  ChatScreen(
+      {super.key,
+      required this.id,
+      required this.sessionId,
+      required this.aiDialogue,
+      required this.aiDialogueAudio,
+      required this.aiTranslation});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -19,6 +29,10 @@ class _ChatScreenState extends State<ChatScreen> {
       body: ResponsiveLayout(
         mobileScaffold: ChatScreenMobile(
           id: widget.id,
+          sessionId: widget.sessionId,
+          aiDialogue: widget.aiDialogue,
+          aiDialogueAudio: widget.aiDialogueAudio,
+          aiTranslation: widget.aiTranslation,
         ),
         tabletScaffold: ChatScreenTablet(),
         desktopScaffold: ChatScreenTablet(),

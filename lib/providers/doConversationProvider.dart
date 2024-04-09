@@ -35,25 +35,46 @@ class DoConversationProvider extends ChangeNotifier {
     String? isFemale,
     String? userName,
   ) async {
-    print("inside fetchConversationResponse $userId $conversationId");
+    print(
+        "inside fetchConversationResponse $userId $conversationId $sessionId $userName -");
     try {
       // Use default audio file if audioFile is null
       // File selectedAudioFile = audioFile;
 
-      Map<String, dynamic> response = await _apiService.doConversation(
+      final response = await _apiService.doConversation(
         userId: userId,
         conversationId: conversationId,
-        sessionId: sessionId ?? '',
+        sessionId: sessionId ?? "",
         audioFile: audioFile,
         discussionTopic: discussionTopic!,
         discussTitle: discussTitle!,
         isFemale: isFemale!,
         userName: userName!,
       );
-      _doConversationDataModel = DoConversationDataModel.fromJson(response);
-      print("Response from fetchConversationResponse: $response");
-      notifyListeners();
-      return response;
+      if (response['errorcode'] == 200) {
+        _doConversationDataModel = DoConversationDataModel.fromJson(response);
+        print("Response from fetchConversationResponse: $response");
+        notifyListeners();
+        return response;
+      } else {
+        _doConversationDataModel = DoConversationDataModel(
+          errorCode: response['errorcode'],
+          message: response['message'],
+          sessionId: '',
+          aiDialogue: '',
+          aiDialogueBn: '',
+          aiDialogueAudio: '',
+          userText: '',
+          userTextBn: '',
+          userAudio: '',
+          accuracyScore: null,
+          fluencyScore: null,
+          completenessScore: null,
+          prosodyScore: null,
+        );
+        notifyListeners();
+        return response;
+      }
     } catch (error) {
       print('Error in getConversationResponse: $error');
       throw Exception('Failed to load data. Check your network connection.');

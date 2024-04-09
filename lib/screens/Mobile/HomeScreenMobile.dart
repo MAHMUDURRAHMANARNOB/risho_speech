@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:risho_speech/screens/PracticeGuidedScreen.dart';
 import 'package:risho_speech/ui/colors.dart';
+
+import '../../providers/auth_provider.dart';
 
 class HomeScreenMobile extends StatefulWidget {
   const HomeScreenMobile({super.key});
@@ -49,6 +52,8 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
 
   @override
   Widget build(BuildContext context) {
+    final userId = Provider.of<AuthProvider>(context).user?.id;
+
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
@@ -71,7 +76,7 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                       ),
                     ),
                     Text(
-                      "User full name",
+                      "${Provider.of<AuthProvider>(context).user?.name ?? 'UserName'}",
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,

@@ -18,6 +18,7 @@ import 'responses/login_response.dart';
 class ApiService {
   // static const String baseUrl = 'https://testapi.risho.guru';
   static const String baseUrl = 'https://speech.risho.guru';
+  // static const String baseUrl_guru = 'https://api.risho.guru';
 
   /*LOGIN*/
   static Future<LoginResponse> loginApi(
@@ -177,6 +178,7 @@ class ApiService {
     required String isFemale,
     required String userName,
   }) async {
+    print("sessionId: $sessionId");
     try {
       var uri = Uri.parse('$baseUrl/doConversation/');
       var request = http.MultipartRequest('POST', uri)
@@ -197,7 +199,7 @@ class ApiService {
       var response = await request.send();
       if (response.statusCode == 200) {
         var responseBody = await response.stream.bytesToString();
-        print(json.decode(responseBody));
+        // print(json.decode(responseBody));
         return json.decode(responseBody);
       } else {
         // Handle error
@@ -248,7 +250,7 @@ class ApiService {
       print("Response  $response");
       if (response.statusCode == 200) {
         final lessonListResponse = json.decode(response.body);
-        print("Response in api: $lessonListResponse");
+        // print("Response in api: $lessonListResponse");
         return {'lessonList': lessonListResponse};
       } else {
         // Handle error

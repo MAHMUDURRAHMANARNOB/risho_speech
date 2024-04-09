@@ -11,6 +11,7 @@ class AppColors {
   static const Color secondaryCardColorGreenish = Color(0xFF283B2A);
   static const Color ExpandedCourseCardColor = Color(0xFF424549);
   static const Color ChapterTitle = Color(0xFFFDEFAE);
+  static const Color cardbasic = Color(0xFF1F2937);
 
 // Add more color constants as needed
 }

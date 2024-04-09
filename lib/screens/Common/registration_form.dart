@@ -9,7 +9,9 @@ import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:risho_speech/screens/Common/terms_and_condition_widget.dart';
 import 'package:risho_speech/screens/Dashboard.dart';
+import '../../providers/optProvider.dart';
 import '../../ui/colors.dart';
+import '../Mobile/OTPScreenMobile.dart';
 
 class RegistrationForm extends StatefulWidget {
   const RegistrationForm({super.key});
@@ -44,7 +46,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
 
   @override
   Widget build(BuildContext context) {
-    // final otpProvider = Provider.of<OtpProvider>(context);
+    final otpProvider = Provider.of<OtpProvider>(context);
 
     void generateUsername(String fullName) {
       if (fullName.isNotEmpty) {
@@ -391,7 +393,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
               backgroundColor:
                   AppColors.primaryColor, // Change the background color
             ),
-            onPressed: /*isCheckboxChecked
+            onPressed: isCheckboxChecked
                 ? () async {
                     // Show loading dialog
                     showDialog(
@@ -498,15 +500,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                       }
                     }
                   }
-                : null,*/
-                () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => Dashboard(),
-                ),
-              );
-            },
+                : null,
             child: Container(
               width: 350,
               padding: EdgeInsets.all(10.0),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:risho_speech/providers/auth_provider.dart';
+import 'package:risho_speech/providers/createUserProvider.dart';
 import 'package:risho_speech/providers/doConversationProvider.dart';
 import 'package:risho_speech/providers/nextQuestionProvider.dart';
+import 'package:risho_speech/providers/optProvider.dart';
 import 'package:risho_speech/providers/spokenLessonListProvider.dart';
 import 'package:risho_speech/providers/suggestAnswerProvider.dart';
 import 'package:risho_speech/providers/validateSpokenSentenceProvider.dart';
@@ -16,6 +18,8 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(create: (context) => OtpProvider()),
+        ChangeNotifierProvider(create: (context) => UserCreationProvider()),
         ChangeNotifierProvider(create: (context) => DoConversationProvider()),
         ChangeNotifierProvider(create: (context) => ValidateSentenceProvider()),
         ChangeNotifierProvider(create: (context) => SpokenLessonListProvider()),

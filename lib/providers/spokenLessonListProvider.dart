@@ -22,8 +22,8 @@ class SpokenLessonListProvider extends ChangeNotifier {
       final response = await _apiService.getSpokenLessonList();
       _spokenLessonListDataModel =
           SpokenLessonListDataModel.fromJson(response['lessonList']);
-      print(
-          "Response from fetchSpokenLessonListResponse: ${response['lessonList']}");
+      // print(
+      //     "Response from fetchSpokenLessonListResponse: ${response['lessonList']}");
       notifyListeners();
     } catch (error) {
       print('Error in getSpokenLessonListResponse: $error');

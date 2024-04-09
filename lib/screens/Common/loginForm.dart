@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -191,22 +192,30 @@ class _LoginformState extends State<Loginform> {
                 elevation: 10.0,
                 shadowColor: AppColors.primaryColor.withOpacity(0.1),
               ),
-
-              /*onPressed: () async {
+              onPressed: () async {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false, // Prevent dialog dismissal
+                  builder: (BuildContext context) {
+                    return Center(
+                      child: SpinKitChasingDots(
+                        color: Colors.green,
+                      ), // Show loader
+                    );
+                  },
+                );
                 try {
                   String username = usernameController.text;
                   String password = passwordController.text;
                   // Call the login method from the AuthProvider
                   await Provider.of<AuthProvider>(context, listen: false)
                       .login(username, password);
-
+                  Navigator.pop(context);
                   // Check if the user is authenticated
-                  if (Provider.of<AuthProvider>(context, listen: false)
-                          .user !=
+                  if (Provider.of<AuthProvider>(context, listen: false).user !=
                       null) {
                     User user =
-                        Provider.of<AuthProvider>(context, listen: false)
-                            .user!;
+                        Provider.of<AuthProvider>(context, listen: false).user!;
                     print("User ID: ${user.userID}");
                     print("Username: ${user.username}");
 
@@ -241,15 +250,15 @@ class _LoginformState extends State<Loginform> {
                     },
                   );
                 }
-              },*/
-              onPressed: () {
+              },
+              /*onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => Dashboard(),
                   ),
                 );
-              },
+              },*/
               child: Container(
                 padding: EdgeInsets.all(10.0),
                 alignment: Alignment.center,

@@ -17,7 +17,7 @@ class NextQuestionProvider extends ChangeNotifier {
     String isfemale,
     String userName,
   ) async {
-    print("inside fetchNextQuestionResponse $userid");
+    print("inside fetchNextQuestionResponse $userid $userName");
     try {
       Map<String, dynamic> response = await _apiService.getNextConversation(
         userid: userid,
