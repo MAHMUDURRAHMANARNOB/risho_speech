@@ -212,9 +212,9 @@ class _PracticeGuidedScreenMobileState
                                 child: Text(
                                   lesson
                                       .conversationDetails, // Display conversationName
-                                  textAlign: TextAlign.justify,
+                                  textAlign: TextAlign.start,
                                   overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
+                                  maxLines: 3,
                                   style: TextStyle(
                                     fontSize: 14,
                                   ),

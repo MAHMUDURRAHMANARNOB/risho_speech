@@ -40,6 +40,7 @@ class ChatScreenMobile extends StatefulWidget {
 class _ChatScreenMobileState extends State<ChatScreenMobile> {
   bool _isFeedbackLoading = false;
   late bool isSessionIdFetched = false;
+  late bool _isSuggestAnsActive = false;
 
   String? _audioPath;
   bool _isRecording = false;
@@ -71,7 +72,7 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
       Provider.of<NextQuestionProvider>(context, listen: false);
   late AuthProvider authController =
       Provider.of<AuthProvider>(context, listen: false);
-
+  late String? suggestedAnswer = '';
   late String inputText = '';
   late String userName = authController.user!.username ?? "username";
 
@@ -138,6 +139,8 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
             AIResponseBox(audioFile!, sessionId, userName),
           );
         });
+        _isSuggestAnsActive = false;
+        suggestedAnswer = null;
         // await _convertToWav(_audioPath!);
       }
     } catch (e) {
@@ -192,13 +195,32 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
       appBar: AppBar(
         title: Text("Risho"),
         actions: [
-          IconButton(
+          /*IconButton(
             icon: const Icon(Icons.mark_unread_chat_alt_outlined),
             tooltip: 'Show Snack bar',
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('This is a snack-bar')));
             },
+          ),*/
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primaryColor.withOpacity(0.1),
+              elevation: 3,
+            ),
+            onPressed: () {
+              // Add your logic to send the message
+              setState(() {
+                _conversationComponents
+                    .add(UserTextAIResponse("Ask me another Ques", username));
+              });
+            },
+            child: Text(
+              "New Question",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
           ),
         ],
       ),
@@ -214,44 +236,39 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
             ),
           ),
           /*Bottom control*/
-          Container(
-            margin: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-            padding: const EdgeInsets.all(5.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.backgroundColorDark),
-                  onPressed: () {
-                    // Add your logic to send the message
-                    setState(() {
-                      _conversationComponents.add(
-                          UserTextAIResponse("Ask me another Ques", username));
-                    });
-                  },
-                  child: Text(
-                    "New Question",
-                    style: TextStyle(
-                      color: Colors.white,
+          Visibility(
+            visible: _isSuggestAnsActive,
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.secondaryColor.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(16.0),
+              ),
+              margin: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      suggestedAnswer ?? "",
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
-                ),
-                /*ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.backgroundColorDark),
-                  onPressed: () {
-                    // Add your logic to send the message
-                    SuggestAnswer(latestQuestion!);
-                  },
-                  child: Text(
-                    "Suggest Answer",
-                    style: TextStyle(
-                      color: Colors.white,
+                  IconButton(
+                    style: ElevatedButton.styleFrom(),
+                    onPressed: () {
+                      setState(() {
+                        _isSuggestAnsActive = false;
+                        suggestedAnswer = null;
+                      });
+                    },
+                    icon: Icon(
+                      Icons.close,
+                      color: AppColors.secondaryColor,
                     ),
                   ),
-                ),*/
-              ],
+                ],
+              ),
             ),
           ),
           Container(
@@ -319,6 +336,7 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                                 .add(AIResponseBox(audioFile!, sessionId));*/
 
                             _askQuescontroller.clear();
+                            _isSuggestAnsActive = false;
                           });
                         },
                         icon: Icon(
@@ -371,31 +389,34 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
               Expanded(
                 flex: 7,
                 child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.0),
-                    color: AppColors.primaryColor.withOpacity(0.3),
-                  ),
                   padding: EdgeInsets.all(5.0),
+                  // color: Colors.white,
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Expanded(
                         flex: 1,
-                        child: Image.asset(
-                          "assets/images/risho_guru_icon.png",
-                          height: 30,
-                          width: 30,
+                        child: Container(
+                          // padding: EdgeInsets.all(5.0),
+                          margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
+                          child: Image.asset(
+                            "assets/images/risho_guru_icon.png",
+                            height: 30,
+                            width: 30,
+                          ),
                         ),
                       ),
                       Expanded(
-                        flex: 1,
-                        child: SizedBox(
-                          width: 1.0,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 8,
-                        child: Text(
-                          widget.aiDialogue,
+                        flex: 7,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.0),
+                            color: AppColors.primaryColor.withOpacity(0.3),
+                          ),
+                          padding: EdgeInsets.all(10.0),
+                          child: Text(
+                            widget.aiDialogue,
+                          ),
                         ),
                       ),
                     ],
@@ -606,35 +627,38 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                           child: Column(
                             children: [
                               Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                  color:
-                                      AppColors.secondaryColor.withOpacity(0.3),
-                                ),
                                 padding: const EdgeInsets.all(10.0),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Expanded(
-                                      flex: 8,
-                                      child: Text(
-                                        _isUserTranslation == false
-                                            ? userText
-                                            : userTranslation,
+                                      flex: 7,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(12.0),
+                                          color: AppColors.secondaryColor
+                                              .withOpacity(0.3),
+                                        ),
+                                        padding: EdgeInsets.all(10.0),
+                                        child: Text(
+                                          _isUserTranslation == false
+                                              ? userText
+                                              : userTranslation,
+                                        ),
                                       ),
                                     ),
                                     Expanded(
                                       flex: 1,
-                                      child: SizedBox(
-                                        width: 1.0,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Image.asset(
-                                        "assets/images/profile_chat.png",
-                                        height: 30,
-                                        width: 30,
+                                      child: Container(
+                                        margin: EdgeInsets.fromLTRB(
+                                            5.0, 0.0, 5.0, 5.0),
+                                        child: Image.asset(
+                                          "assets/images/profile_chat.png",
+                                          height: 30,
+                                          width: 30,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -647,7 +671,7 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                     ),
                     /*FEEDBACK*/
                     Container(
-                      padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                      padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 5.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -693,31 +717,34 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                         Expanded(
                           flex: 7,
                           child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12.0),
-                              color: AppColors.primaryColor.withOpacity(0.3),
-                            ),
                             padding: EdgeInsets.all(5.0),
                             child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Expanded(
                                   flex: 1,
-                                  child: Image.asset(
-                                    "assets/images/risho_guru_icon.png",
-                                    height: 30,
-                                    width: 30,
+                                  child: Container(
+                                    margin:
+                                        EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
+                                    child: Image.asset(
+                                      "assets/images/risho_guru_icon.png",
+                                      height: 30,
+                                      width: 30,
+                                    ),
                                   ),
                                 ),
                                 Expanded(
-                                  flex: 1,
-                                  child: SizedBox(
-                                    width: 1.0,
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 8,
-                                  child: Text(
-                                    aiDialogText,
+                                  flex: 7,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      color: AppColors.primaryColor
+                                          .withOpacity(0.3),
+                                    ),
+                                    padding: EdgeInsets.all(10.0),
+                                    child: Text(
+                                      aiDialogText,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -775,6 +802,10 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                         children: [
                           GestureDetector(
                             onTap: () {
+                              setState(() {
+                                _isSuggestAnsActive = true;
+                              });
+
                               fetchDataAndShowBottomSheet(aiDialogText, "S")
                                   .whenComplete(() {});
                             },
@@ -903,35 +934,38 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                           child: Column(
                             children: [
                               Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                  color:
-                                      AppColors.secondaryColor.withOpacity(0.3),
-                                ),
                                 padding: const EdgeInsets.all(10.0),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Expanded(
-                                      flex: 8,
-                                      child: Text(
-                                        _isUserTranslation == false
-                                            ? userText
-                                            : userTranslation,
+                                      flex: 7,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(12.0),
+                                          color: AppColors.secondaryColor
+                                              .withOpacity(0.3),
+                                        ),
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Text(
+                                          _isUserTranslation == false
+                                              ? userText
+                                              : userTranslation,
+                                        ),
                                       ),
                                     ),
                                     Expanded(
                                       flex: 1,
-                                      child: SizedBox(
-                                        width: 1.0,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Image.asset(
-                                        "assets/images/profile_chat.png",
-                                        height: 30,
-                                        width: 30,
+                                      child: Container(
+                                        margin: EdgeInsets.fromLTRB(
+                                            5.0, 0.0, 5.0, 5.0),
+                                        child: Image.asset(
+                                          "assets/images/profile_chat.png",
+                                          height: 30,
+                                          width: 30,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -990,31 +1024,33 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                         Expanded(
                           flex: 7,
                           child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12.0),
-                              color: AppColors.primaryColor.withOpacity(0.3),
-                            ),
                             padding: EdgeInsets.all(5.0),
                             child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Expanded(
                                   flex: 1,
-                                  child: Image.asset(
-                                    "assets/images/risho_guru_icon.png",
-                                    height: 30,
-                                    width: 30,
+                                  child: Container(
+                                    margin:
+                                        EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
+                                    child: Image.asset(
+                                      "assets/images/risho_guru_icon.png",
+                                      height: 30,
+                                      width: 30,
+                                    ),
                                   ),
                                 ),
                                 Expanded(
-                                  flex: 1,
-                                  child: SizedBox(
-                                    width: 1.0,
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 8,
-                                  child: Text(
-                                    aiDialogText,
+                                  flex: 7,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      color: AppColors.primaryColor
+                                          .withOpacity(0.3),
+                                    ),
+                                    child: Text(
+                                      aiDialogText,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -1392,29 +1428,40 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
             child: CircularProgressIndicator(),
           );
         } else {
-          return Container(
-            width: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                buildFeedbackContentColumn(
-                  'Correct Sentence:',
-                  responseData.correctSentence,
-                ),
-                buildFeedbackContentColumn(
-                  'Explanation:',
-                  responseData.explanation,
-                ),
-                buildFeedbackContentColumn(
-                  'Alternate Sentence:',
-                  responseData.alternate,
-                ),
-                buildFeedbackContentColumn(
-                  'Bangla Explanation:',
-                  responseData.banglaExplanation,
-                ),
-              ],
+          return SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Feedback",
+                    style: TextStyle(
+                        // color: AppColors.primaryColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24),
+                  ),
+                  buildFeedbackContentColumn(
+                    'Correct Sentence:',
+                    responseData.correctSentence,
+                  ),
+                  buildFeedbackContentColumn(
+                    'Explanation:',
+                    responseData.explanation,
+                  ),
+                  buildFeedbackContentColumn(
+                    'Alternate Sentence:',
+                    responseData.alternate,
+                  ),
+                  buildFeedbackContentColumn(
+                    'Bangla Explanation:',
+                    responseData.banglaExplanation,
+                  ),
+                ],
+              ),
             ),
           );
         }
@@ -1481,8 +1528,10 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
       //     await suggestAnswerProvider.fetchSuggestAnswerResponse(text);
 
       Navigator.pop(context);
-
-      showDialog(
+      setState(() {
+        suggestedAnswer = responseData!.replyText!;
+      });
+      /*showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -1498,7 +1547,7 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
             ],
           );
         },
-      );
+      );*/
       // print("$sessionId, $aiDialogue");
     } catch (e) {
       showDialog(
