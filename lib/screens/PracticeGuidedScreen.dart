@@ -5,7 +5,9 @@ import '../responsive/responsive_layout.dart';
 import 'Mobile/PracticeGuidedScreenMobile.dart';
 
 class PracticeGuidedScreen extends StatefulWidget {
-  const PracticeGuidedScreen({super.key});
+  final String? screenName;
+
+  const PracticeGuidedScreen({super.key, required this.screenName});
 
   @override
   State<PracticeGuidedScreen> createState() => _PracticeGuidedScreenState();
@@ -16,7 +18,9 @@ class _PracticeGuidedScreenState extends State<PracticeGuidedScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ResponsiveLayout(
-        mobileScaffold: PracticeGuidedScreenMobile(),
+        mobileScaffold: PracticeGuidedScreenMobile(
+          screenName: widget.screenName!,
+        ),
         tabletScaffold: PracticeGuidedScreenTablet(),
         desktopScaffold: PracticeGuidedScreenTablet(),
       ),

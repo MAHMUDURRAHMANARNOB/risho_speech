@@ -148,6 +148,7 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
             ),
 
             /*Options*/
+            /*PRACTICE DAILY LESSON*/
             Container(
               margin: EdgeInsets.fromLTRB(8.0, 5.0, 8.0, 5.0),
               child: ElevatedButton(
@@ -155,7 +156,9 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const PracticeGuidedScreen()),
+                        builder: (context) => const PracticeGuidedScreen(
+                              screenName: 'PDL',
+                            )),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -197,15 +200,18 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                 ),
               ),
             ),
+            /*IMPROVE PRONUNCIATION*/
             Container(
               margin: EdgeInsets.fromLTRB(8.0, 5.0, 8.0, 5.0),
               child: ElevatedButton(
                 onPressed: () {
-                  /*Navigator.push(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const PackagesScreen()),
-                  );*/
+                        builder: (context) => const PracticeGuidedScreen(
+                              screenName: 'IP',
+                            )),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryContainerColor,
@@ -277,7 +283,7 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                           width: 5.0,
                         ),
                         Text(
-                          "Study by Topic",
+                          "Practice Vocabulary",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -306,7 +312,7 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                   );*/
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryContainerColor,
+                  backgroundColor: Colors.cyan[50],
                   padding: EdgeInsets.all(10.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16.0),
@@ -318,7 +324,7 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                     Row(
                       children: [
                         Image.asset(
-                          "assets/images/practice.png",
+                          "assets/images/phone_call.png",
                           width: 30,
                           height: 30,
                         ),
@@ -326,7 +332,7 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                           width: 5.0,
                         ),
                         Text(
-                          "Practice Conversation",
+                          "Phone Call",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

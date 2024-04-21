@@ -211,6 +211,54 @@ class ApiService {
     }
   }
 
+  /*Guided Conversation Response*/
+  Future<Map<String, dynamic>> doGuidedConversation({
+    required int userId,
+    required int conversationId,
+    required String dialogId,
+    required File? audioFile,
+    required String discussionTopic,
+    required String discussTitle,
+    required String isFemale,
+    required String userName,
+    required int dialogSeqNo,
+  }) async {
+    print("sessionId: $dialogId");
+    try {
+      var uri = Uri.parse('$baseUrl/doGuidedConversation/');
+      var request = http.MultipartRequest('POST', uri)
+        ..fields['userid'] = userId.toString()
+        ..fields['conversationid'] = conversationId.toString()
+        ..fields['dialogId'] = dialogId.toString()
+        ..fields['discussionTopic'] = discussionTopic.toString()
+        ..fields['discusTitle'] = discussTitle.toString()
+        ..fields['isfemale'] = isFemale.toString()
+        ..fields['userName'] = userName.toString()
+        ..fields['dialogSeqNo'] = dialogSeqNo.toString();
+      /*..files.add(
+            await http.MultipartFile.fromPath('audioFile', audioFile!.path));*/
+      if (audioFile != null) {
+        request.files.add(
+            await http.MultipartFile.fromPath('audioFile', audioFile.path));
+      }
+
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        var responseBody = await response.stream.bytesToString();
+        // var respon = json.decode(responseBody);
+        // print(respon);
+        // print("dialogId: ${respon['dialogId'].runtimeType}");
+        return json.decode(responseBody);
+      } else {
+        // Handle error
+        return {'error': 'Failed to make API call'};
+      }
+    } catch (e) {
+      // Handle exception
+      return {'error': e.toString()};
+    }
+  }
+
   /*Validate Spoken Sentence*/
   Future<Map<String, dynamic>> validateSentence({
     required String text,

@@ -13,6 +13,7 @@ import 'package:risho_speech/models/suggestAnswerDataModel.dart';
 import 'package:risho_speech/models/validateSpokenSentenceDataModel.dart';
 import 'package:risho_speech/providers/nextQuestionProvider.dart';
 import 'package:risho_speech/providers/suggestAnswerProvider.dart';
+import 'package:risho_speech/screens/Common/error_dialog.dart';
 import 'package:risho_speech/ui/colors.dart';
 
 import '../../providers/auth_provider.dart';
@@ -509,6 +510,7 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
           } else {
             String aiDialog =
                 doConversationProvider.conversationResponse!.aiDialogue!;
+
             /*setState(() {
               latestQuestion = aiDialog;
             });*/
@@ -528,28 +530,23 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
     String aiDialogAudio =
         doConversationProvider.conversationResponse!.aiDialogueAudio!;
     String aiDialogText =
-        doConversationProvider.conversationResponse!.aiDialogue!;
+        doConversationProvider.conversationResponse!.aiDialogue ?? "";
     String userAudio = doConversationProvider.conversationResponse!.userAudio!;
     double accuracyScore =
-        doConversationProvider.conversationResponse!.accuracyScore!;
+        doConversationProvider.conversationResponse!.accuracyScore ?? 0.0;
     double fluencyScore =
-        doConversationProvider.conversationResponse!.fluencyScore!;
+        doConversationProvider.conversationResponse!.fluencyScore ?? 0.0;
     double completenessScore =
-        doConversationProvider.conversationResponse!.completenessScore!;
+        doConversationProvider.conversationResponse!.completenessScore ?? 0.0;
     double prosodyScore =
-        doConversationProvider.conversationResponse!.prosodyScore!;
-    String userText = doConversationProvider.conversationResponse!.userText!;
+        doConversationProvider.conversationResponse!.prosodyScore ?? 0.0;
+    String userText =
+        doConversationProvider.conversationResponse!.userText ?? "";
     String userTranslation =
         doConversationProvider.conversationResponse!.userTextBn ?? "Not Found";
     String aiTranslation =
         doConversationProvider.conversationResponse!.aiDialogueBn ??
             "Not Found";
-    // setState(() {
-    //   latestQuestion = aiDialogText;
-    // });
-    // if (aiDialogText != "") {
-    //   updateLatestQuestion(aiDialogText);
-    // }
     Source urlSource = UrlSource(aiDialogAudio);
     audioPlayer.play(urlSource);
     return Container(
@@ -705,9 +702,15 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                     ),
                   ],
                 )
-              : SizedBox(
-                  width: 2,
+              : Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0),
+                    color: AppColors.secondaryColor.withOpacity(0.1),
+                  ),
+                  padding: EdgeInsets.all(10.0),
+                  child: Text("Couldn\'t capture your voice"),
                 ),
+
           /*Ai Row*/
           aiDialogText != ""
               ? Column(
@@ -842,13 +845,13 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
   ) {
     final response = nextQuesProvider.nextQuestionResponse;
     String aiDialogAudio = response!.aiDialogAudio!;
-    String aiDialogText = response!.aiDialog!;
+    String aiDialogText = response!.aiDialog ?? "";
     String userAudio = response!.userAudio!;
     double accuracyScore = response!.accuracyScore!;
     double fluencyScore = response!.fluencyScore!;
     double completenessScore = response!.completenessScore!;
     double prosodyScore = response!.prosodyScore!;
-    String userText = response!.userText!;
+    String userText = response!.userText ?? "";
     String userTranslation = response!.userTextBn ?? "Not Found";
     String aiTranslation = response!.aiDialogBn ?? "Not Found";
     if (aiDialogAudio != null) {
@@ -1048,6 +1051,7 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                                       color: AppColors.primaryColor
                                           .withOpacity(0.3),
                                     ),
+                                    padding: EdgeInsets.all(10.0),
                                     child: Text(
                                       aiDialogText,
                                     ),
@@ -1109,6 +1113,9 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                         children: [
                           GestureDetector(
                             onTap: () {
+                              setState(() {
+                                _isSuggestAnsActive = true;
+                              });
                               fetchDataAndShowBottomSheet(aiDialogText, "S")
                                   .whenComplete(() {});
                             },

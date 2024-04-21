@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:risho_speech/providers/auth_provider.dart';
 import 'package:risho_speech/providers/createUserProvider.dart';
 import 'package:risho_speech/providers/doConversationProvider.dart';
+import 'package:risho_speech/providers/doGuidedConversationProvider.dart';
 import 'package:risho_speech/providers/nextQuestionProvider.dart';
 import 'package:risho_speech/providers/optProvider.dart';
 import 'package:risho_speech/providers/spokenLessonListProvider.dart';
@@ -21,6 +22,8 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => OtpProvider()),
         ChangeNotifierProvider(create: (context) => UserCreationProvider()),
         ChangeNotifierProvider(create: (context) => DoConversationProvider()),
+        ChangeNotifierProvider(
+            create: (context) => DoGuidedConversationProvider()),
         ChangeNotifierProvider(create: (context) => ValidateSentenceProvider()),
         ChangeNotifierProvider(create: (context) => SpokenLessonListProvider()),
         ChangeNotifierProvider(create: (context) => NextQuestionProvider()),
