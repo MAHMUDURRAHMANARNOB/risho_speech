@@ -5,6 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:risho_speech/providers/doGuidedConversationProvider.dart';
 import 'package:risho_speech/screens/ChatScreen.dart';
+import 'package:risho_speech/screens/PronunciationScreen.dart';
 import 'package:risho_speech/ui/colors.dart';
 
 import '../../providers/auth_provider.dart';
@@ -43,6 +44,7 @@ class _PracticeGuidedScreenMobileState
     String? conversationBn;
     int? seqNumber;
     String? conversationDetails;
+    String? conversationAudioFile;
     String? discussionTopic;
     String? discusTitle;
 
@@ -155,23 +157,29 @@ class _PracticeGuidedScreenMobileState
           conversationBn = response['conversationBn'];
           seqNumber = response['seqNumber'];
           conversationDetails = response['conversationDetails'];
+          conversationAudioFile = response['conversationAudioFile'];
           discussionTopic = response['discussionTopic'];
           discusTitle = response['discusTitle'];
           isLoading = false;
         });
         Navigator.pop(context);
-        /*Navigator.push(
+        Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => ChatScreen(
-                    id: conversationId,
-                    sessionId: sessionId!,
-                    aiDialogue: aiDialogue!,
-                    aiDialogueAudio: aiDialogueAudio!,
-                    aiTranslation: aiTranslation ?? "Not found",
+              builder: (context) => PronunciationScreen(
+                    conversationId: conversationId,
+                    dialogId: dialogId!,
+                    conversationEn: conversationEn!,
+                    conversationBn: conversationBn!,
+                    conversationAudioFile: conversationAudioFile!,
+                    seqNumber: seqNumber!,
+                    conversationDetails: conversationDetails!,
+                    discussionTopic: discussionTopic!,
+                    discusTitle: discusTitle!,
+                    actorName: actorName!,
                   )),
-        );*/
-        showDialog(
+        );
+        /*showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
@@ -198,8 +206,8 @@ class _PracticeGuidedScreenMobileState
               ],
             );
           },
-        );
-        print("$sessionId, $aiDialogue");
+        );*/
+        // print("$sessionId, $aiDialogue");
       } catch (e) {
         Navigator.pop(context);
         showDialog(
