@@ -76,6 +76,7 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
   late String? suggestedAnswer = '';
   late String inputText = '';
   late String userName = authController.user!.username ?? "username";
+  late int userId = authController.user!.id ?? 123;
 
   // late String aiResponseText;
 
@@ -92,27 +93,6 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
     });
     _conversationComponents.add(firstConversation());
   }
-
-  // Future<void> fetchSessionId() async {
-  //   try {
-  //     setState(() {
-  //       isSessionIdFetched = true;
-  //     });
-  //
-  //     setState(() {
-  //       _conversationComponents.add(
-  //         AIResponseBox(
-  //           null,
-  //           null,
-  //         ),
-  //       );
-  //       isSessionIdFetched = false;
-  //     });
-  //   } catch (error) {
-  //     print('Error fetching session ID: $error');
-  //     // Handle error
-  //   }
-  // }
 
   Future<void> startRecording() async {
     try {
@@ -192,6 +172,7 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
   Widget build(BuildContext context) {
     final username =
         Provider.of<AuthProvider>(context).user?.name ?? 'UserName';
+    userId = Provider.of<AuthProvider>(context).user?.id ?? 123;
     return Scaffold(
       appBar: AppBar(
         title: Text("Risho"),
@@ -479,7 +460,7 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
 
     return FutureBuilder<void>(
         future: doConversationProvider.fetchConversationResponse(
-            59350, widget.id, sessionId, audio, '', '', 'N', username),
+            userId, widget.id, sessionId, audio, '', '', 'N', username),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const SpinKitThreeInOut(

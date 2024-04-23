@@ -245,9 +245,16 @@ class ApiService {
       var response = await request.send();
       if (response.statusCode == 200) {
         var responseBody = await response.stream.bytesToString();
-        // var respon = json.decode(responseBody);
-        // print(respon);
-        // print("dialogId: ${respon['dialogId'].runtimeType}");
+        var respon = json.decode(responseBody);
+        print(respon);
+        print("dialogId: ${respon['dialogId'].runtimeType}");
+        print(respon['convid'].runtimeType);
+        print(respon['seqNumber'].runtimeType);
+        print(respon['accuracyScore'].runtimeType);
+        print(respon['fluencyScore'].runtimeType);
+        print(respon['completenessScore'].runtimeType);
+        print(respon['prosodyScore'].runtimeType);
+        // print(respon['dialogid'].runtimeType);
         return json.decode(responseBody);
       } else {
         // Handle error

@@ -17,16 +17,6 @@ class DoGuidedConversationProvider extends ChangeNotifier {
   DoGuidedConversationDataModel? get guidedConversationResponse =>
       _doGuidedConversationDataModel;
 
-  Future<File> _loadAssetAsFile(String assetPath) async {
-    final ByteData data = await rootBundle.load(assetPath);
-    final List<int> bytes = data.buffer.asUint8List();
-    final Directory tempDir = await getTemporaryDirectory();
-    final String tempPath = '${tempDir.path}/${assetPath.split('/').last}';
-    final File file = File(tempPath);
-    await file.writeAsBytes(bytes);
-    return file;
-  }
-
   Future<Map<String, dynamic>> fetchGuidedConversationResponse(
     int userId,
     int conversationId,
@@ -58,6 +48,7 @@ class DoGuidedConversationProvider extends ChangeNotifier {
       if (response['error'] == 200) {
         _doGuidedConversationDataModel =
             DoGuidedConversationDataModel.fromJson(response);
+
         print("Response from fetchGuidedConversationResponse: $response");
         notifyListeners();
         return response;

@@ -12,10 +12,10 @@ class DoGuidedConversationDataModel {
   final String? conversationDetails;
   final String? discussionTopic;
   final String? discusTitle;
-  final int? accuracyScore;
-  final int? fluencyScore;
-  final int? completenessScore;
-  final int? prosodyScore;
+  final double? accuracyScore;
+  final double? fluencyScore;
+  final double? completenessScore;
+  final double? prosodyScore;
   final String? speechText;
   final String? speechTextBn;
   final String? fileLoc;
@@ -60,10 +60,10 @@ class DoGuidedConversationDataModel {
       conversationDetails: json['conversationDetails'],
       discussionTopic: json['discussionTopic'],
       discusTitle: json['discusTitle'],
-      accuracyScore: json['accuracyScore'],
-      fluencyScore: json['fluencyScore'],
-      completenessScore: json['completenessScore'],
-      prosodyScore: json['prosodyScore'],
+      accuracyScore: json['accuracyScore'].toDouble(),
+      fluencyScore: json['fluencyScore'].toDouble(),
+      completenessScore: json['completenessScore'].toDouble(),
+      prosodyScore: json['prosodyScore'].toDouble(),
       speechText: json['speechText'],
       speechTextBn: json['speechTextbn'],
       fileLoc: json['fileLoc'],
