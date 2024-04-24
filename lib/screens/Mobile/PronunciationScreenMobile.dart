@@ -1,8 +1,11 @@
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:avatar_glow/avatar_glow.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:risho_speech/models/doGuidedConverationDataModel.dart';
 import 'package:risho_speech/providers/doGuidedConversationProvider.dart';
 import 'package:risho_speech/ui/colors.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -160,7 +163,7 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
       padding: EdgeInsets.all(5.0),
       child: Column(
         children: [
-          /*Ai Row*/
+          /*AiName*/
           Row(
             children: [
               Expanded(
@@ -169,7 +172,7 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
                   padding: EdgeInsets.all(5.0),
                   // color: Colors.white,
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
                         flex: 1,
@@ -185,23 +188,40 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
                       ),
                       Expanded(
                         flex: 7,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12.0),
-                            color: AppColors.primaryColor.withOpacity(0.3),
-                          ),
-                          padding: EdgeInsets.all(10.0),
-                          child: Text(
-                            "${widget.conversationEn} ( ${widget.conversationBn} )",
-                          ),
+                        child: Text(
+                          widget.actorName,
+                          // style: TextStyle(fontFamily: "Mina"),
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
+            ],
+          ),
+          /*Ai Row*/
+          Row(
+            children: [
               Expanded(
-                flex: 3,
+                flex: 6,
+                child: Container(
+                  padding: EdgeInsets.all(5.0),
+                  // color: Colors.white,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12.0),
+                      color: AppColors.primaryColor.withOpacity(0.3),
+                    ),
+                    padding: EdgeInsets.all(10.0),
+                    child: Text(
+                      "${widget.conversationEn} ( ${widget.conversationBn} )",
+                      // style: TextStyle(fontFamily: "Mina"),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 1,
                 child: Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -278,39 +298,76 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
             child: Column(
               children: [
                 /* SEND / VOICE */
-                IconButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.backgroundColorDark,
-                      elevation: 4,
-                    ),
-                    onPressed: () async {
-                      // Add your logic to send the message
-                      if (!_isRecording) {
-                        await startRecording();
-                      } else {
-                        await stopRecording();
-                      }
-                      setState(() {});
-                    },
-                    icon: Container(
-                      padding: EdgeInsets.all(15),
-                      child: Icon(
-                        _isRecording == false
-                            ? Icons.keyboard_voice_rounded
-                            : Icons.stop_rounded,
-                        color: AppColors.primaryColor,
-                        size: 24,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: SizedBox(
+                        width: 20,
                       ),
-                    )),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor,
-                  ),
-                  onPressed: () {},
-                  child: Text(
-                    "Next",
-                    style: TextStyle(color: Colors.white),
-                  ),
+                    ),
+                    Flexible(
+                      flex: 2,
+                      child: AvatarGlow(
+                        animate: _isRecording,
+                        curve: Curves.fastOutSlowIn,
+                        glowColor: AppColors.primaryColor,
+                        duration: const Duration(milliseconds: 1000),
+                        repeat: true,
+                        glowRadiusFactor: 1,
+                        child: Container(
+                          margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                          child: IconButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: _isRecording == false
+                                  ? Colors.white
+                                  : AppColors.primaryColor,
+                              elevation: 4,
+                            ),
+                            onPressed: () async {
+                              // Add your logic to send the message
+                              if (!_isRecording) {
+                                await startRecording();
+                              } else {
+                                await stopRecording();
+                              }
+                              setState(() {});
+                            },
+                            icon: Container(
+                              padding: EdgeInsets.all(20),
+                              child: Icon(
+                                _isRecording == false
+                                    ? Icons.keyboard_voice_rounded
+                                    : Icons.stop_rounded,
+                                color: _isRecording == false
+                                    ? AppColors.primaryColor
+                                    : Colors.white,
+                                size: 30,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primaryColor,
+                          ),
+                          onPressed: () {},
+                          child: const Text(
+                            "Next",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -395,6 +452,10 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
       double prosodyScore = doGuidedConversationProvider
               .guidedConversationResponse!.prosodyScore ??
           0.0;
+
+      List<WordInfo>? words =
+          doGuidedConversationProvider.guidedConversationResponse?.words;
+
       String userText =
           doGuidedConversationProvider.guidedConversationResponse!.speechText ??
               "";
@@ -426,6 +487,7 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
       Source urlSource = UrlSource(aiDialogAudio);
       audioPlayer.play(urlSource);
       return Container(
+        width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.all(5.0),
         child: Column(
           children: [
@@ -433,71 +495,73 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
             userText != ""
                 ? Column(
                     children: [
+                      /*USERNAME*/
                       Row(
                         children: [
                           Expanded(
-                            flex: 7,
-                            child: Column(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Expanded(
-                                        flex: 1,
-                                        child: Container(
-                                          margin: EdgeInsets.fromLTRB(
-                                              5.0, 0.0, 5.0, 5.0),
-                                          child: Image.asset(
-                                            "assets/images/profile_chat.png",
-                                            height: 30,
-                                            width: 30,
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 7,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                            color: AppColors.secondaryColor
-                                                .withOpacity(0.3),
-                                          ),
-                                          padding: EdgeInsets.all(10.0),
-                                          child: Text(
-                                            "$userText ( $userTranslation )",
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            flex: 3,
+                            flex: 8,
                             child: Container(
+                              padding: const EdgeInsets.all(10.0),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      /*Source urlSource =
-                                          UrlSource(aiDialogAudio);
-                                      audioPlayer.play(urlSource);*/
-                                    },
-                                    icon: Icon(
-                                      Icons.volume_down_rounded,
-                                      color: Colors.white,
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      margin: EdgeInsets.fromLTRB(
+                                          5.0, 0.0, 5.0, 5.0),
+                                      child: Image.asset(
+                                        "assets/images/profile_chat.png",
+                                        height: 30,
+                                        width: 30,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 7,
+                                    child: Text(
+                                      userName,
                                     ),
                                   ),
                                 ],
                               ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      /*content*/
+                      Row(
+                        children: [
+                          Flexible(
+                            flex: 6,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12.0),
+                                color:
+                                    AppColors.secondaryColor.withOpacity(0.3),
+                              ),
+                              padding: EdgeInsets.all(10.0),
+                              child: Text(
+                                "$userText ( $userTranslation )",
+                              ),
+                            ),
+                          ),
+                          Flexible(
+                            flex: 1,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    /*Source urlSource =
+                                        UrlSource(aiDialogAudio);
+                                    audioPlayer.play(urlSource);*/
+                                  },
+                                  icon: Icon(
+                                    Icons.volume_down_rounded,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -536,7 +600,8 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
                                     accuracyScore,
                                     fluencyScore,
                                     completenessScore,
-                                    prosodyScore);
+                                    prosodyScore,
+                                    words);
                                 /*fetchDataAndShowBottomSheet(userText, "F")
                                   .whenComplete(() {
                                 setState(() {
@@ -549,14 +614,8 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),
-                            SizedBox(
-                              width: 2,
-                            ),
                           ],
                         ),
-                      ),
-                      SizedBox(
-                        height: 5.0,
                       ),
                     ],
                   )
@@ -573,6 +632,7 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
             aiDialogText != ""
                 ? Column(
                     children: [
+                      /*AI_NAME*/
                       Row(
                         children: [
                           Expanded(
@@ -580,7 +640,7 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
                             child: Container(
                               padding: EdgeInsets.all(5.0),
                               child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Expanded(
                                     flex: 1,
@@ -596,23 +656,36 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
                                   ),
                                   Expanded(
                                     flex: 7,
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                            color: AppColors.primaryColor
-                                                .withOpacity(0.3),
-                                          ),
-                                          padding: EdgeInsets.all(10.0),
-                                          child: Text(
-                                            "$aiDialogText ( $aiTranslation )",
-                                            style:
-                                                TextStyle(fontFamily: "Mina"),
-                                          ),
-                                        ),
-                                      ],
+                                    child: Text(
+                                      widget.actorName,
+                                      // style: TextStyle(fontFamily: "Mina"),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      /*Content*/
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 6,
+                            child: Container(
+                              padding: EdgeInsets.all(5.0),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      color: AppColors.primaryColor
+                                          .withOpacity(0.3),
+                                    ),
+                                    padding: EdgeInsets.all(10.0),
+                                    child: Text(
+                                      "$aiDialogText ( $aiTranslation )",
+                                      // style: TextStyle(fontFamily: "Mina"),
                                     ),
                                   ),
                                 ],
@@ -620,7 +693,7 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
                             ),
                           ),
                           Expanded(
-                            flex: 3,
+                            flex: 1,
                             child: Container(
                               child: Row(
                                 mainAxisAlignment:
@@ -657,194 +730,245 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
     }
   }
 
-  Future ShowInfoDialog(String userText, double accuracyScore,
-      double fluencyScore, double completenessScore, double prosodyScore) {
+  Future ShowInfoDialog(
+    String userText,
+    double accuracyScore,
+    double fluencyScore,
+    double completenessScore,
+    double prosodyScore,
+    List<WordInfo>? words,
+  ) {
+    print("words: ${words?[2].word}");
     return showModalBottomSheet(
       context: context,
       builder: (context) {
-        return Container(
-          width: double.infinity,
-          margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                userText,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/images/accuracy.png",
-                    width: 20,
-                    height: 20,
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Accuracy Score:"),
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 8,
-                                child: LinearProgressIndicator(
-                                  value: accuracyScore /
-                                      100, // value should be between 0 and 1
-                                  backgroundColor: Colors.grey[300],
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      AppColors.primaryColor),
+        return SingleChildScrollView(
+          child: Container(
+            width: double.infinity,
+            margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+            padding: EdgeInsets.all(10.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  userText,
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/images/accuracy.png",
+                      width: 20,
+                      height: 20,
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Accuracy Score:"),
+                            Row(
+                              children: [
+                                Expanded(
+                                  flex: 8,
+                                  child: LinearProgressIndicator(
+                                    value: accuracyScore /
+                                        100, // value should be between 0 and 1
+                                    backgroundColor: Colors.grey[300],
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        AppColors.primaryColor),
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 2,
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Text("${accuracyScore.toString()}%"),
-                              ),
-                            ],
-                          ),
-                        ],
+                                SizedBox(
+                                  width: 2,
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Text("${accuracyScore.toString()}%"),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/images/fluency.png",
-                    width: 20,
-                    height: 20,
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Fluency Score:"),
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 8,
-                                child: LinearProgressIndicator(
-                                  value: fluencyScore /
-                                      100, // value should be between 0 and 1
-                                  backgroundColor: Colors.grey[300],
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      AppColors.primaryColor),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/images/fluency.png",
+                      width: 20,
+                      height: 20,
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Fluency Score:"),
+                            Row(
+                              children: [
+                                Expanded(
+                                  flex: 8,
+                                  child: LinearProgressIndicator(
+                                    value: fluencyScore /
+                                        100, // value should be between 0 and 1
+                                    backgroundColor: Colors.grey[300],
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        AppColors.primaryColor),
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 2,
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Text("${fluencyScore.toString()}%"),
-                              ),
-                            ],
-                          ),
-                        ],
+                                SizedBox(
+                                  width: 2,
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Text("${fluencyScore.toString()}%"),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/images/solution.png",
-                    width: 20,
-                    height: 20,
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Completeness Score:"),
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 8,
-                                child: LinearProgressIndicator(
-                                  value: completenessScore /
-                                      100, // value should be between 0 and 1
-                                  backgroundColor: Colors.grey[300],
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      AppColors.primaryColor),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/images/solution.png",
+                      width: 20,
+                      height: 20,
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Completeness Score:"),
+                            Row(
+                              children: [
+                                Expanded(
+                                  flex: 8,
+                                  child: LinearProgressIndicator(
+                                    value: completenessScore /
+                                        100, // value should be between 0 and 1
+                                    backgroundColor: Colors.grey[300],
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        AppColors.primaryColor),
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 2,
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Text("${completenessScore.toString()}%"),
-                              ),
-                            ],
-                          ),
-                        ],
+                                SizedBox(
+                                  width: 2,
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child:
+                                      Text("${completenessScore.toString()}%"),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/images/prosody.png",
-                    width: 20,
-                    height: 20,
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Prosody Score:"),
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 8,
-                                child: LinearProgressIndicator(
-                                  value: prosodyScore /
-                                      100, // value should be between 0 and 1
-                                  backgroundColor: Colors.grey[300],
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      AppColors.primaryColor),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/images/prosody.png",
+                      width: 20,
+                      height: 20,
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Prosody Score:"),
+                            Row(
+                              children: [
+                                Expanded(
+                                  flex: 8,
+                                  child: LinearProgressIndicator(
+                                    value: prosodyScore /
+                                        100, // value should be between 0 and 1
+                                    backgroundColor: Colors.grey[300],
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        AppColors.primaryColor),
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 2,
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Text("${prosodyScore.toString()}%"),
-                              ),
-                            ],
-                          ),
-                        ],
+                                SizedBox(
+                                  width: 2,
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Text("${prosodyScore.toString()}%"),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
+                  ],
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    columnSpacing: 10,
+                    columns: [
+                      DataColumn(label: Text('Word')),
+                      DataColumn(label: Text('Accuracy Score')),
+                      DataColumn(label: Text('Comments')),
+                    ],
+                    rows: words?.map((word) {
+                          String errorType = word.errorType ?? '';
+                          if (word.errorType == "None") {
+                            errorType = "Perfect";
+                          } else {
+                            errorType = word.errorType ?? '';
+                          }
+                          return DataRow(
+                            cells: [
+                              DataCell(
+                                Text(word.word ?? ""),
+                              ),
+                              DataCell(
+                                Text(word.accuracyScore.toString() ?? ""),
+                              ),
+                              DataCell(
+                                Text(
+                                  errorType,
+                                  style: TextStyle(
+                                      color: errorType != "Perfect"
+                                          ? AppColors.secondaryColor
+                                          : AppColors.primaryColor,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          );
+                        }).toList() ??
+                        [],
                   ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         );
       },

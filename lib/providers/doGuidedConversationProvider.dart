@@ -75,6 +75,7 @@ class DoGuidedConversationProvider extends ChangeNotifier {
           speechTextBn: null,
           fileLoc: null,
           dialogId: null,
+          words: [],
         );
         notifyListeners();
         return response;

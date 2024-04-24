@@ -20,6 +20,7 @@ class DoGuidedConversationDataModel {
   final String? speechTextBn;
   final String? fileLoc;
   final int? dialogId;
+  final List<WordInfo>? words;
 
   DoGuidedConversationDataModel({
     required this.error,
@@ -43,6 +44,7 @@ class DoGuidedConversationDataModel {
     required this.speechTextBn,
     required this.fileLoc,
     required this.dialogId,
+    required this.words,
   });
 
   factory DoGuidedConversationDataModel.fromJson(Map<String, dynamic> json) {
@@ -68,6 +70,29 @@ class DoGuidedConversationDataModel {
       speechTextBn: json['speechTextbn'],
       fileLoc: json['fileLoc'],
       dialogId: json['dialogid'],
+      words: json['words'] != null
+          ? List<WordInfo>.from(json['words'].map((x) => WordInfo.fromJson(x)))
+          : [],
+    );
+  }
+}
+
+class WordInfo {
+  final String word;
+  final double accuracyScore;
+  final String? errorType;
+
+  WordInfo({
+    required this.word,
+    required this.accuracyScore,
+    required this.errorType,
+  });
+
+  factory WordInfo.fromJson(Map<String, dynamic> json) {
+    return WordInfo(
+      word: json['Word'],
+      accuracyScore: json['AccuracyScore'],
+      errorType: json['ErrorType'],
     );
   }
 }
