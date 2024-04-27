@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:risho_speech/providers/auth_provider.dart';
+import 'package:risho_speech/providers/callAndConversationProvider.dart';
+import 'package:risho_speech/providers/calling_agentProvider.dart';
 import 'package:risho_speech/providers/createUserProvider.dart';
 import 'package:risho_speech/providers/doConversationProvider.dart';
 import 'package:risho_speech/providers/doGuidedConversationProvider.dart';
@@ -28,6 +30,8 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => SpokenLessonListProvider()),
         ChangeNotifierProvider(create: (context) => NextQuestionProvider()),
         ChangeNotifierProvider(create: (context) => SuggestAnswerProvider()),
+        ChangeNotifierProvider(create: (context) => CallingAgentListProvider()),
+        ChangeNotifierProvider(create: (context) => CallConversationProvider()),
       ],
       child: RishoSpeech(),
     ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:risho_speech/screens/CallingAgentScreen.dart';
 import 'package:risho_speech/screens/PracticeGuidedScreen.dart';
+import 'package:risho_speech/screens/VocabulatyCategoryScreen.dart';
 import 'package:risho_speech/ui/colors.dart';
 
 import '../../providers/auth_provider.dart';
@@ -64,7 +66,7 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                 Image.asset(
                   "assets/images/risho_guru_icon.png",
                   width: 50,
-                  height: 50,
+                  height: 40,
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -252,15 +254,16 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                 ),
               ),
             ),
+            /*Vocabulary*/
             Container(
               margin: EdgeInsets.fromLTRB(8.0, 5.0, 8.0, 5.0),
               child: ElevatedButton(
                 onPressed: () {
-                  /*Navigator.push(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const PackagesScreen()),
-                  );*/
+                        builder: (context) => VocabularyCategoryScreen()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryContainerColor,
@@ -301,15 +304,16 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                 ),
               ),
             ),
+            /*Call*/
             Container(
               margin: EdgeInsets.fromLTRB(8.0, 5.0, 8.0, 5.0),
               child: ElevatedButton(
                 onPressed: () {
-                  /*Navigator.push(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const PackagesScreen()),
-                  );*/
+                        builder: (context) => CallingAgentScreen()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.cyan[50],

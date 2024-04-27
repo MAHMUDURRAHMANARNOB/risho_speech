@@ -30,7 +30,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 margin: const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
                 child: Column(
                   children: [
-                    Image.asset("assets/images/risho_guru_icon.png"),
+                    Image.asset(
+                      "assets/images/risho_guru_icon.png",
+                      height: 150,
+                    ),
                     const Text(
                       "RISHO",
                       style: TextStyle(
