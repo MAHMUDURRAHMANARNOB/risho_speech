@@ -33,12 +33,14 @@ class _CallingAgentScreenMobileState extends State<CallingAgentScreenMobile> {
   @override
   Widget build(BuildContext context) {
     String? sessionId;
+    String? agentAudio;
+    String? aiDialog;
 
     final username =
         Provider.of<AuthProvider>(context).user?.name ?? 'UserName';
     final userId = Provider.of<AuthProvider>(context).user?.id ?? 1;
 
-    void fetchSessionId(int userId, int agentId) async {
+    void fetchSessionId(int userId, int agentId, String agentName) async {
       showDialog(
         context: context,
         barrierDismissible: false, // Prevent dialog dismissal
@@ -56,6 +58,8 @@ class _CallingAgentScreenMobileState extends State<CallingAgentScreenMobile> {
             .fetchCallConversationResponse(userId, agentId, '', null, username);
         setState(() {
           sessionId = response['SessionID'];
+          agentAudio = response['AIDialoagAudio'];
+          aiDialog = response['AIDialoag'];
           /*aiDialogue = response['AIDialoag'];
           aiDialogueAudio = response['AIDialoagAudio'];
           aiTranslation = response['AIDialoagBn'];
@@ -68,6 +72,9 @@ class _CallingAgentScreenMobileState extends State<CallingAgentScreenMobile> {
             builder: (context) => CallingScreen(
               sessionId: sessionId!,
               agentId: agentId.toString(),
+              agentName: agentName,
+              agentAudio: agentAudio!,
+              firstText: aiDialog!,
             ),
           ),
         );
@@ -157,7 +164,8 @@ class _CallingAgentScreenMobileState extends State<CallingAgentScreenMobile> {
                                   final agent = countryData.agents![index];
                                   return GestureDetector(
                                     onTap: () {
-                                      fetchSessionId(userId, agent.id!);
+                                      fetchSessionId(
+                                          userId, agent.id!, agent.agentName!);
                                     },
                                     child: Card(
                                       child: Container(

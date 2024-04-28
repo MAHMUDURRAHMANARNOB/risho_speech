@@ -6,8 +6,17 @@ import 'Mobile/CallingScreenMobile.dart';
 
 class CallingScreen extends StatefulWidget {
   final String agentId;
+  final String agentName;
   final String sessionId;
-  CallingScreen({super.key, required this.agentId, required this.sessionId});
+  final String firstText;
+  final String agentAudio;
+  CallingScreen(
+      {super.key,
+      required this.agentId,
+      required this.sessionId,
+      required this.agentName,
+      required this.agentAudio,
+      required this.firstText});
 
   @override
   State<CallingScreen> createState() => _CallingScreenState();
@@ -21,6 +30,9 @@ class _CallingScreenState extends State<CallingScreen> {
         mobileScaffold: CallingScreenMobile(
           agentId: widget.agentId,
           sessionId: widget.sessionId,
+          agentName: widget.agentName,
+          agentAudio: widget.agentAudio,
+          firstText: widget.firstText,
         ),
         tabletScaffold: CallingScreenTablet(),
         desktopScaffold: CallingScreenTablet(),
