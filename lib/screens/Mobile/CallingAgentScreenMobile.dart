@@ -71,7 +71,7 @@ class _CallingAgentScreenMobileState extends State<CallingAgentScreenMobile> {
           MaterialPageRoute(
             builder: (context) => CallingScreen(
               sessionId: sessionId!,
-              agentId: agentId.toString(),
+              agentId: agentId,
               agentName: agentName,
               agentAudio: agentAudio!,
               firstText: aiDialog!,

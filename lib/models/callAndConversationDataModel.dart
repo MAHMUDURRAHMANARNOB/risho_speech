@@ -56,7 +56,7 @@ class CallConversationDataModel {
 
 class WordScore {
   final String? word;
-  final int? accuracyScore;
+  final double? accuracyScore;
   final String? errorType;
 
   WordScore({
@@ -67,7 +67,7 @@ class WordScore {
 
   factory WordScore.fromJson(Map<String, dynamic> json) => WordScore(
         word: json['Word'],
-        accuracyScore: json['AccuracyScore'],
+        accuracyScore: json['AccuracyScore'].toDouble(),
         errorType: json['ErrorType'],
       );
 }

@@ -5,7 +5,7 @@ import '../responsive/responsive_layout.dart';
 import 'Mobile/CallingScreenMobile.dart';
 
 class CallingScreen extends StatefulWidget {
-  final String agentId;
+  final int agentId;
   final String agentName;
   final String sessionId;
   final String firstText;
