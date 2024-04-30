@@ -3,6 +3,7 @@ class CallConversationDataModel {
   final String message;
   final String? sessionID;
   final String? aiDialog;
+  final String? aiDialogBn;
   final String? aiDialogAudio;
   final String? userText;
   final String? userTextBn;
@@ -19,6 +20,7 @@ class CallConversationDataModel {
     required this.message,
     required this.sessionID,
     required this.aiDialog,
+    required this.aiDialogBn,
     required this.aiDialogAudio,
     required this.userText,
     required this.userTextBn,
@@ -37,6 +39,7 @@ class CallConversationDataModel {
       message: json['message'],
       sessionID: json['SessionID'],
       aiDialog: json['AIDialoag'],
+      aiDialogBn: json['AIDialoagBn'],
       aiDialogAudio: json['AIDialoagAudio'],
       userText: json['usertext'],
       userTextBn: json['usertextBn'],

@@ -9,6 +9,7 @@ class CallingScreen extends StatefulWidget {
   final String agentName;
   final String sessionId;
   final String firstText;
+  final String firstTextBn;
   final String agentAudio;
   CallingScreen(
       {super.key,
@@ -16,7 +17,8 @@ class CallingScreen extends StatefulWidget {
       required this.sessionId,
       required this.agentName,
       required this.agentAudio,
-      required this.firstText});
+      required this.firstText,
+      required this.firstTextBn});
 
   @override
   State<CallingScreen> createState() => _CallingScreenState();
@@ -33,6 +35,7 @@ class _CallingScreenState extends State<CallingScreen> {
           agentName: widget.agentName,
           agentAudio: widget.agentAudio,
           firstText: widget.firstText,
+          firstTextBn: widget.firstTextBn,
         ),
         tabletScaffold: CallingScreenTablet(),
         desktopScaffold: CallingScreenTablet(),

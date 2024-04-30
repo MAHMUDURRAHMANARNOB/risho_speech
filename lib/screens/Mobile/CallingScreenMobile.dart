@@ -17,6 +17,7 @@ import 'package:risho_speech/ui/colors.dart';
 import '../../models/validateSpokenSentenceDataModel.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/validateSpokenSentenceProvider.dart';
+import '../Common/AiEmotionWidget.dart';
 
 class CallingScreenMobile extends StatefulWidget {
   final int agentId;
@@ -24,13 +25,15 @@ class CallingScreenMobile extends StatefulWidget {
   final String sessionId;
   final String agentAudio;
   final String firstText;
+  final String firstTextBn;
   const CallingScreenMobile(
       {super.key,
       required this.agentId,
       required this.sessionId,
       required this.agentName,
       required this.agentAudio,
-      required this.firstText});
+      required this.firstText,
+      required this.firstTextBn});
 
   @override
   State<CallingScreenMobile> createState() => _CallingScreenMobileState();
@@ -42,6 +45,9 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
   void _openEndDrawer() {
     _scaffoldKey.currentState!.openEndDrawer();
   }
+
+  bool _isAiListening = false;
+  // bool _isAiWaiting = false;
 
   bool _isChatExpanded = false;
 
@@ -66,6 +72,17 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
   late int userId = authController.user!.id ?? 123;
   late String _sessionId = widget.sessionId;
 
+  /*Regular changing variables*/
+  late String _aiDialog = '';
+  late String _aiDialogTranslation = '';
+  late double _accuracyScore = 0.0;
+  late double _fluencyScore = 0.0;
+  late double _completenessScore = 0.0;
+  late double _prosodyScore = 0.0;
+  late String _userText = '';
+  late String _userTranslation = '';
+  late List<WordScore>? _words = [];
+
   @override
   void initState() {
     super.initState();
@@ -80,8 +97,13 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
       _seqNumber = widget.seqNumber;*/
       _sessionId = widget.sessionId;
       _aiAudioPath = widget.agentAudio;
+      _aiDialog = widget.firstText;
+      _aiDialogTranslation = widget.firstTextBn;
     });
-    playRecording();
+    /*playRecording(_aiAudioPath!, () {
+      // This callback will be called when audio playback is complete
+    });*/
+
     _conversationComponents.add(firstConversation());
     _requestMicrophonePermission();
   }
@@ -99,6 +121,7 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
         await audioRecord.start();
         setState(() {
           _isRecording = true;
+          _isAiListening = true;
         });
       }
     } catch (e) {
@@ -115,25 +138,17 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
           _audioPath = path;
           audioFile = File(_audioPath!);
           print(_audioPath);
+
+          _isAiListening = false;
+
           _conversationComponents.add(
             AIResponseBox(audioFile!, _sessionId, userName),
           );
           /* playRecording();*/
         });
-        // _isSuggestAnsActive = false;
-        // suggestedAnswer = null;
       }
     } catch (e) {
       print("Error stop recording: $e");
-    }
-  }
-
-  Future<void> playRecording() async {
-    try {
-      Source urlSource = UrlSource(_aiAudioPath!);
-      await audioPlayer.play(urlSource);
-    } catch (e) {
-      print("Error playing audio: $e");
     }
   }
 
@@ -150,10 +165,7 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
 
   Widget firstConversation() {
     Source urlSource = UrlSource(widget.agentName);
-    // audioPlayer.play(urlSource);
-    /*setState(() {
-      latestQuestion = widget.conversationEn;
-    });*/
+
     return Container(
       padding: EdgeInsets.all(5.0),
       child: Column(
@@ -210,7 +222,6 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
                     padding: EdgeInsets.all(10.0),
                     child: Text(
                       "${widget.firstText})",
-                      // style: TextStyle(fontFamily: "Mina"),
                     ),
                   ),
                 ),
@@ -227,14 +238,6 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
-        /*endDrawer: Drawer(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: _conversationComponents,
-            ),
-          ),
-        ),*/
         body: Container(
           decoration: BoxDecoration(
             color: AppColors.backgroundColorDark,
@@ -246,125 +249,167 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
           child: Column(
             children: [
               /*Calling agent Info*/
-              Container(
-                margin: EdgeInsets.fromLTRB(0.0, 40.0, 0.0, 10.0),
-                padding: EdgeInsets.all(10.0),
+              Expanded(
+                flex: 2,
                 child: Column(
                   children: [
-                    Image.asset(
-                      "assets/images/profile_chat.png",
-                      height: 100,
-                      width: 100,
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0.0, 40.0, 0.0, 10.0),
+                      padding: EdgeInsets.all(10.0),
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            "assets/images/profile_chat.png",
+                            height: 100,
+                            width: 100,
+                          ),
+                          Text(
+                            widget.agentName,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    Text(
-                      widget.agentName,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
+                    /*control*/
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryColor,
+                              elevation: 4,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isFeedbackLoading = true;
+                              });
+                              ShowInfoDialog(
+                                  _userText,
+                                  _accuracyScore,
+                                  _fluencyScore,
+                                  _completenessScore,
+                                  _prosodyScore,
+                                  _words);
+                            },
+                            icon: Container(
+                              padding: EdgeInsets.all(10.0),
+                              child: Icon(
+                                Icons.info,
+                                size: 20,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5.0,
+                          ),
+                          IconButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryColor,
+                              elevation: 4,
+                            ),
+                            onPressed: () {
+                              showDialog<void>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Translation'),
+                                    content: Text(
+                                      _aiDialogTranslation,
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            icon: Container(
+                              padding: EdgeInsets.all(10.0),
+                              child: Icon(
+                                Icons.translate_rounded,
+                                size: 20,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5.0,
+                          ),
+                          IconButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryColor,
+                              elevation: 4,
+                            ),
+                            onPressed: () {
+                              /*_openEndDrawer();*/
+                              /*setState(() {
+                                _isChatExpanded = !_isChatExpanded;
+                              });*/
+                              showDialog<void>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("${widget.agentName} said"),
+                                    content: Text(
+                                      _aiDialog,
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            icon: Container(
+                              padding: EdgeInsets.all(10.0),
+                              child: Icon(
+                                Icons.message_rounded,
+                                size: 20,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    /*Content*/
+                    AnimatedContainer(
+                      duration: Duration(
+                          milliseconds: 300), // Set your animation duration
+                      curve: Curves.easeInOut,
+                      width: double.infinity,
+                      height: !_isChatExpanded ? 1 : 200,
+                      padding: EdgeInsets.all(10.0),
+                      margin: EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12.0),
+                        color: AppColors.backgroundColorDark,
+                      ),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: _conversationComponents,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-              /*control*/
-              Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryColor,
-                        elevation: 4,
-                      ),
-                      onPressed: () {},
-                      icon: Container(
-                        padding: EdgeInsets.all(10.0),
-                        child: Icon(
-                          Icons.info,
-                          size: 20,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    IconButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryColor,
-                        elevation: 4,
-                      ),
-                      onPressed: () {},
-                      icon: Container(
-                        padding: EdgeInsets.all(10.0),
-                        child: Icon(
-                          Icons.translate_rounded,
-                          size: 20,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 5.0,
-                    ),
-                    IconButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryColor,
-                        elevation: 4,
-                      ),
-                      onPressed: () {
-                        /*_openEndDrawer();*/
-                        setState(() {
-                          _isChatExpanded = !_isChatExpanded;
-                        });
-                      },
-                      icon: Container(
-                        padding: EdgeInsets.all(10.0),
-                        child: Icon(
-                          Icons.message_rounded,
-                          size: 20,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              /*Content*/
-              AnimatedContainer(
-                duration:
-                    Duration(milliseconds: 300), // Set your animation duration
-                curve: Curves.easeInOut,
-                width: double.infinity,
-                height: !_isChatExpanded ? 1 : 200,
-                padding: EdgeInsets.all(10.0),
-                margin: EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.0),
-                  color: AppColors.backgroundColorDark,
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: _conversationComponents,
-                  ),
-                ),
-              ),
-              /*Visibility(
-                // visible:,
-                child: Container(
-                  child: Column(
+              /*Ai Emotion*/
+              Consumer<CallConversationProvider>(
+                builder: (context, provider, _) {
+                  return Column(
                     children: [
-                      Image.asset(
-                        "assets/images/risho_guru_icon.png",
-                        width: 100,
-                        height: 100,
+                      AiEmotionWidget(
+                        // Use the AiEmotionWidget
+                        isAiSaying: provider.isAiSaying,
+                        isAiAnalyzing: provider.isAiAnalyging,
+                        isAiListening: _isAiListening,
+                        isAiWaiting: provider.isAiWaiting,
+                        AIName: widget.agentName,
                       ),
-                      Text("Analyging"),
                     ],
-                  ),
-                ),
-              ),*/
-              Spacer(),
+                  );
+                },
+              ),
               /*Talk*/
               !_isChatExpanded
                   ? Column(
@@ -417,6 +462,9 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
                           color: Colors.redAccent,
                           child: IconButton(
                             onPressed: () {
+                              setState(() {
+                                _sessionId = '';
+                              });
                               Navigator.pop(context);
                             },
                             icon: Icon(
@@ -447,6 +495,9 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
                                   elevation: 4,
                                 ),
                                 onPressed: () {
+                                  setState(() {
+                                    _sessionId = '';
+                                  });
                                   Navigator.pop(context);
                                 },
                                 icon: Container(
@@ -555,12 +606,34 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
               ),
             );
           } else {
-            String? aiDialog =
-                callConversationProvider.callConversationResponse?.aiDialog;
+            _aiDialog =
+                callConversationProvider.callConversationResponse!.aiDialog!;
 
-            /*setState(() {
-              latestQuestion = aiDialog;
-            });*/
+            _aiDialogTranslation =
+                callConversationProvider.callConversationResponse!.aiDialogBn ??
+                    "Not Found";
+            _accuracyScore = callConversationProvider
+                    .callConversationResponse!.accuracyScore ??
+                0.0;
+            _fluencyScore = callConversationProvider
+                    .callConversationResponse!.fluencyScore ??
+                0.0;
+            _completenessScore = callConversationProvider
+                    .callConversationResponse!.completenessScore ??
+                0.0;
+            _prosodyScore = callConversationProvider
+                    .callConversationResponse!.prosodyScore ??
+                0.0;
+
+            _words =
+                callConversationProvider.callConversationResponse?.wordScores;
+
+            _userText =
+                callConversationProvider.callConversationResponse!.userText ??
+                    "";
+            _userTranslation =
+                callConversationProvider.callConversationResponse!.userTextBn ??
+                    "Not Found";
             // updateLatestQuestion(aiDialog);
             return buildAiResponse(context, snapshot);
           }
@@ -600,18 +673,19 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
       String userAudio =
           callConversationProvider.callConversationResponse!.userAudio!;
 
-      /*int dialogId =
-          callConversationProvider.callConversationResponse!.dialogId ??
-              0;*/
-
-      // _dialogId = dialogId.toString();
-      // _seqNumber = seqNumber;
-      // _discussionTopic = discussionTopic.toString();
-      // _discusTitle = discusTitle.toString();
       _aiAudioPath = aiDialogAudio;
 
-      Source urlSource = UrlSource(aiDialogAudio);
-      audioPlayer.play(urlSource);
+      /*Source urlSource = UrlSource(aiDialogAudio);
+      audioPlayer.play(urlSource);*/
+      /*playRecording(aiDialogAudio, () {
+        // This callback will be called when audio playback is complete
+
+        _isAiSaying = false;
+        _isAiWaiting = true;
+        _isAiListening = false;
+        _isAiAnalyging = false;
+      });*/
+
       return Container(
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.all(5.0),
@@ -818,28 +892,6 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
                               ),
                             ),
                           ),
-                          /*Expanded(
-                            flex: 1,
-                            child: Container(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      Source urlSource =
-                                          UrlSource(aiDialogAudio);
-                                      audioPlayer.play(urlSource);
-                                    },
-                                    icon: Icon(
-                                      Icons.volume_down_rounded,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),*/
                         ],
                       ),
                     ],
@@ -864,7 +916,7 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
     double prosodyScore,
     List<WordScore>? words,
   ) {
-    print("words: ${words?[2].word}");
+    // print("words: ${words?[2].word}");
     return showModalBottomSheet(
       context: context,
       builder: (context) {

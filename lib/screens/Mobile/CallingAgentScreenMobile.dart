@@ -35,6 +35,7 @@ class _CallingAgentScreenMobileState extends State<CallingAgentScreenMobile> {
     String? sessionId;
     String? agentAudio;
     String? aiDialog;
+    String? aiDialogBn;
 
     final username =
         Provider.of<AuthProvider>(context).user?.name ?? 'UserName';
@@ -60,6 +61,7 @@ class _CallingAgentScreenMobileState extends State<CallingAgentScreenMobile> {
           sessionId = response['SessionID'];
           agentAudio = response['AIDialoagAudio'];
           aiDialog = response['AIDialoag'];
+          aiDialogBn = response['AIDialoagBn'];
           /*aiDialogue = response['AIDialoag'];
           aiDialogueAudio = response['AIDialoagAudio'];
           aiTranslation = response['AIDialoagBn'];
@@ -75,6 +77,7 @@ class _CallingAgentScreenMobileState extends State<CallingAgentScreenMobile> {
               agentName: agentName,
               agentAudio: agentAudio!,
               firstText: aiDialog!,
+              firstTextBn: aiDialogBn!,
             ),
           ),
         );
