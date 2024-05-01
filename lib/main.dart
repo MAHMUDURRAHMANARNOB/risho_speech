@@ -11,6 +11,8 @@ import 'package:risho_speech/providers/optProvider.dart';
 import 'package:risho_speech/providers/spokenLessonListProvider.dart';
 import 'package:risho_speech/providers/suggestAnswerProvider.dart';
 import 'package:risho_speech/providers/validateSpokenSentenceProvider.dart';
+import 'package:risho_speech/providers/vocabularyCategoryListProvider.dart';
+import 'package:risho_speech/providers/vocabularyPracticeListProvider.dart';
 import 'package:risho_speech/screens/LoginScreen.dart';
 import 'package:risho_speech/screens/RegistrationScreen.dart';
 import 'package:risho_speech/screens/SplashScreen.dart';
@@ -32,6 +34,10 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => SuggestAnswerProvider()),
         ChangeNotifierProvider(create: (context) => CallingAgentListProvider()),
         ChangeNotifierProvider(create: (context) => CallConversationProvider()),
+        ChangeNotifierProvider(
+            create: (context) => VocabularyCategoryListProvider()),
+        ChangeNotifierProvider(
+            create: (context) => VocabularyPracticeProvider()),
       ],
       child: RishoSpeech(),
     ),

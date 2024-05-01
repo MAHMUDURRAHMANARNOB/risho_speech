@@ -27,7 +27,7 @@ class AiEmotionWidget extends StatelessWidget {
         else if (isAiAnalyzing)
           _buildEmotionWidget(
             image: AssetImage('assets/images/thinking.png'),
-            text: '$AIName is Analyzing',
+            text: '$AIName is Thinking',
           )
         else if (isAiListening)
           _buildEmotionWidget(
