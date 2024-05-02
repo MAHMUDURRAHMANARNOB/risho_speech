@@ -1,43 +1,44 @@
 class VocabularyPracticeListDataModel {
-  final List<VocabularyItem>? vocaList;
+  final List<VocaWord> vocaList;
 
-  VocabularyPracticeListDataModel({required this.vocaList});
+  VocabularyPracticeListDataModel({
+    required this.vocaList,
+  });
 
   factory VocabularyPracticeListDataModel.fromJson(Map<String, dynamic> json) {
     return VocabularyPracticeListDataModel(
-      vocaList: json['vocaList'] != null
-          ? List<VocabularyItem>.from(
-              json['vocaList'].map((x) => VocabularyItem.fromJson(x)))
-          : [],
+      vocaList: List<VocaWord>.from(
+        json['vocaList'].map((v) => VocaWord.fromJson(v)),
+      ),
     );
   }
 }
 
-class VocabularyItem {
+class VocaWord {
   final int id;
-  final String? vocWord;
-  final int? vocaCatId;
-  final String? englishMeaning;
-  final String? banglaMeaning;
-  final String? wordAudios;
+  final String vocWord;
+  final int vocaCatId;
+  final String englishMeaning;
+  final String banglaMeaning;
+  final String wordAudio;
 
-  VocabularyItem({
+  VocaWord({
     required this.id,
-    this.vocWord,
-    this.vocaCatId,
-    this.englishMeaning,
-    this.banglaMeaning,
-    this.wordAudios,
+    required this.vocWord,
+    required this.vocaCatId,
+    required this.englishMeaning,
+    required this.banglaMeaning,
+    required this.wordAudio,
   });
 
-  factory VocabularyItem.fromJson(Map<String, dynamic> json) {
-    return VocabularyItem(
+  factory VocaWord.fromJson(Map<String, dynamic> json) {
+    return VocaWord(
       id: json['id'],
       vocWord: json['vocWord'],
       vocaCatId: json['vocaCatId'],
       englishMeaning: json['englishMeaning'],
       banglaMeaning: json['banglaMeaning'],
-      wordAudios: json['wordAudios'],
+      wordAudio: json['wordaudios'],
     );
   }
 }

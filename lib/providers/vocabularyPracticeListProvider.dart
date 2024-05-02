@@ -8,10 +8,10 @@ class VocabularyPracticeProvider with ChangeNotifier {
   ApiService _apiService = ApiService();
 
   VocabularyPracticeListDataModel? _vocabularyPracticeListDataModel;
-  VocabularyPracticeListDataModel? get vocabularyCategoryResponse =>
+  VocabularyPracticeListDataModel? get vocabularyPracticeResponse =>
       _vocabularyPracticeListDataModel;
 
-  Future<Map<String, dynamic>> fetchVocabularyPracticeList(int vocCatId) async {
+  Future<void> fetchVocabularyPracticeList(int vocCatId) async {
     try {
       print(" -- $vocCatId");
       final response = await _apiService.getVocabularyList(vocaCatId: vocCatId);
@@ -20,7 +20,7 @@ class VocabularyPracticeProvider with ChangeNotifier {
           VocabularyPracticeListDataModel.fromJson(response);
       print("Response from fetchVocabularyPracticeList: ${response}");
       notifyListeners();
-      return response;
+      // return response;
     } catch (error) {
       print('Error in fetchVocabularyPracticeList: $error');
       throw Exception('Failed to load data. Check your network connection.');

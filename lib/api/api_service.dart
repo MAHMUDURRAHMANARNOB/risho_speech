@@ -505,4 +505,56 @@ class ApiService {
       return {'error': e.toString()};
     }
   }
+
+  /*Vocabulary Dialog List*/
+  Future<Map<String, dynamic>> getVocabularyDialogList({
+    required int vocaId,
+  }) async {
+    final url = '$baseUrl/getVocaDialogList/';
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: {
+          'vocaId': vocaId.toString(),
+        },
+      );
+      print("Response  $response");
+      if (response.statusCode == 200) {
+        print("Response in api: ${json.decode(response.body)}");
+        return json.decode(Utf8Decoder().convert(response.bodyBytes));
+      } else {
+        // Handle error
+        return {'error': 'Failed to make API call'};
+      }
+    } catch (e) {
+      // Handle exception
+      return {'error': e.toString()};
+    }
+  }
+
+  /*Vocabulary Sentence List*/
+  Future<Map<String, dynamic>> getVocabularySentenceList({
+    required int vocaId,
+  }) async {
+    final url = '$baseUrl/getVocaSentenceList/';
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: {
+          'vocaId': vocaId.toString(),
+        },
+      );
+      print("Response  $response");
+      if (response.statusCode == 200) {
+        print("Response in api: ${json.decode(response.body)}");
+        return json.decode(Utf8Decoder().convert(response.bodyBytes));
+      } else {
+        // Handle error
+        return {'error': 'Failed to make API call'};
+      }
+    } catch (e) {
+      // Handle exception
+      return {'error': e.toString()};
+    }
+  }
 }

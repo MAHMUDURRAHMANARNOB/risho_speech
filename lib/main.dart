@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:risho_speech/providers/VocabularyDialogListProvider.dart';
+import 'package:risho_speech/providers/VocabularySentenceListProvider.dart';
 import 'package:risho_speech/providers/auth_provider.dart';
 import 'package:risho_speech/providers/callAndConversationProvider.dart';
 import 'package:risho_speech/providers/calling_agentProvider.dart';
@@ -38,6 +40,10 @@ Future<void> main() async {
             create: (context) => VocabularyCategoryListProvider()),
         ChangeNotifierProvider(
             create: (context) => VocabularyPracticeProvider()),
+        ChangeNotifierProvider(
+            create: (context) => VocabularyDialogListProvider()),
+        ChangeNotifierProvider(
+            create: (context) => VocabularySentenceListProvider()),
       ],
       child: RishoSpeech(),
     ),

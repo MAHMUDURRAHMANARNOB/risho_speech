@@ -8,6 +8,7 @@ import '../../models/vocabularyPracticeListDataModel.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/vocabularyCategoryListProvider.dart';
 import '../../ui/colors.dart';
+import '../VocabularyPracticeScreen.dart';
 
 class VocabularyCategoryScreenMobile extends StatefulWidget {
   const VocabularyCategoryScreenMobile({super.key});
@@ -54,32 +55,51 @@ class _VocabularyCategoryScreenMobileState
       try {
         var response = await vocabularyPracticeProvider
             .fetchVocabularyPracticeList(categoryID);
-        /*setState(() {
-          vocaList = response['vocaList'];
-        });*/
+        setState(() {
+          // vocaList = response['vocaList'];
+        });
+        print(vocabularyPracticeProvider
+            .vocabularyPracticeResponse!.vocaList![1].vocWord);
         Navigator.pop(context);
-        showDialog(
+        /*showDialog(
           context: context,
-          barrierDismissible: false, // Prevent dialog dismissal
+          barrierDismissible: false,
           builder: (BuildContext context) {
-            return const Center(
-              child: Text("OK"), // Show loader
+            return AlertDialog(
+              title: Text('Vocabulary List'),
+              content: Container(
+                height: 300, // Adjust the height as needed
+                width: 300, // Adjust the width as needed
+                child: ListView.builder(
+                  itemCount: vocaList!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    VocabularyItem vocabularyItem = vocaList![index];
+                    // Display each item in the list
+                    return ListTile(
+                      title: Text(vocabularyItem.vocWord!),
+                    );
+                  },
+                ),
+              ),
             );
           },
-        );
-        /*Navigator.push(
+        );*/
+        /*showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                content: Text(vocabularyPracticeProvider
+                    .vocabularyPracticeResponse!.vocaList![1].vocWord!),
+              );
+            });*/
+        Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CallingScreen(
-              sessionId: sessionId!,
-              agentId: agentId,
-              agentName: agentName,
-              agentAudio: agentAudio!,
-              firstText: aiDialog!,
-              firstTextBn: aiDialogBn!,
+            builder: (context) => VocabularyPracticeScreen(
+              categoryId: categoryID,
             ),
           ),
-        );*/
+        );
 
         // print("$sessionId, $aiDialogue");
       } catch (e) {
@@ -159,7 +179,15 @@ class _VocabularyCategoryScreenMobileState
                           onTap: () {
                             /*fetchSessionId(
                                     userId, agent.id!, agent.agentName!);*/
-                            fetchVocabulary(category.id!);
+                            /*fetchVocabulary(category.id!);*/
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => VocabularyPracticeScreen(
+                                  categoryId: category.id!,
+                                ),
+                              ),
+                            );
                           },
                           child: Card(
                             child: Container(
