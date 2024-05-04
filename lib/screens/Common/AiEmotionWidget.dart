@@ -6,6 +6,7 @@ class AiEmotionWidget extends StatelessWidget {
   final bool isAiListening;
   final bool isAiWaiting;
   final String AIName;
+  final String AIGander;
 
   AiEmotionWidget({
     required this.isAiSaying,
@@ -13,35 +14,42 @@ class AiEmotionWidget extends StatelessWidget {
     required this.isAiListening,
     required this.isAiWaiting,
     required this.AIName,
+    required this.AIGander,
   });
 
   @override
   Widget build(BuildContext context) {
+    String gander = '';
+    if (AIGander == "M") {
+      gander = "assets/images/man_Caller/";
+    } else {
+      gander = "assets/images/woman_Caller/";
+    }
     return Column(
       children: [
         if (isAiSaying)
           _buildEmotionWidget(
-            image: AssetImage('assets/images/saying.png'),
+            image: AssetImage("${gander}saying.png"),
             text: '$AIName is Saying',
           )
         else if (isAiAnalyzing)
           _buildEmotionWidget(
-            image: AssetImage('assets/images/thinking.png'),
-            text: '$AIName is Thinking',
+            image: AssetImage('${gander}thinking.png'),
+            text: '$AIName is Preparing',
           )
         else if (isAiListening)
           _buildEmotionWidget(
-            image: AssetImage('assets/images/listening.png'),
+            image: AssetImage('${gander}listening.png'),
             text: '$AIName is Listening',
           )
         else if (isAiWaiting)
           _buildEmotionWidget(
-            image: AssetImage('assets/images/waiting.png'),
+            image: AssetImage('${gander}waiting.png'),
             text: 'Waiting for your response',
           )
         else
           _buildEmotionWidget(
-            image: AssetImage('assets/images/waiting.png'),
+            image: AssetImage('${gander}waiting.png'),
             text: 'Waiting for your response',
           )
       ],

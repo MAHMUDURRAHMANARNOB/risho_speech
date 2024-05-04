@@ -39,7 +39,7 @@ class _VocabularyCategoryScreenMobileState
 
     List<dynamic>? vocaList = [];
 
-    void fetchVocabulary(int categoryID) async {
+    void fetchVocabulary(int categoryID, String categoryName) async {
       showDialog(
         context: context,
         barrierDismissible: false, // Prevent dialog dismissal
@@ -58,45 +58,13 @@ class _VocabularyCategoryScreenMobileState
         setState(() {
           // vocaList = response['vocaList'];
         });
-        print(vocabularyPracticeProvider
-            .vocabularyPracticeResponse!.vocaList![1].vocWord);
         Navigator.pop(context);
-        /*showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Vocabulary List'),
-              content: Container(
-                height: 300, // Adjust the height as needed
-                width: 300, // Adjust the width as needed
-                child: ListView.builder(
-                  itemCount: vocaList!.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    VocabularyItem vocabularyItem = vocaList![index];
-                    // Display each item in the list
-                    return ListTile(
-                      title: Text(vocabularyItem.vocWord!),
-                    );
-                  },
-                ),
-              ),
-            );
-          },
-        );*/
-        /*showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                content: Text(vocabularyPracticeProvider
-                    .vocabularyPracticeResponse!.vocaList![1].vocWord!),
-              );
-            });*/
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => VocabularyPracticeScreen(
               categoryId: categoryID,
+              categoryName: categoryName,
             ),
           ),
         );
@@ -185,6 +153,7 @@ class _VocabularyCategoryScreenMobileState
                               MaterialPageRoute(
                                 builder: (context) => VocabularyPracticeScreen(
                                   categoryId: category.id!,
+                                  categoryName: category.vocCatName!,
                                 ),
                               ),
                             );

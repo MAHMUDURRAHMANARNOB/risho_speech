@@ -95,6 +95,8 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/man_Caller/
+    - assets/images/woman_Caller/
     - assets/fonts/
     - assets/audio/
 #    - assets/images/icons/

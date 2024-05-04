@@ -41,7 +41,8 @@ class _CallingAgentScreenMobileState extends State<CallingAgentScreenMobile> {
         Provider.of<AuthProvider>(context).user?.name ?? 'UserName';
     final userId = Provider.of<AuthProvider>(context).user?.id ?? 1;
 
-    void fetchSessionId(int userId, int agentId, String agentName) async {
+    void fetchSessionId(
+        int userId, int agentId, String agentName, String agentGander) async {
       showDialog(
         context: context,
         barrierDismissible: false, // Prevent dialog dismissal
@@ -75,6 +76,7 @@ class _CallingAgentScreenMobileState extends State<CallingAgentScreenMobile> {
               sessionId: sessionId!,
               agentId: agentId,
               agentName: agentName,
+              agentGander: agentGander,
               agentAudio: agentAudio!,
               firstText: aiDialog!,
               firstTextBn: aiDialogBn!,
@@ -167,8 +169,8 @@ class _CallingAgentScreenMobileState extends State<CallingAgentScreenMobile> {
                                   final agent = countryData.agents![index];
                                   return GestureDetector(
                                     onTap: () {
-                                      fetchSessionId(
-                                          userId, agent.id!, agent.agentName!);
+                                      fetchSessionId(userId, agent.id!,
+                                          agent.agentName!, agent.agentGender!);
                                     },
                                     child: Card(
                                       child: Container(

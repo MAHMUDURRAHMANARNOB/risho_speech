@@ -6,7 +6,9 @@ import 'Mobile/VocabularyPracticeScreenMobile.dart';
 
 class VocabularyPracticeScreen extends StatefulWidget {
   final int categoryId;
-  const VocabularyPracticeScreen({super.key, required this.categoryId});
+  final String categoryName;
+  const VocabularyPracticeScreen(
+      {super.key, required this.categoryId, required this.categoryName});
 
   @override
   State<VocabularyPracticeScreen> createState() =>
@@ -20,6 +22,7 @@ class _VocabularyCategoryScreenState extends State<VocabularyPracticeScreen> {
       body: ResponsiveLayout(
         mobileScaffold: VocabularyPracticeScreenMobile(
           categoryId: widget.categoryId,
+          categoryName: widget.categoryName,
         ),
         tabletScaffold: VocabularyPracticeScreenTablet(),
         desktopScaffold: VocabularyPracticeScreenTablet(),

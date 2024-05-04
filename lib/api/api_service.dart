@@ -432,7 +432,7 @@ class ApiService {
         var responseBody = await response.stream.bytesToString();
         var respon = json.decode(responseBody);
         print(respon);
-        print("SessionID: ${respon['SessionID'].runtimeType}");
+        /*print("SessionID: ${respon['SessionID'].runtimeType}");
         print("errorcode: ${respon['errorcode'].runtimeType}");
         print("AIDialoag: ${respon['AIDialoag'].runtimeType}");
         print("AIDialoagAudio: ${respon['AIDialoagAudio'].runtimeType}");
@@ -440,7 +440,7 @@ class ApiService {
         print("usertextBn: ${respon['usertextBn'].runtimeType}");
         print("useraudio: ${respon['useraudio'].runtimeType}");
         print("accuracyScore: ${respon['accuracyScore'].runtimeType}");
-        print("wordscore: ${respon['wordscore'].runtimeType}");
+        print("wordscore: ${respon['wordscore'].runtimeType}");*/
         // print("SessionID: ${respon['SessionID'].runtimeType}");
 
         // print(respon['dialogid'].runtimeType);
@@ -548,6 +548,55 @@ class ApiService {
       if (response.statusCode == 200) {
         print("Response in api: ${json.decode(response.body)}");
         return json.decode(Utf8Decoder().convert(response.bodyBytes));
+      } else {
+        // Handle error
+        return {'error': 'Failed to make API call'};
+      }
+    } catch (e) {
+      // Handle exception
+      return {'error': e.toString()};
+    }
+  }
+
+  /*Vocabulary Word Pronunciation Checker*/
+  Future<Map<String, dynamic>> getVocabularyPronunciation({
+    required int userId,
+    required String wordText,
+    required File? audioFile,
+    required String categoryName,
+  }) async {
+    print("wordText: $wordText");
+    try {
+      var uri = Uri.parse('$baseUrl/validateWordPronunciation/');
+      var request = http.MultipartRequest('POST', uri)
+        ..fields['userid'] = userId.toString()
+        ..fields['wordText'] = wordText.toString()
+        ..fields['categoryName'] = categoryName.toString();
+      /*..files.add(
+            await http.MultipartFile.fromPath('audioFile', audioFile!.path));*/
+      if (audioFile != null) {
+        request.files.add(
+            await http.MultipartFile.fromPath('audioFile', audioFile.path));
+      }
+
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        var responseBody = await response.stream.bytesToString();
+        var respon = json.decode(responseBody);
+        print(respon);
+        /*print("SessionID: ${respon['SessionID'].runtimeType}");
+        print("errorcode: ${respon['errorcode'].runtimeType}");
+        print("AIDialoag: ${respon['AIDialoag'].runtimeType}");
+        print("AIDialoagAudio: ${respon['AIDialoagAudio'].runtimeType}");
+        print("usertext: ${respon['usertext'].runtimeType}");
+        print("usertextBn: ${respon['usertextBn'].runtimeType}");
+        print("useraudio: ${respon['useraudio'].runtimeType}");
+        print("accuracyScore: ${respon['accuracyScore'].runtimeType}");
+        print("wordscore: ${respon['wordscore'].runtimeType}");*/
+        // print("SessionID: ${respon['SessionID'].runtimeType}");
+
+        // print(respon['dialogid'].runtimeType);
+        return json.decode(responseBody);
       } else {
         // Handle error
         return {'error': 'Failed to make API call'};

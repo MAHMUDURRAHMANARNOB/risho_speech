@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
@@ -22,6 +23,7 @@ import '../Common/AiEmotionWidget.dart';
 class CallingScreenMobile extends StatefulWidget {
   final int agentId;
   final String agentName;
+  final String agentGander;
   final String sessionId;
   final String agentAudio;
   final String firstText;
@@ -33,7 +35,8 @@ class CallingScreenMobile extends StatefulWidget {
       required this.agentName,
       required this.agentAudio,
       required this.firstText,
-      required this.firstTextBn});
+      required this.firstTextBn,
+      required this.agentGander});
 
   @override
   State<CallingScreenMobile> createState() => _CallingScreenMobileState();
@@ -41,6 +44,10 @@ class CallingScreenMobile extends StatefulWidget {
 
 class _CallingScreenMobileState extends State<CallingScreenMobile> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  late Timer _timer;
+  int _seconds = 0;
+  int _minutes = 0;
+  int _hours = 0;
 
   void _openEndDrawer() {
     _scaffoldKey.currentState!.openEndDrawer();
@@ -89,6 +96,7 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
 
     audioPlayer = AudioPlayer();
     audioRecord = Record();
+    _startTimer();
 
     setState(() {
       /*_dialogId = widget.dialogId.toString();
@@ -108,10 +116,27 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
     _requestMicrophonePermission();
   }
 
+  void _startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        _seconds++;
+        if (_seconds == 60) {
+          _seconds = 0;
+          _minutes++;
+          if (_minutes == 60) {
+            _minutes = 0;
+            _hours++;
+          }
+        }
+      });
+    });
+  }
+
   @override
   void dispose() {
     audioRecord.dispose();
     audioPlayer.dispose();
+    _timer.cancel();
     super.dispose();
   }
 
@@ -241,10 +266,10 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
         body: Container(
           decoration: BoxDecoration(
             color: AppColors.backgroundColorDark,
-            image: DecorationImage(
-              image: AssetImage("assets/images/caller_bg.png"),
-              fit: BoxFit.cover,
-            ),
+            // image: DecorationImage(
+            //   image: AssetImage("assets/images/caller_bg.png"),
+            //   fit: BoxFit.cover,
+            // ),
           ),
           child: Column(
             children: [
@@ -267,8 +292,12 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
                             widget.agentName,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                              fontSize: 24,
                             ),
+                          ),
+                          Text(
+                            '${_hours.toString().padLeft(2, '0')}:${_minutes.toString().padLeft(2, '0')}:${_seconds.toString().padLeft(2, '0')}',
+                            style: TextStyle(fontSize: 24),
                           ),
                         ],
                       ),
@@ -404,7 +433,7 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
                         isAiAnalyzing: provider.isAiAnalyging,
                         isAiListening: _isAiListening,
                         isAiWaiting: provider.isAiWaiting,
-                        AIName: widget.agentName,
+                        AIName: widget.agentName, AIGander: widget.agentGander,
                       ),
                     ],
                   );
@@ -745,25 +774,6 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
                               ),
                             ),
                           ),
-                          /*Flexible(
-                            flex: 1,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    */ /*Source urlSource =
-                                        UrlSource(aiDialogAudio);
-                                    audioPlayer.play(urlSource);*/ /*
-                                  },
-                                  icon: Icon(
-                                    Icons.volume_down_rounded,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),*/
                         ],
                       ),
                       /*FEEDBACK*/
@@ -928,10 +938,10 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
+                /*Text(
                   userText,
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
+                ),*/
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
