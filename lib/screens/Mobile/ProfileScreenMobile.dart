@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/auth_provider.dart';
+import '../../providers/subscriptionStatus_provider.dart';
 import '../../ui/colors.dart';
 import '../LoginScreen.dart';
+import '../packages_screen.dart';
 
 class ProfileScreenMobile extends StatefulWidget {
   const ProfileScreenMobile({super.key});
@@ -14,17 +17,25 @@ class ProfileScreenMobile extends StatefulWidget {
 }
 
 class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
+  final SubscriptionStatusProvider subscriptionStatusProvider =
+      SubscriptionStatusProvider();
+  late int userId;
+  late String userName;
+
   Future<void> _refresh() async {
+    userId = Provider.of<AuthProvider>(context, listen: false).user!.id;
+    userName = Provider.of<AuthProvider>(context).user!.name;
     // final userId = Provider.of<AuthProvider>(context, listen: false).user?.id;
-    // await subscriptionStatusProvider.fetchSubscriptionData(userId!);
+    await subscriptionStatusProvider.fetchSubscriptionData(userId);
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    final userId = Provider.of<AuthProvider>(context).user?.id;
-    /*subscriptionStatusProvider.fetchSubscriptionData(userId!);*/
+    userId = Provider.of<AuthProvider>(context).user!.id;
+    userName = Provider.of<AuthProvider>(context).user!.username;
+    subscriptionStatusProvider.fetchSubscriptionData(userId!);
 
     return SafeArea(
       child: Scaffold(
@@ -81,7 +92,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    "${Provider.of<AuthProvider>(context).user?.userID ?? 'UserName'}",
+                    userName,
                     // "username",
                     style: TextStyle(
                       fontSize: 30,
@@ -228,6 +239,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                       children: [
                         /*Homework Token*/
                         Expanded(
+                          flex: 1,
                           child: Container(
                             padding: EdgeInsets.all(10.0),
                             decoration: BoxDecoration(
@@ -257,7 +269,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                         "Used",
                                         style: TextStyle(),
                                       ),
-                                      /*userId != null
+                                      userId != null
                                           ? FutureBuilder(
                                               future: subscriptionStatusProvider
                                                   .fetchSubscriptionData(
@@ -291,7 +303,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                           : Text(
                                               "***",
                                               style: TextStyle(),
-                                            ),*/
+                                            ),
                                     ],
                                   ),
                                 ),
@@ -305,7 +317,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                         "Remaining",
                                         style: TextStyle(),
                                       ),
-                                      /*userId != null
+                                      userId != null
                                           ? FutureBuilder(
                                               future: subscriptionStatusProvider
                                                   .fetchSubscriptionData(
@@ -338,7 +350,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                           : Text(
                                               "**",
                                               style: TextStyle(),
-                                            ),*/
+                                            ),
                                     ],
                                   ),
                                 ),
@@ -346,9 +358,10 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 20),
+                        const SizedBox(width: 10),
                         /*Question Token*/
                         Expanded(
+                          flex: 1,
                           child: Container(
                             padding: EdgeInsets.all(10.0),
                             decoration: BoxDecoration(
@@ -378,7 +391,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                         "Used",
                                         style: TextStyle(),
                                       ),
-                                      /*userId != null
+                                      userId != null
                                           ? FutureBuilder(
                                               future: subscriptionStatusProvider
                                                   .fetchSubscriptionData(
@@ -411,7 +424,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                           : Text(
                                               "***",
                                               style: TextStyle(),
-                                            ),*/
+                                            ),
                                     ],
                                   ),
                                 ),
@@ -426,7 +439,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                           "Remaining",
                                           style: TextStyle(),
                                         ),
-                                        /*userId != null
+                                        userId != null
                                             ? FutureBuilder(
                                                 future:
                                                     subscriptionStatusProvider
@@ -462,7 +475,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                             : Text(
                                                 "**",
                                                 style: TextStyle(),
-                                              ),*/
+                                              ),
                                       ],
                                     ),
                                   ),
@@ -475,6 +488,143 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                     ),
                   ),
                   const SizedBox(height: 10),
+                  Container(
+                    width: double.infinity,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        /*Audio Token*/
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            padding: EdgeInsets.all(10.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: AppColors.primaryCardColor,
+                            ),
+                            child: Column(
+                              children: [
+                                Image.asset(
+                                  "assets/images/audio_minute.png",
+                                  width: 50,
+                                  height: 55,
+                                ),
+                                Text(
+                                  "Audio Minutes",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Used",
+                                        style: TextStyle(),
+                                      ),
+                                      userId != null
+                                          ? FutureBuilder(
+                                              future: subscriptionStatusProvider
+                                                  .fetchSubscriptionData(
+                                                      userId!),
+                                              builder: (context, snapshot) {
+                                                if (snapshot.connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return const SpinKitThreeInOut(
+                                                    size: 10.0,
+                                                    color:
+                                                        AppColors.primaryColor,
+                                                  );
+                                                  // Show a loading indicator while fetching data
+                                                } else if (snapshot.hasError) {
+                                                  return Text(
+                                                      'Error: ${snapshot.error}');
+                                                } else {
+                                                  // Once the data is loaded, display the ticketsAvailable value
+                                                  final ticketsAvailable =
+                                                      subscriptionStatusProvider
+                                                          .subscriptionStatus
+                                                          ?.audioMinutesUsed
+                                                          .toString();
+                                                  return Text(
+                                                    ticketsAvailable.toString(),
+                                                    style: TextStyle(),
+                                                  );
+                                                }
+                                              },
+                                            )
+                                          : Text(
+                                              "***",
+                                              style: TextStyle(),
+                                            ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "Remaining",
+                                        style: TextStyle(),
+                                      ),
+                                      userId != null
+                                          ? FutureBuilder(
+                                              future: subscriptionStatusProvider
+                                                  .fetchSubscriptionData(
+                                                      userId!),
+                                              builder: (context, snapshot) {
+                                                if (snapshot.connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return const SpinKitThreeInOut(
+                                                    size: 10.0,
+                                                    color:
+                                                        AppColors.primaryColor,
+                                                  ); // Show a loading indicator while fetching data
+                                                } else if (snapshot.hasError) {
+                                                  return Text(
+                                                      'Error: ${snapshot.error}');
+                                                } else {
+                                                  // Once the data is loaded, display the ticketsAvailable value
+                                                  final ticketsAvailable =
+                                                      subscriptionStatusProvider
+                                                          .subscriptionStatus
+                                                          ?.audioReamins
+                                                          .toString();
+                                                  return Text(
+                                                    ticketsAvailable.toString(),
+                                                    style: TextStyle(),
+                                                  );
+                                                }
+                                              },
+                                            )
+                                          : Text(
+                                              "**",
+                                              style: TextStyle(),
+                                            ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          flex: 1,
+                          child: Container(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
 
                   /*SUBSCRIPTION*/
                   Container(
@@ -494,7 +644,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text("Active Package: "),
-                                /*userId != null
+                                userId != null
                                     ? FutureBuilder(
                                         future: subscriptionStatusProvider
                                             .fetchSubscriptionData(userId!),
@@ -533,7 +683,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                           color: Colors.red,
                                           fontSize: 20,
                                         ),
-                                      ),*/
+                                      ),
                               ],
                             ),
                           ),
@@ -550,7 +700,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text("Purchased Date"),
-                                    /*userId != null
+                                    userId != null
                                         ? FutureBuilder(
                                             future: subscriptionStatusProvider
                                                 .fetchSubscriptionData(userId),
@@ -580,7 +730,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                         : Text(
                                             "***",
                                             style: TextStyle(),
-                                          ),*/
+                                          ),
                                   ],
                                 ),
                               ),
@@ -592,7 +742,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text("Validity Till"),
-                                    /* userId != null
+                                    userId != null
                                         ? FutureBuilder(
                                             future: subscriptionStatusProvider
                                                 .fetchSubscriptionData(userId),
@@ -612,11 +762,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                                     subscriptionStatusProvider
                                                         .subscriptionStatus
                                                         ?.validityDate;
-                                                */ /*convertDateFormat(
-                                                  subscriptionStatusProvider
-                                                      .subscriptionStatus
-                                                      .validityDate
-                                                      .toString());*/ /*
+
                                                 return Text(
                                                   ticketsAvailable.toString(),
                                                   softWrap: true,
@@ -628,7 +774,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                         : Text(
                                             "***",
                                             style: TextStyle(),
-                                          ),*/
+                                          ),
                                   ],
                                 ),
                               ),
@@ -643,11 +789,11 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                   /*Purchase Subscription package*/
                   ElevatedButton(
                     onPressed: () {
-                      /*Navigator.push(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const PackagesScreen()),
-                      );*/
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryCardColor,
@@ -675,13 +821,13 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                   SizedBox(height: 10),
 
                   /*HISTORY*/
-                  ElevatedButton(
+                  /*ElevatedButton(
                     onPressed: () {
-                      /*Navigator.push(
+                      */ /*Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const HistoryScreen()),
-                      );*/
+                      );*/ /*
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryCardColor,
@@ -706,7 +852,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 10),*/
 
                   /*Logout*/
                   ElevatedButton(

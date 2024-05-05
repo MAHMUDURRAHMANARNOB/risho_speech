@@ -13,6 +13,7 @@ import '../models/getNonSubscribedCoursesDataModel.dart';
 import '../models/homeworkHistoryListDataModel.dart';
 import '../models/subscriptionStatusDataModel.dart';
 import '../models/tools.dart';*/
+import '../models/subscriptionStatusDataModel.dart';
 import 'responses/login_response.dart';
 
 class ApiService {
@@ -164,6 +165,26 @@ class ApiService {
       }
     } catch (e) {
       throw Exception(e);
+    }
+  }
+
+  /*SUBSCRIPTION STATUS*/
+  static Future<SubscriptionStatusDataModel> fetchSubscriptionStatus(
+      int userId) async {
+    const apiUrl = '$baseUrl/getsubscriptionDetails/';
+    final Uri uri = Uri.parse('$apiUrl');
+    final response = await http.post(
+      uri,
+      body: {'userid': userId.toString()},
+      /*headers: {'Content-Type': 'application/json'},*/
+    );
+    /*print("Response $response");*/
+
+    if (response.statusCode == 200) {
+      print(SubscriptionStatusDataModel.fromJson(jsonDecode(response.body)));
+      return SubscriptionStatusDataModel.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load Sub status');
     }
   }
 
@@ -604,6 +625,114 @@ class ApiService {
     } catch (e) {
       // Handle exception
       return {'error': e.toString()};
+    }
+  }
+
+  /*Get Package List*/
+  Future<Map<String, dynamic>> getPackagesList(int userid) async {
+    final url = '$baseUrl/getPackageList/';
+    print("Posting in api service $url, $userid");
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: {
+          'userId': userid.toString(),
+          'subscriptionType': "A",
+        },
+      );
+      print("Response:   ${response.body}");
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        print("Response in getPackagesList else" + response.body);
+        throw Exception('Failed to load data in getPackagesList');
+      }
+    } catch (e) {
+      print("Response in getPackagesList Catch" + e.toString());
+      throw Exception("Failed getPackagesList $e");
+    }
+  }
+
+  /*SurjoPay*/
+  static Future<void> initiatePayment(
+    int userId,
+    int subscriptionid,
+    String transactionid,
+    double amount,
+  ) async {
+    final url = '$baseUrl/initiatepayment';
+    print("Posting in api service $url");
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: {
+          'userid': userId.toString(),
+          'subscriptionid': subscriptionid.toString(),
+          'transactionid': transactionid.toString(),
+          'amount': amount.toString(),
+        },
+      );
+      print("Response:   ${response.statusCode}");
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        print("Response in initiatePayment else" + response.body);
+        throw Exception('Failed to load data in getPackagesList');
+      }
+    } catch (e) {
+      print("Response in initiatePayment Catch" + e.toString());
+      throw Exception("Failed getPackagesList $e");
+    }
+  }
+
+  static Future<void> receivePayment(
+    int userId,
+    int subscriptionid,
+    String transactionid,
+    String transStatus,
+    double amount,
+    String storeamount,
+    String cardno,
+    String banktran_id,
+    String currency,
+    String card_issuer,
+    String card_brand,
+    String card_issuer_country,
+    String risk_level,
+    String risk_title,
+  ) async {
+    final url = '$baseUrl/receivepayment';
+    print("Posting in api service $url");
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: {
+          'userid': userId.toString(),
+          'subscriptionid': subscriptionid.toString(),
+          'paytransid': transactionid.toString(),
+          'transStatus': transStatus.toString(),
+          'amount': amount.toString(),
+          'storeamount': storeamount.toString(),
+          'cardno': cardno.toString(),
+          'banktran_id': banktran_id.toString(),
+          'currency': currency.toString(),
+          'card_issuer': card_issuer.toString(),
+          'card_brand': card_brand.toString(),
+          'card_issuer_country': card_issuer_country.toString(),
+          'risk_level': risk_level.toString(),
+          'risk_title': risk_title.toString(),
+        },
+      );
+      print("Response:   ${response.statusCode}");
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        print("Response in receivePayment else" + response.body);
+        throw Exception('Failed to load data in getPackagesList');
+      }
+    } catch (e) {
+      print("Response in receivePayment Catch" + e.toString());
+      throw Exception("Failed getPackagesList $e");
     }
   }
 }

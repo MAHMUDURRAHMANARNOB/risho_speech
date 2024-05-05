@@ -10,7 +10,9 @@ import 'package:risho_speech/providers/doConversationProvider.dart';
 import 'package:risho_speech/providers/doGuidedConversationProvider.dart';
 import 'package:risho_speech/providers/nextQuestionProvider.dart';
 import 'package:risho_speech/providers/optProvider.dart';
+import 'package:risho_speech/providers/packagesProvider.dart';
 import 'package:risho_speech/providers/spokenLessonListProvider.dart';
+import 'package:risho_speech/providers/subscriptionStatus_provider.dart';
 import 'package:risho_speech/providers/suggestAnswerProvider.dart';
 import 'package:risho_speech/providers/validateSpokenSentenceProvider.dart';
 import 'package:risho_speech/providers/vocabularyCategoryListProvider.dart';
@@ -47,6 +49,9 @@ Future<void> main() async {
             create: (context) => VocabularySentenceListProvider()),
         ChangeNotifierProvider(
             create: (context) => ValidatePronunciationProvider()),
+        ChangeNotifierProvider(create: (context) => PackagesProvider()),
+        ChangeNotifierProvider(
+            create: (context) => SubscriptionStatusProvider()),
       ],
       child: RishoSpeech(),
     ),

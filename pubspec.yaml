@@ -47,6 +47,8 @@ dependencies:
   speech_to_text: ^6.6.0
   avatar_glow: ^3.0.1
 
+  vertical_card_pager: ^1.4.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -97,6 +99,7 @@ flutter:
     - assets/images/
     - assets/images/man_Caller/
     - assets/images/woman_Caller/
+    - assets/images/card_images/
     - assets/fonts/
     - assets/audio/
 #    - assets/images/icons/

@@ -260,16 +260,18 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
         body: Container(
           decoration: BoxDecoration(
             color: AppColors.backgroundColorDark,
-            // image: DecorationImage(
-            //   image: AssetImage("assets/images/caller_bg.png"),
-            //   fit: BoxFit.cover,
-            // ),
+            image: DecorationImage(
+              opacity: 0.3,
+              image: AssetImage("assets/images/caller_bg.png"),
+              fit: BoxFit.cover,
+            ),
           ),
           child: Column(
             children: [
@@ -279,25 +281,27 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
                 child: Column(
                   children: [
                     Container(
-                      margin: EdgeInsets.fromLTRB(0.0, 40.0, 0.0, 10.0),
+                      margin: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
                       padding: EdgeInsets.all(10.0),
                       child: Column(
                         children: [
                           Image.asset(
                             "assets/images/profile_chat.png",
-                            height: 100,
+                            height: screenHeight * 0.1,
                             width: 100,
                           ),
                           Text(
                             widget.agentName,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 24,
+                              fontSize: screenHeight * 0.04,
                             ),
                           ),
                           Text(
                             '${_hours.toString().padLeft(2, '0')}:${_minutes.toString().padLeft(2, '0')}:${_seconds.toString().padLeft(2, '0')}',
-                            style: TextStyle(fontSize: 24),
+                            style: TextStyle(
+                              fontSize: screenHeight * 0.04,
+                            ),
                           ),
                         ],
                       ),
@@ -328,7 +332,7 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
                               padding: EdgeInsets.all(10.0),
                               child: Icon(
                                 Icons.info,
-                                size: 20,
+                                size: screenHeight * 0.025,
                                 color: Colors.white,
                               ),
                             ),
@@ -358,7 +362,7 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
                               padding: EdgeInsets.all(10.0),
                               child: Icon(
                                 Icons.translate_rounded,
-                                size: 20,
+                                size: screenHeight * 0.025,
                                 color: Colors.white,
                               ),
                             ),
@@ -392,7 +396,7 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
                               padding: EdgeInsets.all(10.0),
                               child: Icon(
                                 Icons.message_rounded,
-                                size: 20,
+                                size: screenHeight * 0.025,
                                 color: Colors.white,
                               ),
                             ),
@@ -433,162 +437,81 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
                         isAiAnalyzing: provider.isAiAnalyging,
                         isAiListening: _isAiListening,
                         isAiWaiting: provider.isAiWaiting,
-                        AIName: widget.agentName, AIGander: widget.agentGander,
+                        AIName: widget.agentName,
+                        AIGander: widget.agentGander,
                       ),
                     ],
                   );
                 },
               ),
+              SizedBox(
+                height: screenHeight * 0.01,
+              ),
               /*Talk*/
-              !_isChatExpanded
-                  ? Column(
-                      children: [
-                        AvatarGlow(
-                          animate: _isRecording,
-                          curve: Curves.fastOutSlowIn,
-                          glowColor: AppColors.primaryColor,
-                          duration: const Duration(milliseconds: 1000),
-                          repeat: true,
-                          glowRadiusFactor: 1,
-                          child: Container(
-                            margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-                            child: IconButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: _isRecording == false
-                                    ? Colors.white
-                                    : AppColors.primaryColor,
-                                elevation: 4,
-                              ),
-                              onPressed: () async {
-                                if (!_isRecording) {
-                                  await startRecording();
-                                } else {
-                                  await stopRecording();
-                                }
-                                setState(() {});
-                              },
-                              icon: Container(
-                                padding: EdgeInsets.all(20),
-                                child: Icon(
-                                  _isRecording == false
-                                      ? Icons.keyboard_voice_rounded
-                                      : Icons.stop_rounded,
-                                  color: _isRecording == false
-                                      ? AppColors.primaryColor
-                                      : Colors.white,
-                                  size: 30,
-                                ),
-                              ),
-                            ),
+              Column(
+                children: [
+                  AvatarGlow(
+                    animate: _isRecording,
+                    curve: Curves.fastOutSlowIn,
+                    glowColor: AppColors.primaryColor,
+                    duration: const Duration(milliseconds: 1000),
+                    repeat: true,
+                    glowRadiusFactor: 1,
+                    child: Container(
+                      margin:
+                          EdgeInsets.symmetric(vertical: screenHeight * 0.005),
+                      child: IconButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: _isRecording == false
+                              ? Colors.white
+                              : AppColors.primaryColor,
+                          elevation: 4,
+                        ),
+                        onPressed: () async {
+                          if (!_isRecording) {
+                            await startRecording();
+                          } else {
+                            await stopRecording();
+                          }
+                          setState(() {});
+                        },
+                        icon: Container(
+                          padding: EdgeInsets.all(screenHeight * 0.025),
+                          child: Icon(
+                            _isRecording == false
+                                ? Icons.keyboard_voice_rounded
+                                : Icons.stop_rounded,
+                            color: _isRecording == false
+                                ? AppColors.primaryColor
+                                : Colors.white,
+                            size: screenHeight * 0.04,
                           ),
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        /*End Call*/
-                        Container(
-                          width: double.infinity,
-                          color: Colors.redAccent,
-                          child: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _sessionId = '';
-                              });
-                              Navigator.pop(context);
-                            },
-                            icon: Icon(
-                              Icons.call_end,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                  : Container(
-                      width: MediaQuery.of(context).size.width - 5,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          /*End Call*/
-                          Flexible(
-                            flex: 1,
-                            child: Container(
-                              width: double.infinity,
-                              margin: EdgeInsets.fromLTRB(0.0, 5.0, 5.0, 5.0),
-                              child: IconButton(
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5.0),
-                                  ),
-                                  backgroundColor: Colors.redAccent,
-                                  elevation: 4,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _sessionId = '';
-                                  });
-                                  Navigator.pop(context);
-                                },
-                                icon: Container(
-                                  padding: EdgeInsets.all(10),
-                                  child: Icon(
-                                    Icons.call_end,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          /*Record*/
-                          Flexible(
-                            flex: 1,
-                            child: Container(
-                              width: double.infinity,
-                              margin: EdgeInsets.fromLTRB(5.0, 5.0, 0.0, 5.0),
-                              child: AvatarGlow(
-                                animate: _isRecording,
-                                curve: Curves.fastOutSlowIn,
-                                glowColor: AppColors.primaryColor,
-                                duration: const Duration(milliseconds: 1000),
-                                repeat: true,
-                                glowRadiusFactor: 1,
-                                child: IconButton(
-                                  style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5.0),
-                                    ),
-                                    backgroundColor: _isRecording == false
-                                        ? Colors.white
-                                        : AppColors.primaryColor,
-                                    elevation: 4,
-                                  ),
-                                  onPressed: () async {
-                                    if (!_isRecording) {
-                                      await startRecording();
-                                    } else {
-                                      await stopRecording();
-                                    }
-                                    setState(() {});
-                                  },
-                                  icon: Container(
-                                    padding: EdgeInsets.all(10),
-                                    child: Icon(
-                                      _isRecording == false
-                                          ? Icons.keyboard_voice_rounded
-                                          : Icons.stop_rounded,
-                                      color: _isRecording == false
-                                          ? AppColors.primaryColor
-                                          : Colors.white,
-                                      size: 24,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
                       ),
                     ),
+                  ),
+                  SizedBox(
+                    height: screenHeight * 0.01,
+                  ),
+                  /*End Call*/
+                  Container(
+                    width: double.infinity,
+                    color: Colors.redAccent,
+                    child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _sessionId = '';
+                        });
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(
+                        Icons.call_end,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

@@ -47,9 +47,31 @@ class _CallingAgentScreenMobileState extends State<CallingAgentScreenMobile> {
         context: context,
         barrierDismissible: false, // Prevent dialog dismissal
         builder: (BuildContext context) {
-          return const Center(
-            child: SpinKitChasingDots(
-              color: Colors.green,
+          return AlertDialog(
+            contentPadding: EdgeInsets.zero,
+            content: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SpinKitChasingDots(
+                    color: AppColors.primaryColor,
+                  ),
+                  Text(
+                    "Calling",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                  Text(
+                    agentName,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
+                    ),
+                  ),
+                ],
+              ),
             ), // Show loader
           );
         },

@@ -48,8 +48,8 @@ class _NavigationPageState extends State<NavigationPage> {
   final List<CustomDestination> destinations = [
     CustomDestination(
         title: 'Dashboard', imagePath: 'assets/images/risho_guru_icon.png'),
-    CustomDestination(
-        title: 'Courses', imagePath: 'assets/images/risho_guru_icon.png'),
+    /*CustomDestination(
+        title: 'Courses', imagePath: 'assets/images/risho_guru_icon.png'),*/
     CustomDestination(
         title: 'StudyBoard', imagePath: 'assets/images/risho_guru_icon.png'),
   ];
@@ -66,7 +66,7 @@ class _NavigationPageState extends State<NavigationPage> {
         color: AppColors.primaryColor,
       ),
     ),
-    const NavigationDestination(
+    /*const NavigationDestination(
       icon: Icon(
         Icons.menu_book_rounded,
         color: AppColors.primaryColor,
@@ -76,7 +76,7 @@ class _NavigationPageState extends State<NavigationPage> {
         FontAwesomeIcons.bookOpen,
         color: AppColors.primaryColor,
       ),
-    ),
+    ),*/
     const NavigationDestination(
       icon: Icon(
         Icons.person_outline_rounded,
@@ -265,10 +265,10 @@ class _NavigationPageState extends State<NavigationPage> {
       case 0:
         return HomeScreen();
         break;
-      case 1:
+      /*case 1:
         return LearnScreen();
-        break;
-      case 2:
+        break;*/
+      case 1:
         return ProfileScreen();
         break;
 
@@ -283,10 +283,10 @@ class _NavigationPageState extends State<NavigationPage> {
       case 0:
         return HomeScreen();
         break;
-      case 1:
+      /*case 1:
         return LearnScreen();
-        break;
-      case 2:
+        break;*/
+      case 1:
         return ProfileScreen();
         break;
       default:
