@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -17,6 +18,7 @@ class PackagesScreenMobile extends StatefulWidget {
 class _PackagesScreenMobileState extends State<PackagesScreenMobile> {
   late int userid;
   bool isExpanded = false;
+  bool isDiscountAvailable = false;
   Widget packagesCard(
     String name,
     String imagePath,
@@ -35,12 +37,23 @@ class _PackagesScreenMobileState extends State<PackagesScreenMobile> {
     late String durationType;
     if (duration == "H") {
       durationType = " 6 months";
+    } else if (duration == "W") {
+      durationType = " 7 days";
+    } else if (duration == "Q") {
+      durationType = " 3 months";
     } else if (duration == "Y") {
       durationType = " 12 months";
     } else if (duration == "M") {
       durationType = " 30 Days";
     } else if (duration == "U") {
       durationType = " Unlimited";
+    } else {
+      durationType = " Not Mentioned";
+    }
+    if (discountedPrice == 0.0) {
+      isDiscountAvailable = false;
+    } else {
+      isDiscountAvailable = true;
     }
     double finalPrice = price - discountedPrice;
 
@@ -216,13 +229,16 @@ class _PackagesScreenMobileState extends State<PackagesScreenMobile> {
                 Container(
                   child: Column(
                     children: [
-                      Text(
-                        "৳ ${price.toString()}",
-                        style: const TextStyle(
-                          color: Colors.blueGrey,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 14,
-                          decoration: TextDecoration.lineThrough,
+                      Visibility(
+                        visible: isDiscountAvailable,
+                        child: Text(
+                          "৳ ${price.toString()}",
+                          style: const TextStyle(
+                            color: Colors.blueGrey,
+                            fontWeight: FontWeight.normal,
+                            fontSize: 14,
+                            decoration: TextDecoration.lineThrough,
+                          ),
                         ),
                       ),
                       Text(
@@ -389,7 +405,7 @@ class _PackagesScreenMobileState extends State<PackagesScreenMobile> {
                     height: 5,
                   ),
                   Text(
-                    "Comments are used for using Ask Question button. 1 token required for 1 Question",
+                    "Comments are used for using Ask Question button. 1 token required for 1 Comment",
                     style: TextStyle(color: Colors.white),
                   ),
                   SizedBox(

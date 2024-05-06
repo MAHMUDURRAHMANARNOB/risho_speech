@@ -313,6 +313,34 @@ class ApiService {
     }
   }
 
+  /*Validate Spoken Sentence*/
+  Future<Map<String, dynamic>> getCouponDiscount({
+    required String couponcode,
+    required double amount,
+  }) async {
+    final url = '$baseUrl/getCouponDiscount';
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: {
+          'couponcode': couponcode.toString(),
+          'amount': amount.toString(),
+        },
+      );
+      print("Response  $response");
+      if (response.statusCode == 200) {
+        print("Response in api: ${json.decode(response.body)}");
+        return json.decode(Utf8Decoder().convert(response.bodyBytes));
+      } else {
+        // Handle error
+        return {'error': 'Failed to make API call'};
+      }
+    } catch (e) {
+      // Handle exception
+      return {'error': e.toString()};
+    }
+  }
+
   /*Spoken Lesson List*/
   Future<Map<String, dynamic>> getSpokenLessonList() async {
     final url = '$baseUrl/getSpokenLessonList';

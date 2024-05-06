@@ -416,7 +416,10 @@ class _RegistrationFormState extends State<RegistrationForm> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Image.asset(
-                                      "assets/images/risho_guru_icon.png"),
+                                    "assets/images/risho_guru_icon.png",
+                                    width: 80,
+                                    height: 80,
+                                  ),
                                   SpinKitThreeInOut(
                                     color: AppColors.primaryColor,
                                   ),

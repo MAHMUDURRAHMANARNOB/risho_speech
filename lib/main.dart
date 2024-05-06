@@ -5,6 +5,7 @@ import 'package:risho_speech/providers/VocabularySentenceListProvider.dart';
 import 'package:risho_speech/providers/auth_provider.dart';
 import 'package:risho_speech/providers/callAndConversationProvider.dart';
 import 'package:risho_speech/providers/calling_agentProvider.dart';
+import 'package:risho_speech/providers/coupnDiscountProvider.dart';
 import 'package:risho_speech/providers/createUserProvider.dart';
 import 'package:risho_speech/providers/doConversationProvider.dart';
 import 'package:risho_speech/providers/doGuidedConversationProvider.dart';
@@ -52,6 +53,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => PackagesProvider()),
         ChangeNotifierProvider(
             create: (context) => SubscriptionStatusProvider()),
+        ChangeNotifierProvider(create: (context) => CouponDiscountProvider()),
       ],
       child: RishoSpeech(),
     ),

@@ -1,8 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:provider/provider.dart';
+import 'package:risho_speech/providers/coupnDiscountProvider.dart';
 /*
 import 'package:shurjopay/models/config.dart';
 import 'package:shurjopay/models/payment_verification_model.dart';
@@ -45,6 +48,30 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
   late String status = "nothing";
   late int generatedTransectionId = 0;
   late int userID = 0;
+  late int _packageID;
+  late String _packageName;
+  late double _packageValue;
+  late double _discountValue;
+  late double _payableAmount;
+
+  bool _isApplied = false;
+
+  late TextEditingController couponCodeController = TextEditingController();
+
+  CouponDiscountProvider couponDiscountProvider = CouponDiscountProvider();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _packageID = widget.packageID;
+    _packageName = widget.packageName;
+    _packageValue = widget.packageValue;
+    _discountValue = widget.discountValue;
+    _payableAmount = widget.payableAmount;
+    _isApplied = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
@@ -104,7 +131,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                         style: TextStyle(fontSize: 16),
                       ),
                       Text(
-                        "${widget.packageName}",
+                        _packageName,
                         style: TextStyle(fontSize: 16),
                       ),
                     ],
@@ -121,7 +148,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                         style: TextStyle(fontSize: 16),
                       ),
                       Text(
-                        "${widget.packageValue}",
+                        _packageValue.toString(),
                         style: TextStyle(fontSize: 16),
                       ),
                     ],
@@ -138,7 +165,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                         style: TextStyle(fontSize: 16),
                       ),
                       Text(
-                        "${widget.discountValue}",
+                        _discountValue.toString(),
                         style: TextStyle(fontSize: 16),
                       ),
                     ],
@@ -147,13 +174,6 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                     thickness: 2,
                     color: Colors.white,
                   ),
-                  /*Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Total "),
-                Text("${widget.payableAmount}"),
-              ],
-            ),*/
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -162,8 +182,12 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                         style: TextStyle(fontSize: 16),
                       ),
                       Text(
-                        "${widget.payableAmount}",
-                        style: TextStyle(fontSize: 16),
+                        _payableAmount.toStringAsFixed(2),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primaryColor,
+                        ),
                       ),
                     ],
                   ),
@@ -190,6 +214,89 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                     ],
                   ),
                 ],
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Visibility(
+              visible: !_isApplied,
+              child: Container(
+                padding: EdgeInsets.all(10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Coupon Code",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    TextField(
+                      controller: couponCodeController,
+                      keyboardType: TextInputType.text,
+                      cursorColor: AppColors.primaryColor,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                      ),
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          FontAwesomeIcons.ticketAlt,
+                          color:
+                              Colors.grey[900], // Change the color of the icon
+                        ),
+                        hintStyle: TextStyle(
+                          color: Colors.grey[400],
+                        ),
+                        hintText: 'Your coupon code here',
+                        filled: true,
+                        fillColor: Colors.grey[200], // Background color
+                        border: OutlineInputBorder(
+                          borderRadius:
+                              BorderRadius.circular(10.0), // Border radius
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: AppColors
+                                  .primaryColor), // Border color when focused
+                          borderRadius: BorderRadius.circular(
+                              8.0), // Border radius when focused
+                        ),
+                        contentPadding: EdgeInsets.symmetric(vertical: 15.0),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: 1,
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors
+                                .secondaryCardColorGreenish
+                                .withOpacity(0.5),
+                          ),
+                          onPressed: () {
+                            _handleApplyButton(context);
+                          },
+                          child: Text(
+                            "Apply",
+                            style: TextStyle(
+                              color: AppColors.primaryColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
             SizedBox(
@@ -223,11 +330,8 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                         setState(() {
                           generatedTransectionId;
                         });
-                        ApiService.initiatePayment(
-                            userID,
-                            widget.packageID,
-                            generatedTransectionId.toString(),
-                            widget.payableAmount);
+                        ApiService.initiatePayment(userID, _packageID,
+                            generatedTransectionId.toString(), _payableAmount);
                         _initiatePayment();
                       },
                       child: Text(
@@ -248,6 +352,151 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
     );
   }
 
+  void _handleApplyButton(BuildContext context) async {
+    if (couponCodeController.text.isNotEmpty) {
+      // Call the function to fetch coupon discount
+      showDialog(
+        context: context,
+        barrierDismissible:
+            false, // Prevents dismissing the dialog when tapped outside
+        builder: (BuildContext context) {
+          return Center(
+            child: /*SpinKitDancingSquare(
+              color: AppColors.primaryColor,
+            ),*/
+                AlertDialog(
+              contentPadding: EdgeInsets.all(10.0),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.asset(
+                    "assets/images/risho_guru_icon.png",
+                    width: 80,
+                    height: 80,
+                  ),
+                  SpinKitThreeInOut(
+                    color: AppColors.primaryColor,
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+      await fetchCouponDiscount(context);
+    } else {
+      _showAlertDialog(
+        context,
+        'Oops!',
+        'You have to write a valid Coupon code first.',
+        Icon(
+          Icons.report_gmailerrorred_rounded,
+          color: Colors.red,
+          size: 30,
+        ),
+      );
+    }
+  }
+
+  void _showAlertDialog(
+      BuildContext context, String title, String content, Icon icons) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          icon: icons,
+          title: Text(
+            title,
+            style: title == "Sweet!"
+                ? TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 34,
+                    color: AppColors.primaryColor,
+                  )
+                : TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 34,
+                    color: Colors.redAccent,
+                  ),
+          ),
+          content: Text(content),
+        );
+      },
+    );
+  }
+
+  Future<void> fetchCouponDiscount(BuildContext context) async {
+    try {
+      await couponDiscountProvider.fetchCouponDiscountResponse(
+        couponCodeController.text,
+        widget.payableAmount,
+      );
+
+      // Access the response data using the provider
+      int errorCode = couponDiscountProvider.couponDiscountResponse!.errorCode;
+      String message = couponDiscountProvider.couponDiscountResponse!.message;
+      double discountReceivable =
+          couponDiscountProvider.couponDiscountResponse!.discountReceivable;
+      double discount = couponDiscountProvider.couponDiscountResponse!.discount;
+
+      setState(() {
+        _payableAmount = _payableAmount - discountReceivable;
+        _discountValue = discountReceivable;
+      });
+      print(_payableAmount);
+
+      Navigator.of(context).pop();
+      if (errorCode == 200) {
+        setState(() {
+          _isApplied = true;
+        });
+        _showAlertDialog(
+          context,
+          "Sweet!",
+          "You are going to receive BDT: $discount% discount",
+          Icon(
+            FontAwesomeIcons.checkCircle,
+            color: AppColors.primaryColor,
+            size: 30,
+          ),
+        );
+      } else if (errorCode == 400) {
+        _showAlertDialog(
+          context,
+          "Oops!",
+          message,
+          Icon(
+            Icons.report_gmailerrorred_rounded,
+            color: Colors.red,
+            size: 30,
+          ),
+        );
+      } else {
+        _showAlertDialog(
+          context,
+          "Oops!",
+          message,
+          Icon(
+            Icons.report_gmailerrorred_rounded,
+            color: Colors.red,
+            size: 30,
+          ),
+        );
+      }
+    } catch (error) {
+      _showAlertDialog(
+        context,
+        "Error",
+        error.toString(),
+        Icon(
+          Icons.report_gmailerrorred_rounded,
+          color: Colors.red,
+          size: 30,
+        ),
+      );
+    }
+  }
+
   void _initiatePayment() async {
     // Initialize shurjopay
     /*ShurjoPay shurjoPay = ShurjoPay();*/
@@ -264,9 +513,9 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
     final shurjopayRequestModel = await ShurjopayRequestModel(
         configs: shurjopayConfigs,
         currency: "BDT",
-        amount: widget.payableAmount,
+        amount: _payableAmount,
         orderID: generatedTransectionId.toString(),
-        customerName: "widget.packageName",
+        customerName: _packageName,
         customerPhoneNumber: "01758387250",
         customerAddress: "Bangladesh",
         customerCity: "Dhaka",
@@ -302,7 +551,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
 
         ApiService.receivePayment(
           userID,
-          widget.packageID,
+          _packageID,
           generatedTransectionId.toString(),
           shurjopayVerificationModel.spCode == "1000"
               ? "VALID"
