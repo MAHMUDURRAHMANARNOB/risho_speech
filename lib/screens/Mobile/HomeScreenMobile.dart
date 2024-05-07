@@ -190,7 +190,6 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                 ],
               ),
             ),*/
-
             Container(
               margin: EdgeInsets.fromLTRB(8.0, 5.0, 8.0, 5.0),
               child: GestureDetector(
@@ -204,58 +203,74 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                   );
                 },
                 child: Card(
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "Practice Daily Lesson",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(8.0), // Adjust as needed
+                      gradient: LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: [
+                          Colors.transparent, // Start with a transparent color
+                          Colors.white
+                              .withOpacity(0.3), // Adjust opacity as needed
+                        ],
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Practice Daily Lesson",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const PracticeGuidedScreen(
-                                            screenName: 'PDL',
-                                          )),
-                                );
-                              },
-                              /*style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primaryContainerColor,
-                                padding: EdgeInsets.all(10.0),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16.0),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const PracticeGuidedScreen(
+                                              screenName: 'PDL',
+                                            )),
+                                  );
+                                },
+                                /*style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primaryContainerColor,
+                                  padding: EdgeInsets.all(10.0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16.0),
+                                  ),
+                                ),*/
+                                icon: Icon(
+                                  Icons.arrow_circle_right_rounded,
+                                  size: 30,
+                                  color: Colors.white,
                                 ),
-                              ),*/
-                              icon: Icon(
-                                Icons.arrow_circle_right_rounded,
-                                size: 30,
-                                color: AppColors.primaryColor,
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Image.asset(
-                          "assets/images/card_images/practice_guided.png",
-                          fit: BoxFit.contain,
+                        Expanded(
+                          flex: 1,
+                          child: Image.asset(
+                            "assets/images/card_images/practice_guided.png",
+                            fit: BoxFit.contain,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -274,58 +289,74 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                   );
                 },
                 child: Card(
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "Improve Pronunciation",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                  color: Colors.orangeAccent,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(8.0), // Adjust as needed
+                      gradient: LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: [
+                          Colors.transparent, // Start with a transparent color
+                          Colors.amberAccent
+                              .withOpacity(0.3), // Adjust opacity as needed
+                        ],
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Improve Pronunciation",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const PracticeGuidedScreen(
-                                            screenName: 'IP',
-                                          )),
-                                );
-                              },
-                              /*style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primaryContainerColor,
-                                padding: EdgeInsets.all(10.0),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16.0),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const PracticeGuidedScreen(
+                                              screenName: 'IP',
+                                            )),
+                                  );
+                                },
+                                /*style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primaryContainerColor,
+                                  padding: EdgeInsets.all(10.0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16.0),
+                                  ),
+                                ),*/
+                                icon: Icon(
+                                  Icons.arrow_circle_right_rounded,
+                                  size: 30,
+                                  color: Colors.white,
                                 ),
-                              ),*/
-                              icon: Icon(
-                                Icons.arrow_circle_right_rounded,
-                                size: 30,
-                                color: AppColors.primaryColor,
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Image.asset(
-                          "assets/images/card_images/improve_speaking.png",
-                          fit: BoxFit.contain,
+                        Expanded(
+                          flex: 1,
+                          child: Image.asset(
+                            "assets/images/card_images/improve_speaking.png",
+                            fit: BoxFit.contain,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -393,56 +424,72 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                   );
                 },
                 child: Card(
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "Practice Vocabulary",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                  color: Colors.cyan,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(8.0), // Adjust as needed
+                      gradient: LinearGradient(
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                        colors: [
+                          Colors.transparent, // Start with a transparent color
+                          Colors.blueAccent
+                              .withOpacity(0.3), // Adjust opacity as needed
+                        ],
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Practice Vocabulary",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          VocabularyCategoryScreen()),
-                                );
-                              },
-                              /*style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primaryContainerColor,
-                                padding: EdgeInsets.all(10.0),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16.0),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            VocabularyCategoryScreen()),
+                                  );
+                                },
+                                /*style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primaryContainerColor,
+                                  padding: EdgeInsets.all(10.0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16.0),
+                                  ),
+                                ),*/
+                                icon: Icon(
+                                  Icons.arrow_circle_right_rounded,
+                                  size: 30,
+                                  color: Colors.white,
                                 ),
-                              ),*/
-                              icon: Icon(
-                                Icons.arrow_circle_right_rounded,
-                                size: 30,
-                                color: AppColors.primaryColor,
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Image.asset(
-                          "assets/images/card_images/practice_vocabulary.png",
-                          fit: BoxFit.contain,
+                        Expanded(
+                          flex: 1,
+                          child: Image.asset(
+                            "assets/images/card_images/practice_vocabulary.png",
+                            fit: BoxFit.contain,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -509,56 +556,72 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                   );
                 },
                 child: Card(
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                "Phone Call",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                  color: Colors.lime,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(8.0), // Adjust as needed
+                      gradient: LinearGradient(
+                        begin: Alignment.centerRight,
+                        end: Alignment.centerLeft,
+                        colors: [
+                          Colors.transparent, // Start with a transparent color
+                          AppColors.primaryColor
+                              .withOpacity(0.3), // Adjust opacity as needed
+                        ],
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Phone Call",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          CallingAgentScreen()),
-                                );
-                              },
-                              /*style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primaryContainerColor,
-                                padding: EdgeInsets.all(10.0),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16.0),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            CallingAgentScreen()),
+                                  );
+                                },
+                                /*style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primaryContainerColor,
+                                  padding: EdgeInsets.all(10.0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16.0),
+                                  ),
+                                ),*/
+                                icon: Icon(
+                                  Icons.arrow_circle_right_rounded,
+                                  size: 30,
+                                  color: Colors.white,
                                 ),
-                              ),*/
-                              icon: Icon(
-                                Icons.arrow_circle_right_rounded,
-                                size: 30,
-                                color: AppColors.primaryColor,
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Image.asset(
-                          "assets/images/card_images/make_phone_call.png",
-                          fit: BoxFit.contain,
+                        Expanded(
+                          flex: 1,
+                          child: Image.asset(
+                            "assets/images/card_images/make_phone_call.png",
+                            fit: BoxFit.contain,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

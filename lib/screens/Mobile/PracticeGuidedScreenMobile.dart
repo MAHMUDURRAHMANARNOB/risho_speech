@@ -76,6 +76,7 @@ class _PracticeGuidedScreenMobileState
           sessionId = response['SessionID'];
           aiDialogue = response['AIDialoag'];
           aiDialogueAudio = response['AIDialoagAudio'];
+          actorName = response['actorName'];
           aiTranslation = response['AIDialoagBn'];
           isLoading = false;
         });
@@ -89,6 +90,7 @@ class _PracticeGuidedScreenMobileState
                     aiDialogue: aiDialogue!,
                     aiDialogueAudio: aiDialogueAudio!,
                     aiTranslation: aiTranslation ?? "Not found",
+                    actorName: actorName ?? "Not found",
                   )),
         );
         /*showDialog(

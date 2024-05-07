@@ -160,69 +160,78 @@ class _CallingAgentScreenMobileState extends State<CallingAgentScreenMobile> {
                       .map((countryData) {
                     return Card(
                       clipBehavior: Clip.hardEdge,
-                      child: Theme(
-                        data: Theme.of(context)
-                            .copyWith(dividerColor: Colors.transparent),
-                        child: ExpansionTile(
-                            iconColor: AppColors.primaryColor,
-                            collapsedBackgroundColor:
-                                AppColors.primaryColor.withOpacity(0.1),
-                            backgroundColor:
-                                AppColors.primaryColor.withOpacity(0.2),
-                            title: Text(
-                              countryData.country ?? "",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            children: [
-                              GridView.builder(
-                                shrinkWrap: true,
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount:
-                                      MediaQuery.of(context).size.width > 600
-                                          ? 4
-                                          : 3,
-                                  crossAxisSpacing: 8.0,
-                                  mainAxisSpacing: 8.0,
-                                ),
-                                physics: BouncingScrollPhysics(),
-                                itemCount: countryData.agents!.length,
-                                itemBuilder: (context, index) {
-                                  final agent = countryData.agents![index];
-                                  return GestureDetector(
-                                    onTap: () {
-                                      fetchSessionId(userId, agent.id!,
-                                          agent.agentName!, agent.agentGender!);
-                                    },
-                                    child: Card(
-                                      child: Container(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Column(
-                                          children: [
-                                            Image.asset(
-                                              "assets/images/profile_chat.png",
-                                              height: 30,
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            Text(
-                                              agent.agentName ?? "",
-                                              style: TextStyle(
-                                                fontSize: 16,
+                      color: AppColors.backgroundColorDark,
+                      child: Container(
+                        child: Theme(
+                          data: Theme.of(context)
+                              .copyWith(dividerColor: Colors.transparent),
+                          child: ExpansionTile(
+                              iconColor: AppColors.primaryColor,
+                              /*collapsedBackgroundColor:
+                                  Colors.blue.withOpacity(0.1),*/
+                              backgroundColor:
+                                  AppColors.primaryColor.withOpacity(0.2),
+                              title: Text(
+                                countryData.country ?? "",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              children: [
+                                GridView.builder(
+                                  shrinkWrap: true,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount:
+                                        MediaQuery.of(context).size.width > 600
+                                            ? 4
+                                            : 3,
+                                    crossAxisSpacing: 8.0,
+                                    mainAxisSpacing: 8.0,
+                                  ),
+                                  physics: BouncingScrollPhysics(),
+                                  itemCount: countryData.agents!.length,
+                                  itemBuilder: (context, index) {
+                                    final agent = countryData.agents![index];
+                                    return GestureDetector(
+                                      onTap: () {
+                                        fetchSessionId(
+                                            userId,
+                                            agent.id!,
+                                            agent.agentName!,
+                                            agent.agentGender!);
+                                      },
+                                      child: Card(
+                                        color: AppColors.primaryColor
+                                            .withOpacity(0.5),
+                                        child: Container(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Column(
+                                            children: [
+                                              Image.asset(
+                                                "assets/images/profile_chat.png",
+                                                height: 30,
                                               ),
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 2,
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ],
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Text(
+                                                agent.agentName ?? "",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontFamily: "Mina",
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 2,
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ]),
+                                    );
+                                  },
+                                ),
+                              ]),
+                        ),
                       ),
                     );
                   }).toList(),

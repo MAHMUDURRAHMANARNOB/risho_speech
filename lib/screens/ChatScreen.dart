@@ -10,13 +10,15 @@ class ChatScreen extends StatefulWidget {
   final String aiDialogue;
   final String aiDialogueAudio;
   final String aiTranslation;
+  final String actorName;
   ChatScreen(
       {super.key,
       required this.id,
       required this.sessionId,
       required this.aiDialogue,
       required this.aiDialogueAudio,
-      required this.aiTranslation});
+      required this.aiTranslation,
+      required this.actorName});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -33,6 +35,7 @@ class _ChatScreenState extends State<ChatScreen> {
           aiDialogue: widget.aiDialogue,
           aiDialogueAudio: widget.aiDialogueAudio,
           aiTranslation: widget.aiTranslation,
+          actorName: widget.actorName,
         ),
         tabletScaffold: ChatScreenTablet(),
         desktopScaffold: ChatScreenTablet(),

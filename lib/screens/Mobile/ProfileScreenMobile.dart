@@ -23,8 +23,8 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
   late String userName;
 
   Future<void> _refresh() async {
-    userId = Provider.of<AuthProvider>(context, listen: false).user!.id;
-    userName = Provider.of<AuthProvider>(context).user!.name;
+    // userId = Provider.of<AuthProvider>(context).user!.id;
+    // userName = Provider.of<AuthProvider>(context).user!.name;
     // final userId = Provider.of<AuthProvider>(context, listen: false).user?.id;
     await subscriptionStatusProvider.fetchSubscriptionData(userId);
     setState(() {});
@@ -32,7 +32,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final authProvider = Provider.of<AuthProvider>(context);
     userId = Provider.of<AuthProvider>(context).user!.id;
     userName = Provider.of<AuthProvider>(context).user!.username;
     subscriptionStatusProvider.fetchSubscriptionData(userId!);

@@ -302,12 +302,12 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Expanded(
+                    /*Expanded(
                       flex: 1,
                       child: SizedBox(
                         width: 20,
                       ),
-                    ),
+                    ),*/
                     Flexible(
                       flex: 2,
                       child: AvatarGlow(
@@ -351,7 +351,7 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
                         ),
                       ),
                     ),
-                    Expanded(
+                    /*Expanded(
                       flex: 1,
                       child: Container(
                         margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
@@ -366,8 +366,15 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
                           ),
                         ),
                       ),
-                    ),
+                    ),*/
                   ],
+                ),
+                Text(
+                  "You have to say the Text ${widget.actorName} is saying",
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
@@ -389,7 +396,7 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
             audio,
             _discussionTopic,
             _discusTitle,
-            'N',
+            '',
             username,
             _seqNumber),
         builder: (context, snapshot) {
