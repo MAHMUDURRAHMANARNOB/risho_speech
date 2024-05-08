@@ -5,6 +5,7 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:risho_speech/providers/VocabularyDialogListProvider.dart';
 import 'package:risho_speech/providers/VocabularySentenceListProvider.dart';
@@ -305,7 +306,7 @@ class _VocabularyPracticeScreenMobileState
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    /*Prevous Button*/
+                                    /*Previous Button*/
                                     Expanded(
                                       flex: 1,
                                       child: ElevatedButton(
@@ -323,7 +324,7 @@ class _VocabularyPracticeScreenMobileState
                                               }
                                             : null,
                                         child: Text(
-                                          "Prevous",
+                                          "Previous",
                                           style: TextStyle(
                                             color: currentIndex > 0
                                                 ? Colors.white
@@ -371,12 +372,12 @@ class _VocabularyPracticeScreenMobileState
                         ),
                       ),
 
-                      /*See dialog and Make Sentences*/
+                      /*See dialogue and Make Sentences*/
                       Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Column(
                           children: [
-                            /*See dialog*/
+                            /*See dialogue*/
                             ElevatedButton(
                               onPressed: () {
                                 showModalBottomSheet<void>(
@@ -397,7 +398,7 @@ class _VocabularyPracticeScreenMobileState
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "See Dialog",
+                                    "See Dialogue",
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -684,7 +685,7 @@ class _VocabularyPracticeScreenMobileState
   }
 
   /*Bottom Scrollable container  for Sentences*/
-  Widget SentenceContainer(int _vocabularyId) {
+  /*Widget SentenceContainer(int _vocabularyId) {
     return DraggableScrollableSheet(
         initialChildSize: 0.7,
         minChildSize: 0.5,
@@ -798,5 +799,150 @@ class _VocabularyPracticeScreenMobileState
             ),
           );
         });
+  }*/
+  Widget SentenceContainer(int _vocabularyId) {
+    return DraggableScrollableSheet(
+      initialChildSize: 0.7,
+      minChildSize: 0.5,
+      maxChildSize: 1,
+      builder: (_, controller) {
+        return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30.0),
+                topRight: Radius.circular(30.0)),
+            color: AppColors.ExpandedCourseCardColor,
+          ),
+          width: double.infinity,
+          padding: EdgeInsets.all(10.0),
+          child: FutureBuilder(
+            future: vocabularySentenceListProvider
+                .fetchVocabularySentenceList(_vocabularyId),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: SpinKitThreeBounce(
+                    color: AppColors.primaryColor,
+                  ),
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text('Error: ${snapshot.error}'),
+                );
+              } else {
+                final sentenceList = vocabularySentenceListProvider
+                    .vocabularySentenceListResponse?.sentenceList;
+                print("hello ${sentenceList?.length.toString()}");
+
+                if (sentenceList == null || sentenceList.isEmpty) {
+                  return Center(
+                    child: Text('No data available'),
+                  );
+                } else {
+                  return SingleChildScrollView(
+                    controller: controller,
+                    child: Column(
+                      children: [
+                        ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: sentenceList.length,
+                          itemBuilder: (context, index) {
+                            final sentence = sentenceList[index];
+                            return Stack(
+                              // Wrap with Stack
+                              children: [
+                                Column(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: AppColors.backgroundColorDark,
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                      ),
+                                      padding: EdgeInsets.all(8.0),
+                                      margin: EdgeInsets.all(5.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            sentence.vocaSentence ?? '--',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            sentence.vocaSentenceBn ?? '--',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Align(
+                                      // Replace Positioned with Align
+                                      alignment: Alignment.bottomCenter,
+                                      child: Container(
+                                        width: double.infinity,
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                AppColors.primaryColor,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12.0),
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            Source url = UrlSource(
+                                                sentence.vocaAudioFile!);
+                                            audioPlayer.play(url);
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                "Listen",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Icon(
+                                                Icons.volume_up_rounded,
+                                                color: Colors.white,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              }
+            },
+          ),
+        );
+      },
+    );
   }
 }
