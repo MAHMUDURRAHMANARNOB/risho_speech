@@ -5,7 +5,6 @@ import 'package:risho_speech/screens/CallingAgentScreen.dart';
 import 'package:risho_speech/screens/PracticeGuidedScreen.dart';
 import 'package:risho_speech/screens/VocabulatyCategoryScreen.dart';
 import 'package:risho_speech/ui/colors.dart';
-import 'package:vertical_card_pager/vertical_card_pager.dart';
 
 import '../../providers/auth_provider.dart';
 

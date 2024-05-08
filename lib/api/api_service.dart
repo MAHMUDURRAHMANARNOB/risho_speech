@@ -1,18 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
-/*import 'package:risho_guru/api/responses/SubscribedCoursesResponse.dart';
-import 'package:risho_guru/models/optResponseDataModel.dart';
-import 'package:risho_guru/models/videoAskQuesDataModel.dart';
-import '../models/askQuesDataModel.dart';
-import '../models/course.dart';
-import '../models/courseSubscriptionDataModel.dart';
-import '../models/createUserDataModel.dart';
-import '../models/getNonSubscribedCoursesDataModel.dart';
-import '../models/homeworkHistoryListDataModel.dart';
-import '../models/subscriptionStatusDataModel.dart';
-import '../models/tools.dart';*/
 import '../models/subscriptionStatusDataModel.dart';
 import 'responses/login_response.dart';
 
@@ -313,7 +301,7 @@ class ApiService {
     }
   }
 
-  /*Validate Spoken Sentence*/
+  /*Validate Coupon Code*/
   Future<Map<String, dynamic>> getCouponDiscount({
     required String couponcode,
     required double amount,
