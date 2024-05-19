@@ -1,28 +1,24 @@
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
-import 'package:avatar_glow/avatar_glow.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:record/record.dart';
 import 'package:risho_speech/providers/VocabularyDialogListProvider.dart';
 import 'package:risho_speech/providers/VocabularySentenceListProvider.dart';
 import 'package:risho_speech/screens/Mobile/VocabularyPracticeScreenDedicated.dart';
 import 'package:risho_speech/ui/colors.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:record/record.dart';
 
 import '../../models/vocabularyPronunciationDataModel.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/vocabularyPracticeListProvider.dart';
 import '../../providers/vocabularyPronunciationProvider.dart';
-import '../Common/RecordingButton.dart';
 
 class VocabularyPracticeScreenMobile extends StatefulWidget {
   final int categoryId;
   final String categoryName;
+
   const VocabularyPracticeScreenMobile(
       {super.key, required this.categoryId, required this.categoryName});
 
@@ -37,6 +33,10 @@ class _VocabularyPracticeScreenMobileState
   int currentIndex = 0;
   late bool isPlaying = false;
   bool _isRecording = false;
+
+  double _playbackSpeed = 1.0; // Default playback speed
+  // Define the available speeds
+  final List<double> playbackSpeeds = [0.5, 0.75, 1.0, 1.5, 2.0];
 
   File? audioFile;
   String? _audioPath;
@@ -139,6 +139,88 @@ class _VocabularyPracticeScreenMobileState
         title: const Text("Practice Vocabulary"),
         centerTitle: true,
       ),
+      endDrawer: Drawer(
+        backgroundColor: AppColors.backgroundColorDark,
+        child: SafeArea(
+          child: FutureBuilder<void>(
+            future: vocabularyPracticeProvider
+                .fetchVocabularyPracticeList(widget.categoryId),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: SpinKitThreeBounce(
+                    color: AppColors.primaryColor,
+                  ),
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text('Error: ${snapshot.error}'),
+                );
+              } else {
+                final vocabList = vocabularyPracticeProvider
+                        .vocabularyPracticeResponse?.vocaList ??
+                    [];
+                if (vocabList.isEmpty) {
+                  return Center(
+                    child: Text('No vocabulary available.'),
+                  );
+                } else {
+                  return Column(
+                    children: [
+                      // Title for the drawer
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          'Vocabulary Words',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      // Horizontal scrollable list of words
+                      Expanded(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          child: Column(
+                            children: vocabList.map((word) {
+                              int index = vocabList.indexOf(word);
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    currentIndex = index;
+                                  });
+                                  Navigator.of(context).pop();
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Chip(
+                                    label: Container(
+                                      width: double.infinity,
+                                      child: Text(
+                                        word.vocWord,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+              }
+            },
+          ),
+        ),
+      ),
       body: Column(
         children: [
           buildVocabularyPracticeWidget(context),
@@ -215,6 +297,7 @@ class _VocabularyPracticeScreenMobileState
                   _vocabularyId = word.id;
                   _wordText = word.vocWord;
                   Source urlSource = UrlSource(word.wordAudio);
+                  audioPlayer.setPlaybackRate(_playbackSpeed);
                   audioPlayer.play(urlSource);
                   return Column(
                     children: [
@@ -229,6 +312,7 @@ class _VocabularyPracticeScreenMobileState
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              /*Play icon*/
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -236,21 +320,51 @@ class _VocabularyPracticeScreenMobileState
                                   const SizedBox(
                                     width: 1,
                                   ),
-                                  IconButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                    ),
-                                    onPressed: () {
-                                      Source urlSource =
-                                          UrlSource(word.wordAudio);
-                                      audioPlayer.play(urlSource);
-
-                                      print(word.wordAudio);
-                                    },
-                                    icon: const Icon(
-                                      Icons.volume_up_rounded,
-                                      color: AppColors.backgroundColorDark,
-                                    ),
+                                  Row(
+                                    children: [
+                                      /*Playback speed*/
+                                      DropdownButton<double>(
+                                        value: _playbackSpeed,
+                                        dropdownColor:
+                                            AppColors.primaryCardColor,
+                                        onChanged: (double? newSpeed) {
+                                          setState(() {
+                                            _playbackSpeed = newSpeed!;
+                                            audioPlayer.setPlaybackRate(
+                                                _playbackSpeed);
+                                          });
+                                        },
+                                        items: playbackSpeeds
+                                            .map<DropdownMenuItem<double>>(
+                                                (double value) {
+                                          return DropdownMenuItem<double>(
+                                            value: value,
+                                            child: Text(
+                                              '${value} x',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          );
+                                        }).toList(),
+                                      ),
+                                      IconButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.white,
+                                        ),
+                                        onPressed: () {
+                                          Source urlSource =
+                                              UrlSource(word.wordAudio);
+                                          audioPlayer.play(urlSource);
+                                          audioPlayer
+                                              .setPlaybackRate(_playbackSpeed);
+                                          print(word.wordAudio);
+                                        },
+                                        icon: const Icon(
+                                          Icons.volume_up_rounded,
+                                          color: AppColors.backgroundColorDark,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -685,121 +799,6 @@ class _VocabularyPracticeScreenMobileState
   }
 
   /*Bottom Scrollable container  for Sentences*/
-  /*Widget SentenceContainer(int _vocabularyId) {
-    return DraggableScrollableSheet(
-        initialChildSize: 0.7,
-        minChildSize: 0.5,
-        maxChildSize: 1,
-        builder: (_, controller) {
-          return Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30.0),
-                  topRight: Radius.circular(30.0)),
-              color: AppColors.ExpandedCourseCardColor,
-            ),
-            width: double.infinity,
-            padding: EdgeInsets.all(10.0),
-            child: FutureBuilder(
-              future: vocabularySentenceListProvider
-                  .fetchVocabularySentenceList(_vocabularyId),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: SpinKitThreeBounce(
-                      color: AppColors.primaryColor,
-                    ),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text('Error: ${snapshot.error}'),
-                  );
-                } else {
-                  // Assuming your VocabularyDialogListDataModel has a property named dialogList
-                  final sentenceList = vocabularySentenceListProvider
-                      .vocabularySentenceListResponse?.sentenceList;
-                  print("hello ${sentenceList?.length.toString()}");
-
-                  if (sentenceList == null || sentenceList.isEmpty) {
-                    return Center(
-                      child: Text('No data available'),
-                    );
-                  } else {
-                    return ListView.builder(
-                      // controller: controller,
-                      shrinkWrap: true,
-                      itemCount: sentenceList.length,
-                      itemBuilder: (context, index) {
-                        final sentence = sentenceList[index];
-                        return Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.backgroundColorDark,
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
-                          padding: EdgeInsets.all(8.0),
-                          margin: EdgeInsets.all(5.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                sentence.vocaSentence ?? '--',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                sentence.vocaSentenceBn ?? '--',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Positioned(
-                                left: 0,
-                                right: 0,
-                                bottom: 0,
-                                child: Container(
-                                  width: double.infinity,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.primaryColor
-                                          .withOpacity(0.3),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      Source url =
-                                          UrlSource(sentence.vocaAudioFile!);
-                                      audioPlayer.play(url);
-                                    },
-                                    child: const Text(
-                                      "Play Audio",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  }
-                }
-              },
-            ),
-          );
-        });
-  }*/
   Widget SentenceContainer(int _vocabularyId) {
     return DraggableScrollableSheet(
       initialChildSize: 0.7,

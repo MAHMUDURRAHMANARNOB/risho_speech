@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-
 import 'package:provider/provider.dart';
+
 import '../../providers/auth_provider.dart';
 import '../../providers/packagesProvider.dart';
 import '../../ui/colors.dart';
@@ -19,6 +18,7 @@ class _PackagesScreenMobileState extends State<PackagesScreenMobile> {
   late int userid;
   bool isExpanded = false;
   bool isDiscountAvailable = false;
+
   Widget packagesCard(
     String name,
     String imagePath,
@@ -58,7 +58,7 @@ class _PackagesScreenMobileState extends State<PackagesScreenMobile> {
     double finalPrice = price - discountedPrice;
 
     return Container(
-      margin: EdgeInsets.all(20.0),
+      margin: EdgeInsets.all(10.0),
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.0),
@@ -89,24 +89,27 @@ class _PackagesScreenMobileState extends State<PackagesScreenMobile> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  isExpanded = !isExpanded;
-                });
-              },
-              child: AnimatedContainer(
-                duration: Duration(milliseconds: 300),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    color: AppColors.greyCard.withOpacity(0.1)),
-                child: Column(
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Theme(
+                data: Theme.of(context)
+                    .copyWith(dividerColor: Colors.transparent),
+                child: ExpansionTile(
+                  iconColor: AppColors.primaryColor,
+                  title: Text(
+                    "See Details",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 3.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Text(
                         subDesc,
-                        maxLines: isExpanded ? null : 3,
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.normal,
@@ -114,20 +117,6 @@ class _PackagesScreenMobileState extends State<PackagesScreenMobile> {
                         textAlign: TextAlign.justify,
                       ),
                     ),
-                    Visibility(
-                      visible: !isExpanded,
-                      child: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            isExpanded = !isExpanded;
-                          });
-                        },
-                        icon: Icon(
-                          Icons.expand_more_outlined,
-                          size: 20.0,
-                        ),
-                      ),
-                    )
                   ],
                 ),
               ),
@@ -252,12 +241,12 @@ class _PackagesScreenMobileState extends State<PackagesScreenMobile> {
                     ],
                   ),
                 ),
-                Text(
+                /*Text(
                   " / $durationType",
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
-                ),
+                ),*/
               ],
             ),
           ),

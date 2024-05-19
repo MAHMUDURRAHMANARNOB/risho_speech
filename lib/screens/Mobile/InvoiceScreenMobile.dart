@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import 'package:provider/provider.dart';
 import 'package:risho_speech/providers/coupnDiscountProvider.dart';
 /*
@@ -53,6 +51,11 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
   late double _packageValue;
   late double _discountValue;
   late double _payableAmount;
+
+  late double _mainAmount;
+  late double _amount;
+  late double _couponDiscountAmount;
+  late double? _couponPartnerId;
 
   bool _isApplied = false;
 
@@ -161,7 +164,24 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Discount ",
+                        "Discount from Company ",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      Text(
+                        _discountValue.toString(),
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
+                  Divider(
+                    thickness: 2,
+                    color: Colors.white,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Coupon Discount ",
                         style: TextStyle(fontSize: 16),
                       ),
                       Text(
@@ -256,7 +276,8 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                         ),
                         hintText: 'Your coupon code here',
                         filled: true,
-                        fillColor: Colors.grey[200], // Background color
+                        fillColor: Colors.grey[200],
+                        // Background color
                         border: OutlineInputBorder(
                           borderRadius:
                               BorderRadius.circular(10.0), // Border radius
@@ -553,36 +574,44 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
           userID,
           _packageID,
           generatedTransectionId.toString(),
-          shurjopayVerificationModel.spCode == "1000"
-              ? "VALID"
-              : "FAILED", //STATUS
+          shurjopayVerificationModel.spCode == "1000" ? "VALID" : "FAILED",
+          //STATUS
           double.tryParse(shurjopayVerificationModel.amount != null
               ? shurjopayVerificationModel.amount!
-              : "0")!, //amount
+              : "0")!,
+          //amount
           shurjopayVerificationModel.receivedAmount != null
               ? shurjopayVerificationModel.receivedAmount.toString()
-              : "0", //store amount
+              : "0",
+          //store amount
           shurjopayVerificationModel.cardNumber != null
               ? shurjopayVerificationModel.cardNumber!
-              : "null", //cardNumber
+              : "null",
+          //cardNumber
           shurjopayVerificationModel.bankTrxId != null
               ? shurjopayVerificationModel.bankTrxId!
-              : "null", //bankTranId
+              : "null",
+          //bankTranId
           shurjopayVerificationModel.currency != null
               ? shurjopayVerificationModel.currency!
-              : "null", //currencyType
+              : "null",
+          //currencyType
           shurjopayVerificationModel.cardHolderName != null
               ? shurjopayVerificationModel.cardHolderName!
-              : "null", //cardIssuer
+              : "null",
+          //cardIssuer
           shurjopayVerificationModel.bankStatus != null
               ? shurjopayVerificationModel.bankStatus!
-              : "null", //cardBrand
+              : "null",
+          //cardBrand
           shurjopayVerificationModel.transactionStatus != null
               ? shurjopayVerificationModel.transactionStatus!
-              : "null", //cardIssuerCountry
+              : "null",
+          //cardIssuerCountry
           shurjopayVerificationModel.spCode != null
               ? shurjopayVerificationModel.spCode!
-              : "null", //riskLevel
+              : "null",
+          //riskLevel
           shurjopayVerificationModel.spMessage != null
               ? shurjopayVerificationModel.spMessage!
               : "null", //risk title

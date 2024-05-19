@@ -5,7 +5,6 @@ import 'package:risho_speech/providers/callAndConversationProvider.dart';
 import 'package:risho_speech/screens/CallingScreen.dart';
 import 'package:risho_speech/ui/colors.dart';
 
-import '../../models/CallingAgentDataModel.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/calling_agentProvider.dart';
 
@@ -206,10 +205,44 @@ class _CallingAgentScreenMobileState extends State<CallingAgentScreenMobile> {
                                           padding: EdgeInsets.all(8.0),
                                           child: Column(
                                             children: [
-                                              Image.asset(
-                                                "assets/images/profile_chat.png",
-                                                height: 30,
-                                              ),
+                                              agent.agentPicture == null
+                                                  ? ClipOval(
+                                                      child: Image.asset(
+                                                        "assets/images/profile_chat.png",
+                                                        height: 50,
+                                                      ),
+                                                    )
+                                                  : ClipOval(
+                                                      child: Image.network(
+                                                        agent.agentPicture!,
+                                                        width: 50,
+                                                        height: 50,
+                                                        fit: BoxFit.cover,
+                                                        loadingBuilder:
+                                                            (BuildContext
+                                                                    context,
+                                                                Widget child,
+                                                                ImageChunkEvent?
+                                                                    loadingProgress) {
+                                                          if (loadingProgress ==
+                                                              null)
+                                                            return child;
+                                                          return Center(
+                                                            child:
+                                                                CircularProgressIndicator(
+                                                              value: loadingProgress
+                                                                          .expectedTotalBytes !=
+                                                                      null
+                                                                  ? loadingProgress
+                                                                          .cumulativeBytesLoaded /
+                                                                      loadingProgress
+                                                                          .expectedTotalBytes!
+                                                                  : null,
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                    ),
                                               SizedBox(
                                                 height: 10,
                                               ),

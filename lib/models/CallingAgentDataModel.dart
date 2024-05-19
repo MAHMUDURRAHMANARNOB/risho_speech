@@ -52,7 +52,7 @@ class Agents {
   String? agentName;
   String? agentDesc;
   String? agentGender;
-  Null? agentPicture;
+  String? agentPicture;
   int? totalUsed;
 
   Agents(
