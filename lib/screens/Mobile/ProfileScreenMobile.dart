@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
+import 'package:risho_speech/screens/AboutScreen.dart';
 
 import '../../providers/auth_provider.dart';
 import '../../providers/subscriptionStatus_provider.dart';
@@ -854,6 +855,40 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                   ),
                   SizedBox(height: 10),*/
 
+                  /*About*/
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AboutScreen(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryCardColor,
+                      padding: EdgeInsets.all(15.0),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "About",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Icon(
+                          Icons.info,
+                          size: 30,
+                          color: AppColors.primaryColor,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 10),
                   /*Logout*/
                   ElevatedButton(
                     onPressed: () {

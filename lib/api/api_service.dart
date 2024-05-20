@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:http/http.dart' as http;
+
 import '../models/subscriptionStatusDataModel.dart';
 import 'responses/login_response.dart';
 
 class ApiService {
   // static const String baseUrl = 'https://testapi.risho.guru';
   static const String baseUrl = 'https://speech.risho.guru';
+
   // static const String baseUrl_guru = 'https://api.risho.guru';
 
   /*LOGIN*/
@@ -675,19 +678,44 @@ class ApiService {
     int subscriptionid,
     String transactionid,
     double amount,
+    double mainAmout,
+    double couponDiscountAmt,
+    int? CouponPartnerID,
   ) async {
     final url = '$baseUrl/initiatepayment';
     print("Posting in api service $url");
     try {
-      final response = await http.post(
+      /*final response = await http.post(
         Uri.parse(url),
         body: {
           'userid': userId.toString(),
           'subscriptionid': subscriptionid.toString(),
           'transactionid': transactionid.toString(),
           'amount': amount.toString(),
+          'mainAmout': mainAmout.toString(),
+          'couponDiscountAmt': couponDiscountAmt.toString(),
+          'CouponPartnerID': CouponPartnerID.toString(),
         },
+      );*/
+      final Map<String, String> body = {
+        'userid': userId.toString(),
+        'subscriptionid': subscriptionid.toString(),
+        'transactionid': transactionid,
+        'amount': amount.toString(),
+        'mainAmout': mainAmout.toString(),
+        'couponDiscountAmt': couponDiscountAmt.toString(),
+      };
+
+      // Add CouponPartnerID only if it's not null
+      if (CouponPartnerID != null) {
+        body['CouponPartnerID'] = CouponPartnerID.toString();
+      }
+
+      final response = await http.post(
+        Uri.parse(url),
+        body: body,
       );
+
       print("Response:   ${response.statusCode}");
       if (response.statusCode == 200) {
         return json.decode(response.body);
