@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +10,6 @@ import 'package:risho_speech/models/suggestAnswerDataModel.dart';
 import 'package:risho_speech/models/validateSpokenSentenceDataModel.dart';
 import 'package:risho_speech/providers/nextQuestionProvider.dart';
 import 'package:risho_speech/providers/suggestAnswerProvider.dart';
-import 'package:risho_speech/screens/Common/error_dialog.dart';
 import 'package:risho_speech/ui/colors.dart';
 
 import '../../providers/auth_provider.dart';
@@ -26,6 +23,7 @@ class ChatScreenMobile extends StatefulWidget {
   final String aiDialogueAudio;
   final String aiTranslation;
   final String actorName;
+
   ChatScreenMobile(
       {super.key,
       required this.id,
@@ -117,6 +115,10 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
           _audioPath = path;
           audioFile = File(_audioPath!);
           print(_audioPath);
+          _scrollController.animateTo(
+              _scrollController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut);
           _conversationComponents.add(
             AIResponseBox(audioFile!, sessionId, userName),
           );
@@ -171,6 +173,8 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+
     final username =
         Provider.of<AuthProvider>(context).user?.name ?? 'UserName';
     userId = Provider.of<AuthProvider>(context).user?.id ?? 123;
@@ -193,6 +197,10 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
             ),
             onPressed: () {
               // Add your logic to send the message
+              _scrollController.animateTo(
+                  _scrollController.position.maxScrollExtent,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOut);
               setState(() {
                 _conversationComponents
                     .add(UserTextAIResponse("Ask me another Ques", username));
@@ -213,6 +221,8 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
           Expanded(
             flex: 2,
             child: SingleChildScrollView(
+              controller: _scrollController,
+              physics: BouncingScrollPhysics(),
               child: Column(
                 children: _conversationComponents,
               ),
@@ -255,63 +265,73 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
             ),
           ),
           Container(
-            color: AppColors.backgroundColorDark,
+            decoration: BoxDecoration(
+              color: AppColors.backgroundColorDark,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(24.0),
+                topRight: Radius.circular(24.0),
+              ),
+            ),
             padding: const EdgeInsets.all(5.0),
-            child: Row(
+            child: Column(
               children: [
                 /*SPEAKER*/
-                IconButton(
+                /*IconButton(
                   style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.backgroundColorDark),
                   onPressed: () {
-                    /* _pickImage(context);*/
+                    */ /* _pickImage(context);*/ /*
                   },
                   icon: const Icon(
                     Icons.volume_up_rounded,
                     color: AppColors.primaryColor,
                     size: 18,
                   ),
-                ),
+                ),*/
                 /*Question Asking*/
-                Expanded(
-                  child: _isRecording
-                      ? Text("Recording in progress")
-                      : TextField(
-                          controller: _askQuescontroller,
-                          maxLines: 3,
-                          minLines: 1,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                          ),
-                          cursorColor: AppColors.primaryColor,
-                          decoration: const InputDecoration(
-                            hintText: 'Type your message...',
-                            border: OutlineInputBorder(),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: AppColors.primaryColor,
-                              ),
-                            ),
-                            contentPadding: EdgeInsets.symmetric(
-                                vertical: 10.0, horizontal: 10.0),
-                          ),
-                          onChanged: (value) {
-                            inputText = value;
-                            setState(() {
-                              _isTextQuestion = value.isNotEmpty;
-                              _isMyMessage = true;
-                            });
-                          },
+                _isRecording
+                    ? Text("Recording in progress ...")
+                    : TextField(
+                        controller: _askQuescontroller,
+                        maxLines: 3,
+                        minLines: 1,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: screenHeight * 0.020,
                         ),
+                        cursorColor: AppColors.primaryColor,
+                        decoration: const InputDecoration(
+                          hintText: 'Type or Speak..',
+                          border: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 10.0),
+                        ),
+                        onChanged: (value) {
+                          inputText = value;
+                          setState(() {
+                            _isTextQuestion = value.isNotEmpty;
+                            _isMyMessage = true;
+                          });
+                        },
+                      ),
+                SizedBox(
+                  height: 5,
                 ),
                 /*SEND / VOICE*/
                 _isTextQuestion == true
                     ? IconButton(
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.backgroundColorDark),
+                          backgroundColor: Colors.white,
+                          elevation: 4,
+                        ),
                         onPressed: () {
                           // Add your logic to send the message
+                          _scrollController.animateTo(
+                              _scrollController.position.maxScrollExtent,
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeOut);
                           setState(() {
                             _conversationComponents
                                 .add(UserTextAIResponse(inputText, username));
@@ -322,14 +342,21 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                             _isSuggestAnsActive = false;
                           });
                         },
-                        icon: Icon(
-                          Icons.send_rounded,
-                          color: AppColors.primaryColor,
-                          size: 18,
+                        icon: Container(
+                          padding: EdgeInsets.all(screenHeight * 0.010),
+                          child: Icon(
+                            Icons.send_rounded,
+                            color: AppColors.primaryColor,
+                            size: screenHeight * 0.03,
+                          ),
                         ))
                     : IconButton(
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.backgroundColorDark),
+                          backgroundColor: _isRecording == false
+                              ? Colors.white
+                              : AppColors.primaryColor,
+                          elevation: 4,
+                        ),
                         onPressed: () async {
                           /*_onMicrophoneButtonPressed;*/
                           if (!_isRecording) {
@@ -339,13 +366,16 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                           }
                           setState(() {}); // Update UI based on recording state
                         },
-                        icon: Icon(
-                          _isRecording == false
-                              ? Icons.keyboard_voice_rounded
-                              : Icons.stop_rounded,
-                          /*Icons.keyboard_voice_rounded,*/
-                          color: AppColors.primaryColor,
-                          size: 18,
+                        icon: Container(
+                          padding: EdgeInsets.all(screenHeight * 0.020),
+                          child: Icon(
+                            _isRecording == false
+                                ? Icons.keyboard_voice_rounded
+                                : Icons.stop_rounded,
+                            /*Icons.keyboard_voice_rounded,*/
+                            color: AppColors.primaryColor,
+                            size: screenHeight * 0.04,
+                          ),
                         ),
                       ),
               ],

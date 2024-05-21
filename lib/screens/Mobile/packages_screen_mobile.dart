@@ -262,7 +262,7 @@ class _PackagesScreenMobileState extends State<PackagesScreenMobile> {
                 ),
               ),
               onPressed: () {
-                print("pressed id: $id");
+                // print("pressed id: $id");
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -331,7 +331,7 @@ class _PackagesScreenMobileState extends State<PackagesScreenMobile> {
                         } else if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
                         } else {
-                          print("Success ${packagesProvider.packages.length}");
+                          // print("Success ${packagesProvider.packages.length}");
                           // Display your list of tools
                           return SingleChildScrollView(
                             child: Column(
@@ -339,7 +339,7 @@ class _PackagesScreenMobileState extends State<PackagesScreenMobile> {
                                   packagesProvider.packages.map((packages) {
                                 /*bool isSelected =
                                   tool.toolsCode == widget.staticToolsCode;*/
-                                print(packages.price);
+                                // print(packages.price);
                                 return Container(
                                   width: double.infinity,
                                   padding:
@@ -364,7 +364,7 @@ class _PackagesScreenMobileState extends State<PackagesScreenMobile> {
                                         userID,
                                         tool.toolID,
                                       );*/
-                                      print(packages.id);
+                                      // print(packages.id);
                                     },
                                   ),
                                 );
@@ -380,7 +380,7 @@ class _PackagesScreenMobileState extends State<PackagesScreenMobile> {
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
+        /* floatingActionButton: FloatingActionButton(
           onPressed: () {
             const snackBar = SnackBar(
               content: Column(
@@ -416,7 +416,7 @@ class _PackagesScreenMobileState extends State<PackagesScreenMobile> {
             color: AppColors.primaryColor,
           ),
           backgroundColor: AppColors.primaryCardColor,
-        ),
+        ),*/
       ),
     );
   }

@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:risho_speech/providers/vocabularyPracticeListProvider.dart';
 
 import '../../models/vocabularyCategoryListDataModel.dart';
-import '../../models/vocabularyPracticeListDataModel.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/vocabularyCategoryListProvider.dart';
 import '../../ui/colors.dart';
@@ -25,72 +24,58 @@ class _VocabularyCategoryScreenMobileState
   VocabularyPracticeProvider vocabularyPracticeProvider =
       VocabularyPracticeProvider();
 
+  TextEditingController _searchTextController = TextEditingController();
+  List<VocalCat> _filteredCategories = [];
+
   /*@override
   void initState() {
     super.initState();
     vocabularyProvider.fetchVocabularyCategoryList();
   }*/
+  @override
+  void initState() {
+    super.initState();
+    vocabularyProvider = VocabularyCategoryListProvider();
+    _searchTextController.addListener(_filterCategories);
+    _fetchData();
+  }
+
+  @override
+  void dispose() {
+    _searchTextController.removeListener(_filterCategories);
+    _searchTextController.dispose();
+    super.dispose();
+  }
+
+  void _filterCategories() {
+    final query = _searchTextController.text.toLowerCase();
+    setState(() {
+      _filteredCategories = vocabularyProvider
+          .vocabularyCategoryResponse!.vocalListlist!
+          .where(
+              (category) => category.vocCatName!.toLowerCase().contains(query))
+          .toList();
+    });
+  }
+
+  Future<void> _fetchData() async {
+    await vocabularyProvider.fetchVocabularyCategoryList();
+    setState(() {
+      _filteredCategories =
+          vocabularyProvider.vocabularyCategoryResponse!.vocalListlist!;
+    });
+  }
+
+  String capitalize(String s) {
+    if (s.isEmpty) return s;
+    return s[0].toUpperCase() + s.substring(1).toLowerCase();
+  }
 
   @override
   Widget build(BuildContext context) {
     final username =
         Provider.of<AuthProvider>(context).user?.name ?? 'UserName';
     final userId = Provider.of<AuthProvider>(context).user?.id ?? 1;
-
-    List<dynamic>? vocaList = [];
-
-    void fetchVocabulary(int categoryID, String categoryName) async {
-      showDialog(
-        context: context,
-        barrierDismissible: false, // Prevent dialog dismissal
-        builder: (BuildContext context) {
-          return const Center(
-            child: SpinKitChasingDots(
-              color: Colors.green,
-            ),
-          );
-        },
-      );
-
-      try {
-        var response = await vocabularyPracticeProvider
-            .fetchVocabularyPracticeList(categoryID);
-        setState(() {
-          // vocaList = response['vocaList'];
-        });
-        Navigator.pop(context);
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => VocabularyPracticeScreen(
-              categoryId: categoryID,
-              categoryName: categoryName,
-            ),
-          ),
-        );
-
-        // print("$sessionId, $aiDialogue");
-      } catch (e) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text("Error"),
-              content: Text(e.toString()),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text("OK"),
-                ),
-              ],
-            );
-          },
-        );
-        // Handle error
-      }
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -102,7 +87,7 @@ class _VocabularyCategoryScreenMobileState
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Padding(
+              /*Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: const Text(
                   "Which type of word you want to learn today?",
@@ -114,6 +99,33 @@ class _VocabularyCategoryScreenMobileState
                   ),
                   textAlign: TextAlign.start,
                 ),
+              ),*/
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: TextField(
+                  cursorColor: AppColors.primaryColor,
+                  controller: _searchTextController,
+                  decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24),
+                      borderSide: BorderSide(
+                        color: AppColors.primaryColor, // Change to your color
+                      ),
+                    ),
+                    prefixIconColor: AppColors.primaryColor,
+                    prefixIcon: Icon(Icons.search),
+                    hintText: "Search for the type of Vocabulary",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                        color: AppColors.primaryColor, // Change to your color
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 8.0,
               ),
               FutureBuilder<void>(
                 future: vocabularyProvider.fetchVocabularyCategoryList(),
@@ -138,11 +150,13 @@ class _VocabularyCategoryScreenMobileState
                       ),
                       shrinkWrap: true,
                       physics: BouncingScrollPhysics(),
-                      itemCount: vocabularyProvider
-                          .vocabularyCategoryResponse!.vocalListlist!.length,
+                      itemCount: /* vocabularyProvider
+                          .vocabularyCategoryResponse!.vocalListlist!.length*/
+                          _filteredCategories.length,
                       itemBuilder: (context, index) {
-                        final category = vocabularyProvider
-                            .vocabularyCategoryResponse!.vocalListlist![index];
+                        final category = /*vocabularyProvider
+                            .vocabularyCategoryResponse!.vocalListlist![index]*/
+                            _filteredCategories[index];
                         return GestureDetector(
                           onTap: () {
                             /*fetchSessionId(
@@ -159,22 +173,90 @@ class _VocabularyCategoryScreenMobileState
                             );
                           },
                           child: Card(
+                            clipBehavior: Clip.antiAlias,
                             child: Container(
-                              padding: EdgeInsets.all(8.0),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Image.asset(
-                                    "assets/images/office.png",
-                                    height: 100,
-                                    fit: BoxFit.fitHeight,
+                                  Expanded(
+                                    flex: 3,
+                                    child: Container(
+                                      width: double.infinity,
+                                      color: Colors.white,
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        child: category.imageUrl == null
+                                            ? Image.asset(
+                                                "assets/images/risho_guru_icon.png",
+                                                height: 200,
+                                              )
+                                            : Image.network(
+                                                category.imageUrl!,
+                                                height: 200,
+                                                fit: BoxFit.fitHeight,
+                                                loadingBuilder:
+                                                    (BuildContext context,
+                                                        Widget child,
+                                                        ImageChunkEvent?
+                                                            loadingProgress) {
+                                                  if (loadingProgress == null)
+                                                    return child;
+                                                  return Center(
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      color: AppColors
+                                                          .primaryColor,
+                                                      value: loadingProgress
+                                                                  .expectedTotalBytes !=
+                                                              null
+                                                          ? loadingProgress
+                                                                  .cumulativeBytesLoaded /
+                                                              loadingProgress
+                                                                  .expectedTotalBytes!
+                                                          : null,
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                      ),
+                                    ),
                                   ),
                                   SizedBox(
                                     height: 10,
                                   ),
-                                  Text(
-                                    category.vocCatName ?? "",
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      capitalize(category.vocCatName ?? ""),
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  /*Expanded(
+                                    flex: 1,
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        capitalize(category.vocCatNameBn ?? ""),
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),*/
+                                  /*Text(
+                                    capitalize(category.vocaDescription ?? ""),
                                     style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
@@ -182,7 +264,7 @@ class _VocabularyCategoryScreenMobileState
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 2,
                                     textAlign: TextAlign.center,
-                                  ),
+                                  ),*/
                                 ],
                               ),
                             ),

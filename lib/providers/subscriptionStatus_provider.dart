@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
 
 import '../api/api_service.dart';
 import '../models/subscriptionStatusDataModel.dart';
@@ -10,7 +9,7 @@ class SubscriptionStatusProvider extends ChangeNotifier {
   SubscriptionStatusDataModel? get subscriptionStatus => _subscriptionStatus;
 
   Future<void> fetchSubscriptionData(int userId) async {
-    print('Fetching subscriptionData for userId: $userId');
+    // print('Fetching subscriptionData for userId: $userId');
 
     try {
       final newSubscriptionStatus =

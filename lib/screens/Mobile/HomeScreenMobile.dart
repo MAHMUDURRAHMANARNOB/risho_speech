@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:risho_speech/screens/CallingAgentScreen.dart';
@@ -56,46 +55,6 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
   @override
   Widget build(BuildContext context) {
     final userId = Provider.of<AuthProvider>(context).user?.id;
-    final List<String> titles = [
-      "RED",
-      "YELLOW",
-      "CYAN",
-      "BLUE",
-      "GREY",
-    ];
-
-    final List<Widget> images = [
-      Container(
-        decoration: BoxDecoration(
-          color: Colors.red,
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-      ),
-      Container(
-        decoration: BoxDecoration(
-          color: Colors.yellow,
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-      ),
-      Container(
-        decoration: BoxDecoration(
-          color: Colors.cyan,
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-      ),
-      Container(
-        decoration: BoxDecoration(
-          color: Colors.blue,
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-      ),
-      Container(
-        decoration: BoxDecoration(
-          color: Colors.grey,
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-      ),
-    ];
 
     return SafeArea(
       child: SingleChildScrollView(

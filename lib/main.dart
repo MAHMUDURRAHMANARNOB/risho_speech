@@ -23,6 +23,7 @@ import 'package:risho_speech/screens/LoginScreen.dart';
 import 'package:risho_speech/screens/RegistrationScreen.dart';
 import 'package:risho_speech/screens/SplashScreen.dart';
 import 'package:risho_speech/screens/WelcomeScreen.dart';
+import 'package:upgrader/upgrader.dart';
 
 Future<void> main() async {
   runApp(
@@ -55,7 +56,9 @@ Future<void> main() async {
             create: (context) => SubscriptionStatusProvider()),
         ChangeNotifierProvider(create: (context) => CouponDiscountProvider()),
       ],
-      child: RishoSpeech(),
+      child: UpgradeAlert(
+        child: RishoSpeech(),
+      ),
     ),
   );
 }

@@ -242,13 +242,13 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                       ),
                       status == "true"
                           ? Text(
-                        "${generatedTransectionId}",
-                        style: TextStyle(fontSize: 16),
-                      )
+                              "${generatedTransectionId}",
+                              style: TextStyle(fontSize: 16),
+                            )
                           : const Text(
-                        "No transaction yet",
-                        style: TextStyle(fontSize: 16),
-                      ),
+                              "No transaction yet",
+                              style: TextStyle(fontSize: 16),
+                            ),
                     ],
                   ),
                 ],
@@ -260,141 +260,139 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
             status == "true"
                 ? SizedBox(width: 2)
                 : Visibility(
-              visible: !_isApplied,
-              child: Container(
-                padding: EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Coupon Code",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    TextField(
-                      controller: couponCodeController,
-                      keyboardType: TextInputType.text,
-                      cursorColor: AppColors.primaryColor,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14,
-                      ),
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(
-                          FontAwesomeIcons.ticketAlt,
-                          color: Colors
-                              .grey[900], // Change the color of the icon
-                        ),
-                        hintStyle: TextStyle(
-                          color: Colors.grey[400],
-                        ),
-                        hintText: 'Your coupon code here',
-                        filled: true,
-                        fillColor: Colors.grey[200],
-                        // Background color
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(
-                              10.0), // Border radius
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: AppColors
-                                  .primaryColor), // Border color when focused
-                          borderRadius: BorderRadius.circular(
-                              8.0), // Border radius when focused
-                        ),
-                        contentPadding:
-                        EdgeInsets.symmetric(vertical: 15.0),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          width: 1,
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors
-                                .secondaryCardColorGreenish
-                                .withOpacity(0.5),
-                          ),
-                          onPressed: () {
-                            _handleApplyButton(context);
-                          },
-                          child: Text(
-                            "Apply",
-                            style: TextStyle(
-                              color: AppColors.primaryColor,
+                    visible: !_isApplied,
+                    child: Container(
+                      padding: EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Coupon Code",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                          TextField(
+                            controller: couponCodeController,
+                            keyboardType: TextInputType.text,
+                            cursorColor: AppColors.primaryColor,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                            ),
+                            decoration: InputDecoration(
+                              prefixIcon: Icon(
+                                FontAwesomeIcons.ticketAlt,
+                                color: Colors
+                                    .grey[900], // Change the color of the icon
+                              ),
+                              hintStyle: TextStyle(
+                                color: Colors.grey[400],
+                              ),
+                              hintText: 'Your coupon code here',
+                              filled: true,
+                              fillColor: Colors.grey[200],
+                              // Background color
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                                    10.0), // Border radius
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: AppColors
+                                        .primaryColor), // Border color when focused
+                                borderRadius: BorderRadius.circular(
+                                    8.0), // Border radius when focused
+                              ),
+                              contentPadding:
+                                  EdgeInsets.symmetric(vertical: 15.0),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width: 1,
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors
+                                      .secondaryCardColorGreenish
+                                      .withOpacity(0.5),
+                                ),
+                                onPressed: () {
+                                  _handleApplyButton(context);
+                                },
+                                child: Text(
+                                  "Apply",
+                                  style: TextStyle(
+                                    color: AppColors.primaryColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-              ),
-            ),
+                  ),
             SizedBox(
               height: 10,
             ),
             status == "true"
                 ? Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(10.0),
-              margin: EdgeInsets.all(10.0),
-              decoration: BoxDecoration(
-                  color: AppColors.secondaryCardColorGreenish,
-                  borderRadius: BorderRadius.circular(8)),
-              child: Text(
-                "Purchased Successfully,\n Now you can continue your study.",
-                textAlign: TextAlign.center,
-                style:
-                TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            )
+                    width: double.infinity,
+                    padding: EdgeInsets.all(10.0),
+                    margin: EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                        color: AppColors.secondaryCardColorGreenish,
+                        borderRadius: BorderRadius.circular(8)),
+                    child: Text(
+                      "Purchased Successfully,\n Now you can continue your study.",
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  )
                 : Container(
-              width: double.infinity,
-              margin: EdgeInsets.all(10.0),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor),
-                onPressed: () {
-                  generatedTransectionId =
-                      DateTime
-                          .now()
-                          .millisecondsSinceEpoch;
-                  print("$generatedTransectionId");
-                  setState(() {
-                    generatedTransectionId;
-                  });
-                  ApiService.initiatePayment(
-                    userID,
-                    _packageID,
-                    generatedTransectionId.toString(),
-                    _payableAmount,
-                    _mainAmount,
-                    _couponDiscountAmount,
-                    _couponPartnerId,
-                  );
-                  _initiatePayment();
-                },
-                child: Text(
-                  "Purchase",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Colors.white,
+                    width: double.infinity,
+                    margin: EdgeInsets.all(10.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryColor),
+                      onPressed: () {
+                        generatedTransectionId =
+                            DateTime.now().millisecondsSinceEpoch;
+                        print("$generatedTransectionId");
+                        setState(() {
+                          generatedTransectionId;
+                        });
+                        ApiService.initiatePayment(
+                          userID,
+                          _packageID,
+                          generatedTransectionId.toString(),
+                          _payableAmount,
+                          _mainAmount,
+                          _couponDiscountAmount,
+                          _couponPartnerId,
+                        );
+                        _initiatePayment();
+                      },
+                      child: Text(
+                        "Purchase",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
 
             /*Text("Transection Status:  $status"),*/
           ],
@@ -409,13 +407,13 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
       showDialog(
         context: context,
         barrierDismissible:
-        false, // Prevents dismissing the dialog when tapped outside
+            false, // Prevents dismissing the dialog when tapped outside
         builder: (BuildContext context) {
           return Center(
             child: /*SpinKitDancingSquare(
               color: AppColors.primaryColor,
             ),*/
-            AlertDialog(
+                AlertDialog(
               contentPadding: EdgeInsets.all(10.0),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -449,8 +447,8 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
     }
   }
 
-  void _showAlertDialog(BuildContext context, String title, String content,
-      Icon icons) {
+  void _showAlertDialog(
+      BuildContext context, String title, String content, Icon icons) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -460,15 +458,15 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
             title,
             style: title == "Sweet!"
                 ? TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 34,
-              color: AppColors.primaryColor,
-            )
+                    fontWeight: FontWeight.bold,
+                    fontSize: 34,
+                    color: AppColors.primaryColor,
+                  )
                 : TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 34,
-              color: Colors.redAccent,
-            ),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 34,
+                    color: Colors.redAccent,
+                  ),
           ),
           content: Text(content),
         );
@@ -489,11 +487,15 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
       double discountReceivable =
           couponDiscountProvider.couponDiscountResponse!.discountReceivable;
       double discount = couponDiscountProvider.couponDiscountResponse!.discount;
+      int? partnerId = couponDiscountProvider.couponDiscountResponse!.partnerId;
 
       setState(() {
         _payableAmount = _payableAmount - discountReceivable;
         // _discountValue = discountReceivable;
         _couponDiscountAmount = discountReceivable;
+        if (partnerId != null) {
+          _couponPartnerId = partnerId;
+        }
       });
       print(
           "payable amount$_payableAmount - Discount from coupon $_couponDiscountAmount");
@@ -585,7 +587,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
     print(shurjopayResponseModel.errorCode);
 
     ShurjopayVerificationModel shurjopayVerificationModel =
-    ShurjopayVerificationModel();
+        ShurjopayVerificationModel();
     if (shurjopayResponseModel.status == true) {
       try {
         // Initiate payment
@@ -596,12 +598,10 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
         print(shurjopayVerificationModel.spMessage);
         if (shurjopayVerificationModel.spCode == "1000") {
           print(
-              "Payment Varified - ${shurjopayVerificationModel
-                  .spMessage}, ${shurjopayVerificationModel.spCode}");
+              "Payment Varified - ${shurjopayVerificationModel.spMessage}, ${shurjopayVerificationModel.spCode}");
         } else {
           print(
-              "Payment not Varified - ${shurjopayVerificationModel
-                  .spMessage}, ${shurjopayVerificationModel.spCode}");
+              "Payment not Varified - ${shurjopayVerificationModel.spMessage}, ${shurjopayVerificationModel.spCode}");
         }
 
         ApiService.receivePayment(
@@ -657,8 +657,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
           });
           Fluttertoast.showToast(
             msg:
-            "Transaction successful. Transaction ID: ${shurjopayVerificationModel
-                .bankTrxId}",
+                "Transaction successful. Transaction ID: ${shurjopayVerificationModel.bankTrxId}",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
           );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:risho_speech/screens/Mobile/HomeScreenMobile.dart';
 import 'package:risho_speech/screens/tablet/HomeScreenTablet.dart';
+import 'package:upgrader/upgrader.dart';
 
 import '../responsive/responsive_layout.dart';
 
@@ -14,11 +15,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ResponsiveLayout(
-        mobileScaffold: HomeScreenMobile(),
-        tabletScaffold: HomeScreenMobile(),
-        desktopScaffold: HomeScreenTablet(),
+    return UpgradeAlert(
+      child: Scaffold(
+        body: ResponsiveLayout(
+          mobileScaffold: HomeScreenMobile(),
+          tabletScaffold: HomeScreenMobile(),
+          desktopScaffold: HomeScreenTablet(),
+        ),
       ),
     );
   }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher.dart' as launcher;
 
 class AboutScreenMobile extends StatefulWidget {
   const AboutScreenMobile({super.key});
@@ -138,10 +138,23 @@ class _AboutScreenMobileState extends State<AboutScreenMobile> {
               'We love hearing from our users! If you have any questions, feedback, or suggestions, feel free to reach out to us at ',
               style: TextStyle(fontSize: 16),
             ),
-            InkWell(
+            GestureDetector(
               onTap: _launchEmail,
               child: Text(
                 'info@shonod.com',
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline),
+              ),
+            ),
+            SizedBox(
+              height: 5.0,
+            ),
+            GestureDetector(
+              onTap: _launchMobile,
+              child: Text(
+                '+8801972746663',
                 style: TextStyle(
                     fontSize: 16,
                     color: Colors.blue,
@@ -161,15 +174,37 @@ class _AboutScreenMobileState extends State<AboutScreenMobile> {
 
   void _launchEmail() async {
     final String email = 'info@shonod.com';
-    final Uri params = Uri(
+    /*final Uri params = Uri(
       scheme: 'mailto',
       path: email,
-    );
-    var url = params.toString();
+    );*/
+    Uri uri = Uri.parse('mailto:$email');
+    if (!await launcher.launchUrl(uri)) {
+      debugPrint("Courier no launch the $uri");
+    }
+    /*var url = params.toString();
     if (await canLaunchUrl(params)) {
       await launchUrl(params);
     } else {
       throw 'Could not launch $url';
+    }*/
+  }
+
+  void _launchMobile() async {
+    final String mobile = '+8801972746663';
+    /*final Uri params = Uri(
+      scheme: 'mailto',
+      path: email,
+    );*/
+    Uri uri = Uri.parse('tel:$mobile');
+    if (!await launcher.launchUrl(uri)) {
+      debugPrint("Courier no launch the $uri");
     }
+    /*var url = params.toString();
+    if (await canLaunchUrl(params)) {
+      await launchUrl(params);
+    } else {
+      throw 'Could not launch $url';
+    }*/
   }
 }
