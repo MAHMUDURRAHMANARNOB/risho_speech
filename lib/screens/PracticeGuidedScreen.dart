@@ -21,8 +21,12 @@ class _PracticeGuidedScreenState extends State<PracticeGuidedScreen> {
         mobileScaffold: PracticeGuidedScreenMobile(
           screenName: widget.screenName!,
         ),
-        tabletScaffold: PracticeGuidedScreenTablet(),
-        desktopScaffold: PracticeGuidedScreenTablet(),
+        tabletScaffold: PracticeGuidedScreenTablet(
+          screenName: widget.screenName!,
+        ),
+        desktopScaffold: PracticeGuidedScreenTablet(
+          screenName: widget.screenName!,
+        ),
       ),
     );
   }

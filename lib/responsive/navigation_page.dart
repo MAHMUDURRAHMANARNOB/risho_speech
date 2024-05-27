@@ -1,12 +1,9 @@
 // import 'dart:ffi';
 
 import 'package:flutter/material.dart';
-import 'package:adaptive_navigation/adaptive_navigation.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../screens/HomeScreen.dart';
-import '../screens/LearnScreen.dart';
 import '../screens/ProfileScreen.dart';
 import '../ui/colors.dart';
 
@@ -47,11 +44,11 @@ class _NavigationPageState extends State<NavigationPage> {
   ];*/
   final List<CustomDestination> destinations = [
     CustomDestination(
-        title: 'Dashboard', imagePath: 'assets/images/risho_guru_icon.png'),
+        title: 'Home', imagePath: 'assets/images/risho_guru_icon.png'),
     /*CustomDestination(
         title: 'Courses', imagePath: 'assets/images/risho_guru_icon.png'),*/
     CustomDestination(
-        title: 'StudyBoard', imagePath: 'assets/images/risho_guru_icon.png'),
+        title: 'Profile', imagePath: 'assets/images/man_chat.png'),
   ];
 
   final destinationsMobile = <NavigationDestination>[

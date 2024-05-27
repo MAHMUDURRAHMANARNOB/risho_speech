@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+import 'package:risho_speech/screens/Mobile/InvoiceScreenMobile.dart';
 
 import '../../providers/auth_provider.dart';
 import '../../providers/packagesProvider.dart';
@@ -16,6 +17,8 @@ class PackagesScreenTablet extends StatefulWidget {
 class _PackagesScreenTabletState extends State<PackagesScreenTablet> {
   late int userid;
   bool isExpanded = false;
+  bool isDiscountAvailable = false;
+
   Widget packagesCard(
     String name,
     String imagePath,
@@ -24,6 +27,7 @@ class _PackagesScreenTabletState extends State<PackagesScreenTablet> {
     int noOfCourse,
     int noOfTickets,
     int noOfComments,
+    double audiominutes,
     String subDesc,
     double discountedPrice,
     double price,
@@ -33,18 +37,29 @@ class _PackagesScreenTabletState extends State<PackagesScreenTablet> {
     late String durationType;
     if (duration == "H") {
       durationType = " 6 months";
+    } else if (duration == "W") {
+      durationType = " 7 days";
+    } else if (duration == "Q") {
+      durationType = " 3 months";
     } else if (duration == "Y") {
       durationType = " 12 months";
     } else if (duration == "M") {
       durationType = " 30 Days";
     } else if (duration == "U") {
       durationType = " Unlimited";
+    } else {
+      durationType = " Not Mentioned";
+    }
+    if (discountedPrice == 0.0) {
+      isDiscountAvailable = false;
+    } else {
+      isDiscountAvailable = true;
     }
     double finalPrice = price - discountedPrice;
 
     return Container(
-      margin: EdgeInsets.all(20.0),
-      width: double.infinity,
+      margin: EdgeInsets.all(10.0),
+      // width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.0),
         color: AppColors.primaryCardColor,
@@ -74,24 +89,27 @@ class _PackagesScreenTabletState extends State<PackagesScreenTablet> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  isExpanded = !isExpanded;
-                });
-              },
-              child: AnimatedContainer(
-                duration: Duration(milliseconds: 300),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    color: AppColors.greyCard.withOpacity(0.1)),
-                child: Column(
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Theme(
+                data: Theme.of(context)
+                    .copyWith(dividerColor: Colors.transparent),
+                child: ExpansionTile(
+                  iconColor: AppColors.primaryColor,
+                  title: Text(
+                    "See Details",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   children: [
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 3.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Text(
                         subDesc,
-                        maxLines: isExpanded ? null : 3,
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.normal,
@@ -99,20 +117,6 @@ class _PackagesScreenTabletState extends State<PackagesScreenTablet> {
                         textAlign: TextAlign.justify,
                       ),
                     ),
-                    Visibility(
-                      visible: !isExpanded,
-                      child: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            isExpanded = !isExpanded;
-                          });
-                        },
-                        icon: Icon(
-                          Icons.expand_more_outlined,
-                          size: 20.0,
-                        ),
-                      ),
-                    )
                   ],
                 ),
               ),
@@ -131,7 +135,7 @@ class _PackagesScreenTabletState extends State<PackagesScreenTablet> {
                   width: 2,
                 ),
                 Text(
-                  "Homework Tokens",
+                  "Tickets",
                   style: TextStyle(),
                 ),
                 Container(
@@ -161,7 +165,7 @@ class _PackagesScreenTabletState extends State<PackagesScreenTablet> {
                   width: 2,
                 ),
                 Text(
-                  "Question Tokens",
+                  "Comments",
                 ),
                 Container(
                   margin: EdgeInsets.all(5.0),
@@ -178,6 +182,35 @@ class _PackagesScreenTabletState extends State<PackagesScreenTablet> {
             ),
           ),
           Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.task_alt,
+                  color: AppColors.primaryColor,
+                ),
+                SizedBox(
+                  width: 2,
+                ),
+                Text(
+                  "Minutes",
+                ),
+                Container(
+                  margin: EdgeInsets.all(5.0),
+                  padding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4.0),
+                    color: AppColors.primaryColor,
+                  ),
+                  child: Text(
+                    audiominutes.toString(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
             padding: const EdgeInsets.all(5.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -185,13 +218,16 @@ class _PackagesScreenTabletState extends State<PackagesScreenTablet> {
                 Container(
                   child: Column(
                     children: [
-                      Text(
-                        "৳ ${price.toString()}",
-                        style: const TextStyle(
-                          color: Colors.blueGrey,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 14,
-                          decoration: TextDecoration.lineThrough,
+                      Visibility(
+                        visible: isDiscountAvailable,
+                        child: Text(
+                          "৳ ${price.toString()}",
+                          style: const TextStyle(
+                            color: Colors.blueGrey,
+                            fontWeight: FontWeight.normal,
+                            fontSize: 14,
+                            decoration: TextDecoration.lineThrough,
+                          ),
                         ),
                       ),
                       Text(
@@ -205,12 +241,12 @@ class _PackagesScreenTabletState extends State<PackagesScreenTablet> {
                     ],
                   ),
                 ),
-                Text(
+                /*Text(
                   " / $durationType",
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
-                ),
+                ),*/
               ],
             ),
           ),
@@ -226,8 +262,8 @@ class _PackagesScreenTabletState extends State<PackagesScreenTablet> {
                 ),
               ),
               onPressed: () {
-                print("pressed id: $id");
-                /*Navigator.push(
+                // print("pressed id: $id");
+                Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => InvoiceScreenMobile(
@@ -237,7 +273,7 @@ class _PackagesScreenTabletState extends State<PackagesScreenTablet> {
                         discountValue: discountedPrice,
                         payableAmount: finalPrice),
                   ),
-                );*/
+                );
               },
               child: Text(
                 "Purchase Now",
@@ -263,12 +299,12 @@ class _PackagesScreenTabletState extends State<PackagesScreenTablet> {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          /*leading: IconButton(
+          leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
             },
             icon: Icon(Icons.chevron_left),
-          ),*/
+          ),
           title: Text(
             'Packages',
             style: TextStyle(fontWeight: FontWeight.bold),
@@ -282,7 +318,7 @@ class _PackagesScreenTabletState extends State<PackagesScreenTablet> {
                 /*Packages List*/
                 Container(
                   margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-                  width: double.infinity,
+                  // width: double.infinity,
                   child: Builder(builder: (context) {
                     return FutureBuilder(
                       future: packagesProvider.fetchPackages(),
@@ -295,7 +331,7 @@ class _PackagesScreenTabletState extends State<PackagesScreenTablet> {
                         } else if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
                         } else {
-                          print("Success ${packagesProvider.packages.length}");
+                          // print("Success ${packagesProvider.packages.length}");
                           // Display your list of tools
                           return SingleChildScrollView(
                             child: Column(
@@ -303,9 +339,9 @@ class _PackagesScreenTabletState extends State<PackagesScreenTablet> {
                                   packagesProvider.packages.map((packages) {
                                 /*bool isSelected =
                                   tool.toolsCode == widget.staticToolsCode;*/
-                                print(packages.price);
+                                // print(packages.price);
                                 return Container(
-                                  width: double.infinity,
+                                  // width: double.infinity,
                                   padding:
                                       const EdgeInsets.fromLTRB(10, 5, 10, 5),
                                   child: packagesCard(
@@ -316,6 +352,7 @@ class _PackagesScreenTabletState extends State<PackagesScreenTablet> {
                                     packages.noOfCourse ?? 0,
                                     packages.noOfTickets!,
                                     packages.noOfComments!,
+                                    packages.audiominutes!,
                                     packages.subDesc!,
                                     packages.discountedPrice!,
                                     packages.price!,
@@ -327,7 +364,7 @@ class _PackagesScreenTabletState extends State<PackagesScreenTablet> {
                                         userID,
                                         tool.toolID,
                                       );*/
-                                      print(packages.id);
+                                      // print(packages.id);
                                     },
                                   ),
                                 );
@@ -343,21 +380,28 @@ class _PackagesScreenTabletState extends State<PackagesScreenTablet> {
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
+        /* floatingActionButton: FloatingActionButton(
           onPressed: () {
             const snackBar = SnackBar(
               content: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    "Homework Token is used for using tools. 1 token required for 1 response",
+                    "Tickets are used for using tools. 1 token required for 1 response",
                     style: TextStyle(color: Colors.white),
                   ),
                   SizedBox(
                     height: 5,
                   ),
                   Text(
-                    "Question token is used for using Ask Question button. 1 token required for 1 Question",
+                    "Comments are used for using Ask Question button. 1 token required for 1 Comment",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    "Minutes are used for speaking.",
                     style: TextStyle(color: Colors.white),
                   ),
                 ],
@@ -372,7 +416,7 @@ class _PackagesScreenTabletState extends State<PackagesScreenTablet> {
             color: AppColors.primaryColor,
           ),
           backgroundColor: AppColors.primaryCardColor,
-        ),
+        ),*/
       ),
     );
   }

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:risho_speech/ui/colors.dart';
 import 'package:provider/provider.dart';
+import 'package:risho_speech/ui/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../providers/auth_provider.dart';
 import '../Common/loginForm.dart';
 import '../Dashboard.dart';
@@ -16,6 +17,7 @@ class LoginScreenMobile extends StatefulWidget {
 
 class _LoginScreenMobileState extends State<LoginScreenMobile> {
   bool _isLoading = true;
+
   @override
   void initState() {
     super.initState();
@@ -69,7 +71,7 @@ class _LoginScreenMobileState extends State<LoginScreenMobile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColorDark,
+      // backgroundColor: AppColors.backgroundColorDark,
       appBar: AppBar(
         title: Image.asset(
           "assets/images/risho_speech.png",

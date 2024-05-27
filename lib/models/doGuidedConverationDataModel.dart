@@ -62,10 +62,18 @@ class DoGuidedConversationDataModel {
       conversationDetails: json['conversationDetails'],
       discussionTopic: json['discussionTopic'],
       discusTitle: json['discusTitle'],
-      accuracyScore: json['accuracyScore'].toDouble(),
-      fluencyScore: json['fluencyScore'].toDouble(),
-      completenessScore: json['completenessScore'].toDouble(),
-      prosodyScore: json['prosodyScore'].toDouble(),
+      accuracyScore: json['accuracyScore'] != null
+          ? json['accuracyScore'].toDouble()
+          : json['accuracyScore'],
+      fluencyScore: json['fluencyScore'] != null
+          ? json['fluencyScore'].toDouble()
+          : json['fluencyScore'],
+      completenessScore: json['completenessScore'] != null
+          ? json['completenessScore'].toDouble()
+          : json['completenessScore'],
+      prosodyScore: json['prosodyScore'] != null
+          ? json['prosodyScore'].toDouble()
+          : json['prosodyScore'],
       speechText: json['speechText'],
       speechTextBn: json['speechTextbn'],
       fileLoc: json['fileLoc'],

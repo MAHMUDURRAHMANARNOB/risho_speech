@@ -11,6 +11,7 @@ class ChatScreen extends StatefulWidget {
   final String aiDialogueAudio;
   final String aiTranslation;
   final String actorName;
+
   ChatScreen(
       {super.key,
       required this.id,
@@ -37,8 +38,22 @@ class _ChatScreenState extends State<ChatScreen> {
           aiTranslation: widget.aiTranslation,
           actorName: widget.actorName,
         ),
-        tabletScaffold: ChatScreenTablet(),
-        desktopScaffold: ChatScreenTablet(),
+        tabletScaffold: ChatScreenTablet(
+          id: widget.id,
+          sessionId: widget.sessionId,
+          aiDialogue: widget.aiDialogue,
+          aiDialogueAudio: widget.aiDialogueAudio,
+          aiTranslation: widget.aiTranslation,
+          actorName: widget.actorName,
+        ),
+        desktopScaffold: ChatScreenTablet(
+          id: widget.id,
+          sessionId: widget.sessionId,
+          aiDialogue: widget.aiDialogue,
+          aiDialogueAudio: widget.aiDialogueAudio,
+          aiTranslation: widget.aiTranslation,
+          actorName: widget.actorName,
+        ),
       ),
     );
   }

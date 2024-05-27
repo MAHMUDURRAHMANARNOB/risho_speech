@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -290,7 +291,11 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                 ),*/
                 /*Question Asking*/
                 _isRecording
-                    ? Text("Recording in progress ...")
+                    ? Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(10.0),
+                        child: Text("Recording in progress ..."),
+                      )
                     : TextField(
                         controller: _askQuescontroller,
                         maxLines: 3,
@@ -350,31 +355,42 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                             size: screenHeight * 0.03,
                           ),
                         ))
-                    : IconButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: _isRecording == false
-                              ? Colors.white
-                              : AppColors.primaryColor,
-                          elevation: 4,
-                        ),
-                        onPressed: () async {
-                          /*_onMicrophoneButtonPressed;*/
-                          if (!_isRecording) {
-                            await startRecording();
-                          } else {
-                            await stopRecording();
-                          }
-                          setState(() {}); // Update UI based on recording state
-                        },
-                        icon: Container(
-                          padding: EdgeInsets.all(screenHeight * 0.020),
-                          child: Icon(
-                            _isRecording == false
-                                ? Icons.keyboard_voice_rounded
-                                : Icons.stop_rounded,
-                            /*Icons.keyboard_voice_rounded,*/
-                            color: AppColors.primaryColor,
-                            size: screenHeight * 0.04,
+                    : AvatarGlow(
+                        animate: _isRecording,
+                        curve: Curves.fastOutSlowIn,
+                        glowColor: AppColors.primaryColor,
+                        duration: const Duration(milliseconds: 1000),
+                        repeat: true,
+                        glowRadiusFactor: 1,
+                        child: IconButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: _isRecording == false
+                                ? Colors.white
+                                : AppColors.primaryColor,
+                            elevation: 4,
+                          ),
+                          onPressed: () async {
+                            /*_onMicrophoneButtonPressed;*/
+                            if (!_isRecording) {
+                              await startRecording();
+                            } else {
+                              await stopRecording();
+                            }
+                            setState(
+                                () {}); // Update UI based on recording state
+                          },
+                          icon: Container(
+                            padding: EdgeInsets.all(screenHeight * 0.020),
+                            child: Icon(
+                              _isRecording == false
+                                  ? Icons.keyboard_voice_rounded
+                                  : Icons.stop_rounded,
+                              /*Icons.keyboard_voice_rounded,*/
+                              color: _isRecording == false
+                                  ? AppColors.primaryColor
+                                  : Colors.white,
+                              size: screenHeight * 0.04,
+                            ),
                           ),
                         ),
                       ),
