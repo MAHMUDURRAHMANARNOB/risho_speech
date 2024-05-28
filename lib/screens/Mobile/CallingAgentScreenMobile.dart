@@ -40,8 +40,18 @@ class _CallingAgentScreenMobileState extends State<CallingAgentScreenMobile> {
         Provider.of<AuthProvider>(context).user?.name ?? 'UserName';
     final userId = Provider.of<AuthProvider>(context).user?.id ?? 1;
 
-    void fetchSessionId(
-        int userId, int agentId, String agentName, String agentGander) async {
+    final screenWidth = MediaQuery.of(context).size.width;
+    int crossAxisCount;
+    if (screenWidth <= 900) {
+      crossAxisCount = 3;
+    } else if (screenWidth <= 1100) {
+      crossAxisCount = 5;
+    } else {
+      crossAxisCount = 6; // You can set any default value for larger screens
+    }
+
+    void fetchSessionId(int userId, int agentId, String agentName,
+        String agentGander, String? agentImage) async {
       showDialog(
         context: context,
         barrierDismissible: false, // Prevent dialog dismissal
@@ -97,6 +107,7 @@ class _CallingAgentScreenMobileState extends State<CallingAgentScreenMobile> {
               sessionId: sessionId!,
               agentId: agentId,
               agentName: agentName,
+              agentImage: agentImage,
               agentGander: agentGander,
               agentAudio: agentAudio!,
               firstText: aiDialog!,
@@ -179,10 +190,7 @@ class _CallingAgentScreenMobileState extends State<CallingAgentScreenMobile> {
                                   shrinkWrap: true,
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount:
-                                        MediaQuery.of(context).size.width > 600
-                                            ? 4
-                                            : 3,
+                                    crossAxisCount: crossAxisCount,
                                     crossAxisSpacing: 8.0,
                                     mainAxisSpacing: 8.0,
                                   ),
@@ -190,13 +198,16 @@ class _CallingAgentScreenMobileState extends State<CallingAgentScreenMobile> {
                                   itemCount: countryData.agents!.length,
                                   itemBuilder: (context, index) {
                                     final agent = countryData.agents![index];
+                                    String agentPicture =
+                                        "assets/images/profile_chat.png";
                                     return GestureDetector(
                                       onTap: () {
                                         fetchSessionId(
                                             userId,
                                             agent.id!,
                                             agent.agentName!,
-                                            agent.agentGender!);
+                                            agent.agentGender!,
+                                            agent.agentPicture);
                                       },
                                       child: Card(
                                         color: AppColors.primaryColor
@@ -205,56 +216,59 @@ class _CallingAgentScreenMobileState extends State<CallingAgentScreenMobile> {
                                           padding: EdgeInsets.all(8.0),
                                           child: Column(
                                             children: [
-                                              agent.agentPicture == null
-                                                  ? ClipOval(
-                                                      child: Image.asset(
-                                                        "assets/images/profile_chat.png",
-                                                        height: 50,
-                                                      ),
-                                                    )
-                                                  : ClipOval(
-                                                      child: Image.network(
-                                                        agent.agentPicture!,
-                                                        width: 50,
-                                                        height: 50,
-                                                        fit: BoxFit.cover,
-                                                        loadingBuilder:
-                                                            (BuildContext
-                                                                    context,
-                                                                Widget child,
-                                                                ImageChunkEvent?
-                                                                    loadingProgress) {
-                                                          if (loadingProgress ==
-                                                              null)
-                                                            return child;
-                                                          return Center(
-                                                            child:
-                                                                CircularProgressIndicator(
-                                                              value: loadingProgress
-                                                                          .expectedTotalBytes !=
-                                                                      null
-                                                                  ? loadingProgress
-                                                                          .cumulativeBytesLoaded /
-                                                                      loadingProgress
-                                                                          .expectedTotalBytes!
-                                                                  : null,
-                                                            ),
-                                                          );
-                                                        },
-                                                      ),
-                                                    ),
+                                              Flexible(
+                                                flex: 3,
+                                                child: Container(
+                                                  child: agent.agentPicture ==
+                                                          null
+                                                      ? Image.asset(
+                                                          "assets/images/profile_chat.png",
+                                                          fit: BoxFit.fitHeight,
+                                                        )
+                                                      : Image.network(
+                                                          agent.agentPicture!,
+                                                          fit: BoxFit.fitHeight,
+                                                          loadingBuilder:
+                                                              (BuildContext
+                                                                      context,
+                                                                  Widget child,
+                                                                  ImageChunkEvent?
+                                                                      loadingProgress) {
+                                                            if (loadingProgress ==
+                                                                null)
+                                                              return child;
+                                                            return Center(
+                                                              child:
+                                                                  CircularProgressIndicator(
+                                                                value: loadingProgress
+                                                                            .expectedTotalBytes !=
+                                                                        null
+                                                                    ? loadingProgress
+                                                                            .cumulativeBytesLoaded /
+                                                                        loadingProgress
+                                                                            .expectedTotalBytes!
+                                                                    : null,
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                ),
+                                              ),
                                               SizedBox(
                                                 height: 10,
                                               ),
-                                              Text(
-                                                agent.agentName ?? "",
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontFamily: "Mina",
+                                              Flexible(
+                                                flex: 1,
+                                                child: Text(
+                                                  agent.agentName ?? "",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 2,
+                                                  textAlign: TextAlign.center,
                                                 ),
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 2,
-                                                textAlign: TextAlign.center,
                                               ),
                                             ],
                                           ),

@@ -7,6 +7,7 @@ import 'Mobile/VocabularyPracticeScreenMobile.dart';
 class VocabularyPracticeScreen extends StatefulWidget {
   final int categoryId;
   final String categoryName;
+
   const VocabularyPracticeScreen(
       {super.key, required this.categoryId, required this.categoryName});
 
@@ -24,8 +25,14 @@ class _VocabularyCategoryScreenState extends State<VocabularyPracticeScreen> {
           categoryId: widget.categoryId,
           categoryName: widget.categoryName,
         ),
-        tabletScaffold: VocabularyPracticeScreenTablet(),
-        desktopScaffold: VocabularyPracticeScreenTablet(),
+        tabletScaffold: VocabularyPracticeScreenTablet(
+          categoryId: widget.categoryId,
+          categoryName: widget.categoryName,
+        ),
+        desktopScaffold: VocabularyPracticeScreenTablet(
+          categoryId: widget.categoryId,
+          categoryName: widget.categoryName,
+        ),
       ),
     );
   }

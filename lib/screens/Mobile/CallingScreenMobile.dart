@@ -3,10 +3,7 @@ import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:avatar_glow/avatar_glow.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -23,20 +20,24 @@ import '../Common/AiEmotionWidget.dart';
 class CallingScreenMobile extends StatefulWidget {
   final int agentId;
   final String agentName;
+  final String? agentImage;
   final String agentGander;
   final String sessionId;
   final String agentAudio;
   final String firstText;
   final String firstTextBn;
-  const CallingScreenMobile(
-      {super.key,
-      required this.agentId,
-      required this.sessionId,
-      required this.agentName,
-      required this.agentAudio,
-      required this.firstText,
-      required this.firstTextBn,
-      required this.agentGander});
+
+  const CallingScreenMobile({
+    super.key,
+    required this.agentId,
+    required this.sessionId,
+    required this.agentName,
+    required this.agentImage,
+    required this.agentAudio,
+    required this.firstText,
+    required this.firstTextBn,
+    required this.agentGander,
+  });
 
   @override
   State<CallingScreenMobile> createState() => _CallingScreenMobileState();
@@ -54,6 +55,7 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
   }
 
   bool _isAiListening = false;
+
   // bool _isAiWaiting = false;
 
   bool _isChatExpanded = false;
@@ -285,11 +287,16 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
                       padding: EdgeInsets.all(10.0),
                       child: Column(
                         children: [
-                          Image.asset(
-                            "assets/images/profile_chat.png",
-                            height: screenHeight * 0.1,
-                            width: 100,
-                          ),
+                          widget.agentImage != null
+                              ? Image.network(
+                                  widget.agentImage!,
+                                  height: screenHeight * 0.2,
+                                  width: 100,
+                                )
+                              : Image.asset(
+                                  "assets/images/profile_chat.png",
+                                  height: screenHeight * 0.2,
+                                ),
                           Text(
                             widget.agentName,
                             style: TextStyle(
@@ -406,8 +413,8 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
                     ),
                     /*Content*/
                     AnimatedContainer(
-                      duration: Duration(
-                          milliseconds: 300), // Set your animation duration
+                      duration: Duration(milliseconds: 300),
+                      // Set your animation duration
                       curve: Curves.easeInOut,
                       width: double.infinity,
                       height: !_isChatExpanded ? 1 : 200,
