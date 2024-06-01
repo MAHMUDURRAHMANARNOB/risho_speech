@@ -10,7 +10,7 @@
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{E9256686-1873-405F-832F-4CFE1CA3C395}
+AppId={{13EC4EDA-3D8E-4324-BE55-7A9449CA3DE7}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -44,12 +44,31 @@ Source: "E:\Flutter Projects\risho_speech\build\windows\x64\runner\Release\recor
 Source: "E:\Flutter Projects\risho_speech\build\windows\x64\runner\Release\url_launcher_windows_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "E:\Flutter Projects\risho_speech\build\windows\x64\runner\Release\data\*"; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "E:\Flutter Projects\risho_speech\build\windows\x64\runner\Release\fmedia\*"; DestDir: "{app}\fmedia"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Windows\System32\msvcp140.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Windows\System32\vcruntime140.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\Shonod\Downloads\vcruntime140_1.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\Shonod\Downloads\api-ms-win-core-heap-l2-1-0.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Windows\System32\concrt140.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Windows\System32\msvcp140_1.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Windows\System32\msvcp140_2.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\Shonod\Downloads\VC_redist.x64.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall
+
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
+[Code]
+function IsVC2015RuntimeInstalled(): Boolean;
+var
+  Installed: Cardinal;
+begin
+  Result := RegQueryDWordValue(HKLM, 'SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x64', 'Installed', Installed) and (Installed = 1);
+end;
+
+
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+Filename: "{tmp}\VC_redist.x64.exe"; Parameters: "/install /quiet /norestart"; Flags: waituntilterminated; Check: not IsVC2015RuntimeInstalled
 
