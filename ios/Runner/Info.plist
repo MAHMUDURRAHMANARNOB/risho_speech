@@ -45,5 +45,26 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+	<key>NSCameraUsageDescription</key>
+    <string>We need access to the camera to take pictures</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>We need access to the microphone to record audio</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>We need access to the photo library to select pictures</string>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>http</string>
+        <string>https</string>
+        <string>mail</string>
+        <string>tel</string>
+    </array>
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>We need access to speech recognition</string>
+    <key>com.apple.security.device.audio-input</key>
+    <true/>
+
+
+
 </dict>
 </plist>
