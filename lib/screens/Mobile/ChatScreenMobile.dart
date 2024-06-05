@@ -24,6 +24,7 @@ class ChatScreenMobile extends StatefulWidget {
   final String aiDialogueAudio;
   final String aiTranslation;
   final String actorName;
+  final String isFemale;
 
   ChatScreenMobile(
       {super.key,
@@ -32,7 +33,8 @@ class ChatScreenMobile extends StatefulWidget {
       required this.aiDialogue,
       required this.aiDialogueAudio,
       required this.aiTranslation,
-      required this.actorName});
+      required this.actorName,
+      required this.isFemale});
 
   @override
   State<ChatScreenMobile> createState() => _ChatScreenMobileState();
@@ -507,7 +509,7 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
 
     return FutureBuilder<void>(
         future: doConversationProvider.fetchConversationResponse(
-            userId, widget.id, sessionId, audio, '', '', '', username),
+            userId, widget.id, sessionId, audio, '', '', widget.isFemale, username),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const SpinKitThreeInOut(
@@ -1509,7 +1511,7 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
         Provider.of<NextQuestionProvider>(context, listen: false);
     return FutureBuilder<void>(
         future: nextQuesProvider.fetchNextQuestionResponse(
-            59350, widget.id, sessionId!, text, '', username),
+            59350, widget.id, sessionId!, text, widget.isFemale, username),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const SpinKitThreeInOut(

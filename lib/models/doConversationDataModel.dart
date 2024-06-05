@@ -12,8 +12,9 @@ class DoConversationDataModel {
   final double? fluencyScore;
   final double? completenessScore;
   final double? prosodyScore;
+  final String? isFemale;
 
-  DoConversationDataModel({
+  DoConversationDataModel( {
     required this.errorCode,
     required this.message,
     required this.sessionId,
@@ -27,6 +28,7 @@ class DoConversationDataModel {
     required this.fluencyScore,
     required this.completenessScore,
     required this.prosodyScore,
+    required this.isFemale,
   });
 
   factory DoConversationDataModel.fromJson(Map<String, dynamic> json) {
@@ -52,6 +54,7 @@ class DoConversationDataModel {
       prosodyScore: json['prosodyScore'] != null
           ? json['prosodyScore'].toDouble()
           : json['prosodyScore'],
+        isFemale : json['isFemale'],
     );
   }
 }

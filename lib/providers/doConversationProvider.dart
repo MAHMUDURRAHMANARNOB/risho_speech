@@ -70,7 +70,7 @@ class DoConversationProvider extends ChangeNotifier {
           accuracyScore: null,
           fluencyScore: null,
           completenessScore: null,
-          prosodyScore: null,
+          prosodyScore: null, isFemale: null,
         );
         notifyListeners();
         return response;

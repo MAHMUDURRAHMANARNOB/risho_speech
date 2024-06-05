@@ -24,6 +24,7 @@ class ChatScreenTablet extends StatefulWidget {
   final String aiDialogueAudio;
   final String aiTranslation;
   final String actorName;
+  final String isFemale;
 
   const ChatScreenTablet(
       {super.key,
@@ -32,7 +33,8 @@ class ChatScreenTablet extends StatefulWidget {
       required this.aiDialogue,
       required this.aiDialogueAudio,
       required this.aiTranslation,
-      required this.actorName});
+      required this.actorName,
+      required this.isFemale});
 
   @override
   State<ChatScreenTablet> createState() => _ChatScreenTabletState();

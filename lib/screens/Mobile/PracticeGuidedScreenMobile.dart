@@ -37,6 +37,7 @@ class _PracticeGuidedScreenMobileState
     String? aiDialogue;
     String? aiDialogueAudio;
     String? aiTranslation;
+    String? isFemale;
 
     int? dialogId;
     String? actorName;
@@ -78,6 +79,7 @@ class _PracticeGuidedScreenMobileState
           aiDialogueAudio = response['AIDialoagAudio'];
           actorName = response['actorName'];
           aiTranslation = response['AIDialoagBn'];
+          isFemale = response['isFemale'];
           isLoading = false;
         });
         Navigator.pop(context);
@@ -91,6 +93,7 @@ class _PracticeGuidedScreenMobileState
                     aiDialogueAudio: aiDialogueAudio!,
                     aiTranslation: aiTranslation ?? "Not found",
                     actorName: actorName ?? "Not found",
+                isFemale: isFemale ?? "N",
                   )),
         );
         /*showDialog(
