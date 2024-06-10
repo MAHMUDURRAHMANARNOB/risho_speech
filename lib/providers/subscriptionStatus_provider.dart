@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
-
 import '../api/api_service.dart';
 import '../models/subscriptionStatusDataModel.dart';
 
 class SubscriptionStatusProvider extends ChangeNotifier {
   SubscriptionStatusDataModel? _subscriptionStatus;
+  bool _isFetching = false;
 
   SubscriptionStatusDataModel? get subscriptionStatus => _subscriptionStatus;
 
+  bool get isFetching => _isFetching;
+
+  void setFetching(bool value) {
+    _isFetching = value;
+    notifyListeners();
+  }
+
+  void updateSubscriptionStatus(SubscriptionStatusDataModel newStatus) {
+    _subscriptionStatus = newStatus;
+    notifyListeners();
+  }
+
   Future<void> fetchSubscriptionData(int userId) async {
-    // print('Fetching subscriptionData for userId: $userId');
+    if (_isFetching) return;
+    setFetching(true);
 
     try {
       final newSubscriptionStatus =
@@ -19,13 +32,15 @@ class SubscriptionStatusProvider extends ChangeNotifier {
         _subscriptionStatus = newSubscriptionStatus;
         notifyListeners();
       } else {
-        // Handle the case when the response has an error code other than 200
         print(
             'Failed to fetch subscription data. Error code: ${newSubscriptionStatus.errorCode}');
       }
     } catch (e) {
-      // Handle the case when there is an exception during the API call
       print('Error fetching subscription data: $e');
+    } finally {
+      setFetching(false);
     }
   }
+
+  double get audioRemains => _subscriptionStatus?.audioReamins ?? 0.0;
 }

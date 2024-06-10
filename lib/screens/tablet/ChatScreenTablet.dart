@@ -182,39 +182,6 @@ class _ChatScreenTabletState extends State<ChatScreenTablet> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Risho"),
-        actions: [
-          /*IconButton(
-            icon: const Icon(Icons.mark_unread_chat_alt_outlined),
-            tooltip: 'Show Snack bar',
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('This is a snack-bar')));
-            },
-          ),*/
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryColor.withOpacity(0.1),
-              elevation: 3,
-            ),
-            onPressed: () {
-              // Add your logic to send the message
-              _scrollController.animateTo(
-                  _scrollController.position.maxScrollExtent,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeOut);
-              setState(() {
-                _conversationComponents
-                    .add(UserTextAIResponse("Ask me another Ques", username));
-              });
-            },
-            child: Text(
-              "New Question",
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
       ),
       body: Column(
         children: [
@@ -381,6 +348,41 @@ class _ChatScreenTabletState extends State<ChatScreenTablet> {
                           ),
                         ),
                       ),
+                // NEW QUESTION
+                Container(
+                  margin: EdgeInsets.fromLTRB(0.0, 0.0, 5.0, 5.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: 1,
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryColor,
+                          elevation: 3,
+                        ),
+                        onPressed: () {
+                          // Add your logic to send the message
+                          _scrollController.animateTo(
+                              _scrollController.position.maxScrollExtent,
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeOut);
+                          setState(() {
+                            _conversationComponents.add(UserTextAIResponse(
+                                "Ask me another Ques", username));
+                          });
+                        },
+                        child: Text(
+                          "New Ques.",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -483,6 +485,33 @@ class _ChatScreenTabletState extends State<ChatScreenTablet> {
                 ),
               ),
             ],
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _isFeedbackLoading
+                    ? CircularProgressIndicator() // Show a loader while loading
+                    : TextButton(
+                        onPressed: () {
+                          setState(() {
+                            _isSuggestAnsActive = true;
+                          });
+
+                          fetchDataAndShowBottomSheet(widget.aiDialogue, "S")
+                              .whenComplete(() {});
+                        },
+                        child: Text(
+                          "Suggest Answer",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                SizedBox(
+                  width: 2,
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -698,8 +727,8 @@ class _ChatScreenTabletState extends State<ChatScreenTablet> {
                             },
                             child: _isFeedbackLoading
                                 ? CircularProgressIndicator() // Show a loader while loading
-                                : Text(
-                                    "Feedback",
+                                : const Text(
+                                    "Grammar Checker",
                                     style: TextStyle(color: Colors.white),
                                   ),
                           ),
@@ -807,27 +836,28 @@ class _ChatScreenTabletState extends State<ChatScreenTablet> {
                         ),
                       ],
                     ),
-                    Container(
+                    Padding(
                       padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _isSuggestAnsActive = true;
-                              });
+                          _isFeedbackLoading
+                              ? CircularProgressIndicator() // Show a loader while loading
+                              : ElevatedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _isSuggestAnsActive = true;
+                                    });
 
-                              fetchDataAndShowBottomSheet(aiDialogText, "S")
-                                  .whenComplete(() {});
-                            },
-                            child: _isFeedbackLoading
-                                ? CircularProgressIndicator() // Show a loader while loading
-                                : Text(
+                                    fetchDataAndShowBottomSheet(
+                                            widget.aiDialogue, "S")
+                                        .whenComplete(() {});
+                                  },
+                                  child: Text(
                                     "Suggest Answer",
                                     style: TextStyle(color: Colors.white),
                                   ),
-                          ),
+                                ),
                           SizedBox(
                             width: 2,
                           ),
@@ -989,33 +1019,33 @@ class _ChatScreenTabletState extends State<ChatScreenTablet> {
                       ],
                     ),
                     /*FEEDBACK*/
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 5.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SizedBox(
                             width: 2,
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _isFeedbackLoading = true;
-                              });
-                              fetchDataAndShowBottomSheet(userText, "F")
-                                  .whenComplete(() {
-                                setState(() {
-                                  _isFeedbackLoading = false;
-                                });
-                              });
-                            },
-                            child: _isFeedbackLoading
-                                ? CircularProgressIndicator() // Show a loader while loading
-                                : Text(
-                                    "Feedback",
+                          _isFeedbackLoading
+                              ? CircularProgressIndicator() // Show a loader while loading
+                              : ElevatedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _isFeedbackLoading = true;
+                                    });
+                                    fetchDataAndShowBottomSheet(userText, "F")
+                                        .whenComplete(() {
+                                      setState(() {
+                                        _isFeedbackLoading = false;
+                                      });
+                                    });
+                                  },
+                                  child: const Text(
+                                    "Grammar Checker",
                                     style: TextStyle(color: Colors.white),
                                   ),
-                          ),
+                                ),
                         ],
                       ),
                     ),
@@ -1115,26 +1145,28 @@ class _ChatScreenTabletState extends State<ChatScreenTablet> {
                       ],
                     ),
                     /*Suggest Answer*/
-                    Container(
+                    Padding(
                       padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _isSuggestAnsActive = true;
-                              });
-                              fetchDataAndShowBottomSheet(aiDialogText, "S")
-                                  .whenComplete(() {});
-                            },
-                            child: _isFeedbackLoading
-                                ? CircularProgressIndicator() // Show a loader while loading
-                                : Text(
+                          _isFeedbackLoading
+                              ? CircularProgressIndicator() // Show a loader while loading
+                              : TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _isSuggestAnsActive = true;
+                                    });
+
+                                    fetchDataAndShowBottomSheet(
+                                            widget.aiDialogue, "S")
+                                        .whenComplete(() {});
+                                  },
+                                  child: Text(
                                     "Suggest Answer",
                                     style: TextStyle(color: Colors.white),
                                   ),
-                          ),
+                                ),
                           SizedBox(
                             width: 2,
                           ),
@@ -1362,7 +1394,8 @@ class _ChatScreenTabletState extends State<ChatScreenTablet> {
         children: [
           Text(
             title,
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, color: AppColors.primaryColor),
           ),
           SizedBox(width: 5),
           Text(

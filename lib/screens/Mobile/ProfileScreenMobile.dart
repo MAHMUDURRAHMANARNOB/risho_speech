@@ -20,7 +20,7 @@ class ProfileScreenMobile extends StatefulWidget {
 class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
   final SubscriptionStatusProvider subscriptionStatusProvider =
       SubscriptionStatusProvider();
-  late int userId;
+  late int userId = Provider.of<AuthProvider>(context).user!.id;
   late String userName;
 
   Future<void> _refresh() async {
@@ -461,12 +461,12 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                                         'Error: ${snapshot.error}');
                                                   } else {
                                                     // Once the data is loaded, display the ticketsAvailable value
-                                                    final ticketsAvailable =
+                                                    final commentsAvailable =
                                                         subscriptionStatusProvider
                                                             .subscriptionStatus
                                                             ?.commentsAvailable;
                                                     return Text(
-                                                      ticketsAvailable
+                                                      commentsAvailable
                                                           .toString(),
                                                       style: TextStyle(),
                                                     );
@@ -489,7 +489,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Container(
+                  SizedBox(
                     width: double.infinity,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -545,13 +545,13 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                                       'Error: ${snapshot.error}');
                                                 } else {
                                                   // Once the data is loaded, display the ticketsAvailable value
-                                                  final ticketsAvailable =
+                                                  final audioMinutesUsed =
                                                       subscriptionStatusProvider
                                                           .subscriptionStatus
                                                           ?.audioMinutesUsed
                                                           .toString();
                                                   return Text(
-                                                    ticketsAvailable.toString(),
+                                                    audioMinutesUsed.toString(),
                                                     style: TextStyle(),
                                                   );
                                                 }
@@ -592,13 +592,13 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                                       'Error: ${snapshot.error}');
                                                 } else {
                                                   // Once the data is loaded, display the ticketsAvailable value
-                                                  final ticketsAvailable =
+                                                  final audioRemains =
                                                       subscriptionStatusProvider
                                                           .subscriptionStatus
                                                           ?.audioReamins
                                                           .toString();
                                                   return Text(
-                                                    ticketsAvailable.toString(),
+                                                    audioRemains.toString(),
                                                     style: TextStyle(),
                                                   );
                                                 }

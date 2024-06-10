@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:risho_speech/screens/CallingAgentScreen.dart';
 import 'package:risho_speech/screens/PracticeGuidedScreen.dart';
@@ -6,6 +7,8 @@ import 'package:risho_speech/screens/VocabulatyCategoryScreen.dart';
 import 'package:risho_speech/ui/colors.dart';
 
 import '../../providers/auth_provider.dart';
+import '../../providers/subscriptionStatus_provider.dart';
+import '../packages_screen.dart';
 
 class HomeScreenMobile extends StatefulWidget {
   const HomeScreenMobile({super.key});
@@ -52,13 +55,36 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
     );
   }
 
+  void initState() {
+    super.initState();
+    /*final userId = Provider.of<AuthProvider>(context, listen: false).user?.id;
+    if (userId != null) {
+      Provider.of<SubscriptionStatusProvider>(context, listen: false)
+          .fetchSubscriptionData(userId);
+    }*/
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final userId = Provider.of<AuthProvider>(context, listen: false).user?.id;
+      if (userId != null) {
+        Provider.of<SubscriptionStatusProvider>(context, listen: false)
+            .fetchSubscriptionData(userId);
+      }
+    });
+  }
+
+  final SubscriptionStatusProvider subscriptionStatusProvider =
+      SubscriptionStatusProvider();
+
+  // late final userId;
+
   @override
   Widget build(BuildContext context) {
-    final userId = Provider.of<AuthProvider>(context).user?.id;
+    // final userId = Provider.of<AuthProvider>(context).user?.id;
+    // subscriptionStatusProvider.fetchSubscriptionData(userId!);
 
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             /*TOP Greetings*/
             Row(
@@ -89,76 +115,122 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
               ],
             ),
 
-            /*Conversation Card*/
-            /*Padding(
-              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            // Audio Remaining
+            Container(
+              margin: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: AppColors.backgroundColorDark,
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "Conversation with Risho",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        ReuseableCard(
-                          "assets/images/card_img_one.png",
-                          "TITLE",
-                          "subTitle",
-                        ),
-                        ReuseableCard(
-                          "assets/images/card_img_one.png",
-                          "TITLE",
-                          "subTitle",
-                        ),
-                        ReuseableCard(
-                          "assets/images/card_img_one.png",
-                          "TITLE",
-                          "subTitle",
-                        ),
-                        ReuseableCard(
-                          "assets/images/card_img_one.png",
-                          "TITLE",
-                          "subTitle",
-                        ),
-                        ElevatedButton(
-                          onPressed: () {},
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                  Consumer<SubscriptionStatusProvider>(
+                    builder: (context, provider, child) {
+                      if (provider.isFetching) {
+                        return const SpinKitThreeInOut(
+                          size: 10.0,
+                          color: AppColors.primaryColor,
+                        ); // Show a loading indicator while fetching data for the first time
+                      } else if (provider.subscriptionStatus == null) {
+                        return const Text('No data available');
+                      } else {
+                        final audioRemains = provider
+                                .subscriptionStatus?.audioReamins
+                                ?.toString() ??
+                            '---';
+                        return Container(
+                          padding: EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "See more",
-                                style: TextStyle(color: AppColors.primaryColor),
+                                "$audioRemains",
+                                style: TextStyle(
+                                    color: AppColors.primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 24),
                               ),
-                              Icon(
-                                Icons.chevron_right,
-                                color: AppColors.primaryColor,
+                              Text(
+                                "Minutes Remaining",
+                                style: TextStyle(color: Colors.white),
                               ),
                             ],
                           ),
-                        ),
-                      ],
+                        );
+                      }
+                    },
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PackagesScreen()),
+                      );
+                    },
+                    child: Text(
+                      "Add Minutes",
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ],
               ),
-            ),*/
+            ),
+
+            /*Conversation Card*/
             Container(
               margin: EdgeInsets.fromLTRB(8.0, 5.0, 8.0, 5.0),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const PracticeGuidedScreen(
-                              screenName: 'PDL',
-                            )),
-                  );
+                  // double audioRemains = subscriptionStatusProvider.audioRemains;
+                  double audioRemains = Provider.of<SubscriptionStatusProvider>(
+                          context,
+                          listen: false)
+                      .audioRemains;
+                  // debugPrint(audioRemains.toString());
+                  if (audioRemains > 0.0) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const PracticeGuidedScreen(
+                                screenName: 'PDL',
+                              )),
+                    );
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text('Limit expired'),
+                        content: Text(
+                            'You have no audio minutes remains. Please purchase more.'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: Text(
+                              'OK',
+                              style: TextStyle(color: AppColors.secondaryColor),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const PackagesScreen()),
+                            ),
+                            child: Text(
+                              'Purchase',
+                              style: TextStyle(color: AppColors.primaryColor),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
                 },
                 child: Card(
                   color: Colors.redAccent,
@@ -238,13 +310,48 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
               margin: EdgeInsets.fromLTRB(8.0, 5.0, 8.0, 5.0),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const PracticeGuidedScreen(
-                              screenName: 'IP',
-                            )),
-                  );
+                  double audioRemains = Provider.of<SubscriptionStatusProvider>(
+                          context,
+                          listen: false)
+                      .audioRemains;
+                  if (audioRemains > 0.0) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const PracticeGuidedScreen(
+                                screenName: 'IP',
+                              )),
+                    );
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text('Limit expired'),
+                        content: Text(
+                            'You have no audio minutes remains. Please purchase more.'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: Text(
+                              'OK',
+                              style: TextStyle(color: AppColors.secondaryColor),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const PackagesScreen()),
+                            ),
+                            child: Text(
+                              'Purchase',
+                              style: TextStyle(color: AppColors.primaryColor),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
                 },
                 child: Card(
                   color: Colors.orangeAccent,

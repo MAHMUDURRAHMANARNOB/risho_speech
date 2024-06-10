@@ -5,6 +5,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:record/record.dart';
@@ -89,6 +90,7 @@ class _CallingScreenTabletState extends State<CallingScreenTablet> {
   late double _completenessScore = 0.0;
   late double _prosodyScore = 0.0;
   late String _userText = '';
+  late String _userAudio = '';
   late String _userTranslation = '';
   late List<WordScore>? _words = [];
 
@@ -333,6 +335,7 @@ class _CallingScreenTabletState extends State<CallingScreenTablet> {
                                   _fluencyScore,
                                   _completenessScore,
                                   _prosodyScore,
+                                  _userAudio,
                                   _words);
                             },
                             icon: Container(
@@ -590,6 +593,9 @@ class _CallingScreenTabletState extends State<CallingScreenTablet> {
             _userText =
                 callConversationProvider.callConversationResponse!.userText ??
                     "";
+            _userAudio =
+                callConversationProvider.callConversationResponse!.userAudio ??
+                    "";
             _userTranslation =
                 callConversationProvider.callConversationResponse!.userTextBn ??
                     "Not Found";
@@ -741,6 +747,7 @@ class _CallingScreenTabletState extends State<CallingScreenTablet> {
                                     fluencyScore,
                                     completenessScore,
                                     prosodyScore,
+                                    _userAudio,
                                     words);
                                 /*fetchDataAndShowBottomSheet(userText, "F")
                                   .whenComplete(() {
@@ -854,6 +861,7 @@ class _CallingScreenTabletState extends State<CallingScreenTablet> {
     double fluencyScore,
     double completenessScore,
     double prosodyScore,
+    String userAudio,
     List<WordScore>? words,
   ) {
     // print("words: ${words?[2].word}");
@@ -867,223 +875,271 @@ class _CallingScreenTabletState extends State<CallingScreenTablet> {
             padding: EdgeInsets.all(10.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                /*Text(
+                const Text(
+                  "You said",
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryColor),
+                ),
+                Text(
                   userText,
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),*/
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      "assets/images/accuracy.png",
-                      width: 20,
-                      height: 20,
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Accuracy Score:"),
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 8,
-                                  child: LinearProgressIndicator(
-                                    value: accuracyScore /
-                                        100, // value should be between 0 and 1
-                                    backgroundColor: Colors.grey[300],
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        AppColors.primaryColor),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 2,
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: Text("${accuracyScore.toString()}%"),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      "assets/images/fluency.png",
-                      width: 20,
-                      height: 20,
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Fluency Score:"),
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 8,
-                                  child: LinearProgressIndicator(
-                                    value: fluencyScore /
-                                        100, // value should be between 0 and 1
-                                    backgroundColor: Colors.grey[300],
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        AppColors.primaryColor),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 2,
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: Text("${fluencyScore.toString()}%"),
-                                ),
-                              ],
-                            ),
-                          ],
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor),
+                  onPressed: () {
+                    Source urlSource = UrlSource(userAudio);
+                    audioPlayer.play(urlSource);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Listen",
+                          style: TextStyle(color: Colors.white),
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      "assets/images/solution.png",
-                      width: 20,
-                      height: 20,
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Completeness Score:"),
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 8,
-                                  child: LinearProgressIndicator(
-                                    value: completenessScore /
-                                        100, // value should be between 0 and 1
-                                    backgroundColor: Colors.grey[300],
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        AppColors.primaryColor),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 2,
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child:
-                                      Text("${completenessScore.toString()}%"),
-                                ),
-                              ],
-                            ),
-                          ],
+                        SizedBox(
+                          width: 5.0,
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      "assets/images/prosody.png",
-                      width: 20,
-                      height: 20,
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Prosody Score:"),
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 8,
-                                  child: LinearProgressIndicator(
-                                    value: prosodyScore /
-                                        100, // value should be between 0 and 1
-                                    backgroundColor: Colors.grey[300],
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        AppColors.primaryColor),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 2,
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: Text("${prosodyScore.toString()}%"),
-                                ),
-                              ],
-                            ),
-                          ],
+                        Icon(
+                          FontAwesomeIcons.volumeUp,
+                          size: 16,
+                          color: Colors.white,
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    columnSpacing: 10,
-                    columns: [
-                      DataColumn(label: Text('Word')),
-                      DataColumn(label: Text('Accuracy Score')),
-                      DataColumn(label: Text('Comments')),
-                    ],
-                    rows: words?.map((word) {
-                          String errorType = word.errorType ?? '';
-                          if (word.errorType == "None") {
-                            errorType = "Perfect";
-                          } else {
-                            errorType = word.errorType ?? '';
-                          }
-                          return DataRow(
-                            cells: [
-                              DataCell(
-                                Text(word.word ?? ""),
-                              ),
-                              DataCell(
-                                Text(word.accuracyScore.toString() ?? ""),
-                              ),
-                              DataCell(
-                                Text(
-                                  errorType,
-                                  style: TextStyle(
-                                      color: errorType != "Perfect"
-                                          ? AppColors.secondaryColor
-                                          : AppColors.primaryColor,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ],
-                          );
-                        }).toList() ??
-                        [],
                   ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/images/accuracy.png",
+                          width: 20,
+                          height: 20,
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Accuracy Score:"),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 8,
+                                      child: LinearProgressIndicator(
+                                        value: accuracyScore / 100,
+                                        // value should be between 0 and 1
+                                        backgroundColor: Colors.grey[300],
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                AppColors.primaryColor),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 2,
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child:
+                                          Text("${accuracyScore.toString()}%"),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/images/fluency.png",
+                          width: 20,
+                          height: 20,
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Fluency Score:"),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 8,
+                                      child: LinearProgressIndicator(
+                                        value: fluencyScore / 100,
+                                        // value should be between 0 and 1
+                                        backgroundColor: Colors.grey[300],
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                AppColors.primaryColor),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 2,
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child:
+                                          Text("${fluencyScore.toString()}%"),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/images/solution.png",
+                          width: 20,
+                          height: 20,
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Completeness Score:"),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 8,
+                                      child: LinearProgressIndicator(
+                                        value: completenessScore / 100,
+                                        // value should be between 0 and 1
+                                        backgroundColor: Colors.grey[300],
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                AppColors.primaryColor),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 2,
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Text(
+                                          "${completenessScore.toString()}%"),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/images/prosody.png",
+                          width: 20,
+                          height: 20,
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Prosody Score:"),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 8,
+                                      child: LinearProgressIndicator(
+                                        value: prosodyScore / 100,
+                                        // value should be between 0 and 1
+                                        backgroundColor: Colors.grey[300],
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                AppColors.primaryColor),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 2,
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child:
+                                          Text("${prosodyScore.toString()}%"),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: DataTable(
+                        columnSpacing: 10,
+                        columns: [
+                          DataColumn(label: Text('Word')),
+                          DataColumn(label: Text('Accuracy Score')),
+                          DataColumn(label: Text('Comments')),
+                        ],
+                        rows: words?.map((word) {
+                              String errorType = word.errorType ?? '';
+                              if (word.errorType == "None") {
+                                errorType = "Perfect";
+                              } else {
+                                errorType = word.errorType ?? '';
+                              }
+                              return DataRow(
+                                cells: [
+                                  DataCell(
+                                    Text(word.word ?? ""),
+                                  ),
+                                  DataCell(
+                                    Text(word.accuracyScore.toString() ?? ""),
+                                  ),
+                                  DataCell(
+                                    Text(
+                                      errorType,
+                                      style: TextStyle(
+                                          color: errorType != "Perfect"
+                                              ? AppColors.secondaryColor
+                                              : AppColors.primaryColor,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }).toList() ??
+                            [],
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/auth_provider.dart';
+import '../../providers/subscriptionStatus_provider.dart';
+import '../../ui/colors.dart';
 import '../CallingAgentScreen.dart';
 import '../Common/ContainerCard.dart';
 import '../PracticeGuidedScreen.dart';
 import '../VocabulatyCategoryScreen.dart';
+import '../packages_screen.dart';
 
 class HomeScreenTablet extends StatefulWidget {
   const HomeScreenTablet({super.key});
@@ -15,6 +19,22 @@ class HomeScreenTablet extends StatefulWidget {
 }
 
 class _HomeScreenTabletState extends State<HomeScreenTablet> {
+  void initState() {
+    super.initState();
+    /*final userId = Provider.of<AuthProvider>(context, listen: false).user?.id;
+    if (userId != null) {
+      Provider.of<SubscriptionStatusProvider>(context, listen: false)
+          .fetchSubscriptionData(userId);
+    }*/
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final userId = Provider.of<AuthProvider>(context, listen: false).user?.id;
+      if (userId != null) {
+        Provider.of<SubscriptionStatusProvider>(context, listen: false)
+            .fetchSubscriptionData(userId);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final userId = Provider.of<AuthProvider>(context).user?.id;
@@ -54,6 +74,72 @@ class _HomeScreenTabletState extends State<HomeScreenTablet> {
                 ],
               ),
             ),
+            // Audio Remaining
+            Container(
+              margin: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: AppColors.backgroundColorDark,
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Consumer<SubscriptionStatusProvider>(
+                    builder: (context, provider, child) {
+                      if (provider.isFetching) {
+                        return const SpinKitThreeInOut(
+                          size: 10.0,
+                          color: AppColors.primaryColor,
+                        ); // Show a loading indicator while fetching data for the first time
+                      } else if (provider.subscriptionStatus == null) {
+                        return const Text('No data available');
+                      } else {
+                        final audioRemains = provider
+                                .subscriptionStatus?.audioReamins
+                                ?.toString() ??
+                            '---';
+                        return Container(
+                          padding: EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "$audioRemains",
+                                style: TextStyle(
+                                    color: AppColors.primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 24),
+                              ),
+                              Text(
+                                "Minutes Remaining",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PackagesScreen()),
+                      );
+                    },
+                    child: Text(
+                      "Add Minutes",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             /*Option Buttons*/
             Row(
               children: [
@@ -66,13 +152,51 @@ class _HomeScreenTabletState extends State<HomeScreenTablet> {
                     subTitle: '',
                     color: Colors.redAccent,
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const PracticeGuidedScreen(
-                                  screenName: 'PDL',
-                                )),
-                      );
+                      double audioRemains =
+                          Provider.of<SubscriptionStatusProvider>(context,
+                                  listen: false)
+                              .audioRemains;
+                      if (audioRemains > 0.0) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const PracticeGuidedScreen(
+                                    screenName: 'PDL',
+                                  )),
+                        );
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text('Limit expired'),
+                            content: Text(
+                                'You have no audio minutes remains. Please purchase more.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: Text(
+                                  'OK',
+                                  style: TextStyle(
+                                      color: AppColors.secondaryColor),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const PackagesScreen()),
+                                ),
+                                child: Text(
+                                  'Purchase',
+                                  style:
+                                      TextStyle(color: AppColors.primaryColor),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
                     },
                   ),
                 ),
@@ -85,13 +209,51 @@ class _HomeScreenTabletState extends State<HomeScreenTablet> {
                     color: Colors.orangeAccent,
                     subTitle: '',
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const PracticeGuidedScreen(
-                                  screenName: 'IP',
-                                )),
-                      );
+                      double audioRemains =
+                          Provider.of<SubscriptionStatusProvider>(context,
+                                  listen: false)
+                              .audioRemains;
+                      if (audioRemains > 0.0) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const PracticeGuidedScreen(
+                                    screenName: 'IP',
+                                  )),
+                        );
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text('Limit expired'),
+                            content: Text(
+                                'You have no audio minutes remains. Please purchase more.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: Text(
+                                  'OK',
+                                  style: TextStyle(
+                                      color: AppColors.secondaryColor),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const PackagesScreen()),
+                                ),
+                                child: Text(
+                                  'Purchase',
+                                  style:
+                                      TextStyle(color: AppColors.primaryColor),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
                     },
                   ),
                 ),
