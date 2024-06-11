@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 import 'package:risho_speech/providers/VocabularyDialogListProvider.dart';
 import 'package:risho_speech/providers/VocabularySentenceListProvider.dart';
@@ -23,6 +24,7 @@ import 'package:risho_speech/screens/LoginScreen.dart';
 import 'package:risho_speech/screens/RegistrationScreen.dart';
 import 'package:risho_speech/screens/SplashScreen.dart';
 import 'package:risho_speech/screens/WelcomeScreen.dart';
+import 'package:risho_speech/utils/theme/theme.dart';
 import 'package:upgrader/upgrader.dart';
 
 Future<void> main() async {
@@ -101,5 +103,25 @@ class RishoSpeech extends StatelessWidget {
           // ToolsScreen.id: (context) => ToolsScreen(),
           // DashboardScreen.id: (context) => DashboardScreen(),
         });
+
+    /*return GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        themeMode: ThemeMode.system,
+        theme: TAppTheme.lightTheme,
+        darkTheme: TAppTheme.darkTheme,
+        initialRoute: SplashScreen.id,
+        routes: {
+          SplashScreen.id: (context) => SplashScreen(),
+          WelcomeScreen.id: (context) => WelcomeScreen(),
+          LoginScreen.id: (context) => LoginScreen(),
+          RegistrationScreen.id: (context) => RegistrationScreen(),
+          // OtpScreenMobile.id: (context) => OtpScreenMobile(),
+          // Dashboard.id: (context) => Dashboard(),
+          // CoursesScreen.id: (context) => CoursesScreen(),
+          // StudySectionScreen.id: (context) => StudySectionScreen(),
+          // PackagesScreen.id: (context) => PackagesScreen(),
+          // ToolsScreen.id: (context) => ToolsScreen(),
+          // DashboardScreen.id: (context) => DashboardScreen(),
+        });*/
   }
 }

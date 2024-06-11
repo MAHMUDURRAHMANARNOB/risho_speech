@@ -8,7 +8,7 @@ import '../../ui/colors.dart';
 import '../CallingAgentScreen.dart';
 import '../Common/ContainerCard.dart';
 import '../PracticeGuidedScreen.dart';
-import '../VocabulatyCategoryScreen.dart';
+import '../VocabularyCategoryScreen.dart';
 import '../packages_screen.dart';
 
 class HomeScreenTablet extends StatefulWidget {
@@ -19,6 +19,7 @@ class HomeScreenTablet extends StatefulWidget {
 }
 
 class _HomeScreenTabletState extends State<HomeScreenTablet> {
+  @override
   void initState() {
     super.initState();
     /*final userId = Provider.of<AuthProvider>(context, listen: false).user?.id;
@@ -37,7 +38,7 @@ class _HomeScreenTabletState extends State<HomeScreenTablet> {
 
   @override
   Widget build(BuildContext context) {
-    final userId = Provider.of<AuthProvider>(context).user?.id;
+    // final userId = Provider.of<AuthProvider>(context).user?.id;
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -287,11 +288,49 @@ class _HomeScreenTabletState extends State<HomeScreenTablet> {
                     color: Colors.lime,
                     subTitle: '',
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CallingAgentScreen()),
-                      );
+                      double audioRemains =
+                          Provider.of<SubscriptionStatusProvider>(context,
+                                  listen: false)
+                              .audioRemains;
+                      if (audioRemains > 0.0) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CallingAgentScreen()),
+                        );
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text('Limit expired'),
+                            content: Text(
+                                'You have no audio minutes remains. Please purchase more.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: Text(
+                                  'OK',
+                                  style: TextStyle(
+                                      color: AppColors.secondaryColor),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const PackagesScreen()),
+                                ),
+                                child: Text(
+                                  'Purchase',
+                                  style:
+                                      TextStyle(color: AppColors.primaryColor),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
                     },
                   ),
                 ),

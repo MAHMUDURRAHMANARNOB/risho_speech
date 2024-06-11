@@ -16,6 +16,7 @@ import 'package:risho_speech/ui/colors.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/doConversationProvider.dart';
 import '../../providers/validateSpokenSentenceProvider.dart';
+import '../packages_screen.dart';
 
 class ChatScreenMobile extends StatefulWidget {
   final int id;
@@ -600,316 +601,371 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
   // }
 
   Widget buildAiResponse(BuildContext context, AsyncSnapshot<void> snapshot) {
-    String aiDialogAudio =
-        doConversationProvider.conversationResponse!.aiDialogueAudio!;
-    String aiDialogText =
-        doConversationProvider.conversationResponse!.aiDialogue ?? "";
-    String userAudio = doConversationProvider.conversationResponse!.userAudio!;
-    double accuracyScore =
-        doConversationProvider.conversationResponse!.accuracyScore ?? 0.0;
-    double fluencyScore =
-        doConversationProvider.conversationResponse!.fluencyScore ?? 0.0;
-    double completenessScore =
-        doConversationProvider.conversationResponse!.completenessScore ?? 0.0;
-    double prosodyScore =
-        doConversationProvider.conversationResponse!.prosodyScore ?? 0.0;
-    String userText =
-        doConversationProvider.conversationResponse!.userText ?? "";
-    String userTranslation =
-        doConversationProvider.conversationResponse!.userTextBn ?? "Not Found";
-    String aiTranslation =
-        doConversationProvider.conversationResponse!.aiDialogueBn ??
-            "Not Found";
-    Source urlSource = UrlSource(aiDialogAudio);
-    audioPlayer.play(urlSource);
-    return Container(
-      padding: EdgeInsets.all(5.0),
-      child: Column(
-        children: [
-          /*UserRow*/
-          userText != ""
-              ? Column(
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 3,
-                          child: Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+    int errorCode = doConversationProvider.conversationResponse!.errorCode!;
+
+    if (errorCode == 200) {
+      String aiDialogAudio =
+          doConversationProvider.conversationResponse!.aiDialogueAudio!;
+      String aiDialogText =
+          doConversationProvider.conversationResponse!.aiDialogue ?? "";
+      String userAudio =
+          doConversationProvider.conversationResponse!.userAudio!;
+      double accuracyScore =
+          doConversationProvider.conversationResponse!.accuracyScore ?? 0.0;
+      double fluencyScore =
+          doConversationProvider.conversationResponse!.fluencyScore ?? 0.0;
+      double completenessScore =
+          doConversationProvider.conversationResponse!.completenessScore ?? 0.0;
+      double prosodyScore =
+          doConversationProvider.conversationResponse!.prosodyScore ?? 0.0;
+      String userText =
+          doConversationProvider.conversationResponse!.userText ?? "";
+      String userTranslation =
+          doConversationProvider.conversationResponse!.userTextBn ??
+              "Not Found";
+      String aiTranslation =
+          doConversationProvider.conversationResponse!.aiDialogueBn ??
+              "Not Found";
+      Source urlSource = UrlSource(aiDialogAudio);
+      audioPlayer.play(urlSource);
+      return Container(
+        padding: EdgeInsets.all(5.0),
+        child: Column(
+          children: [
+            /*UserRow*/
+            userText != ""
+                ? Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: Container(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        ShowInfoDialog(
+                                            userText,
+                                            accuracyScore,
+                                            fluencyScore,
+                                            completenessScore,
+                                            prosodyScore);
+                                      },
+                                      icon: const Icon(
+                                        Icons.info_outline,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        showDialog<String>(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              AlertDialog(
+                                            title: const Text('Translation'),
+                                            content: Text(userTranslation),
+                                          ),
+                                        );
+                                      },
+                                      icon: const Icon(
+                                        Icons.translate_rounded,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        Source urlSource = UrlSource(userAudio);
+                                        audioPlayer.play(urlSource);
+                                        // print(urlSource);
+                                      },
+                                      icon: const Icon(
+                                        Icons.volume_down_rounded,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 7,
+                            child: Column(
                               children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      ShowInfoDialog(
-                                          userText,
-                                          accuracyScore,
-                                          fluencyScore,
-                                          completenessScore,
-                                          prosodyScore);
-                                    },
-                                    icon: const Icon(
-                                      Icons.info_outline,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      showDialog<String>(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            AlertDialog(
-                                          title: const Text('Translation'),
-                                          content: Text(userTranslation),
+                                Container(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Expanded(
+                                        flex: 7,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                            color: AppColors.secondaryColor
+                                                .withOpacity(0.3),
+                                          ),
+                                          padding: EdgeInsets.all(10.0),
+                                          child: Text(
+                                            _isUserTranslation == false
+                                                ? userText
+                                                : userTranslation,
+                                          ),
                                         ),
-                                      );
-                                    },
-                                    icon: const Icon(
-                                      Icons.translate_rounded,
-                                      color: Colors.white,
-                                    ),
+                                      ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                          margin: EdgeInsets.fromLTRB(
+                                              5.0, 0.0, 5.0, 5.0),
+                                          child: Image.asset(
+                                            "assets/images/profile_chat.png",
+                                            height: 30,
+                                            width: 30,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Expanded(
-                                  flex: 1,
-                                  child: IconButton(
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      /*FEEDBACK*/
+                      Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 5.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: 2,
+                            ),
+                            _isFeedbackLoading
+                                ? CircularProgressIndicator() // Show a loader while loading
+                                : TextButton(
                                     onPressed: () {
-                                      Source urlSource = UrlSource(userAudio);
-                                      audioPlayer.play(urlSource);
-                                      // print(urlSource);
+                                      setState(() {
+                                        _isFeedbackLoading = true;
+                                      });
+                                      fetchDataAndShowBottomSheet(userText, "F")
+                                          .whenComplete(() {
+                                        setState(() {
+                                          _isFeedbackLoading = false;
+                                        });
+                                      });
                                     },
-                                    icon: const Icon(
+                                    child: const Text(
+                                      "Correction",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5.0,
+                      ),
+                    ],
+                  )
+                : Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12.0),
+                      color: AppColors.secondaryColor.withOpacity(0.1),
+                    ),
+                    padding: EdgeInsets.all(10.0),
+                    child: Text("Couldn\'t capture your voice"),
+                  ),
+
+            /*Ai Row*/
+            aiDialogText != ""
+                ? Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 7,
+                            child: Container(
+                              padding: EdgeInsets.all(5.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      margin: EdgeInsets.fromLTRB(
+                                          5.0, 0.0, 5.0, 5.0),
+                                      child: Image.asset(
+                                        "assets/images/risho_guru_icon.png",
+                                        height: 30,
+                                        width: 30,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 7,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                        color: AppColors.primaryColor
+                                            .withOpacity(0.3),
+                                      ),
+                                      padding: EdgeInsets.all(10.0),
+                                      child: Text(
+                                        aiDialogText,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: Container(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      Source urlSource =
+                                          UrlSource(aiDialogAudio);
+                                      audioPlayer.play(urlSource);
+                                    },
+                                    icon: Icon(
                                       Icons.volume_down_rounded,
                                       color: Colors.white,
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 7,
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Expanded(
-                                      flex: 7,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(12.0),
-                                          color: AppColors.secondaryColor
-                                              .withOpacity(0.3),
-                                        ),
-                                        padding: EdgeInsets.all(10.0),
-                                        child: Text(
-                                          _isUserTranslation == false
-                                              ? userText
-                                              : userTranslation,
-                                        ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        showDialog<String>(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              AlertDialog(
+                                            title: const Text('Translation'),
+                                            content: Text(aiTranslation),
+                                          ),
+                                        );
+                                      },
+                                      icon: const Icon(
+                                        Icons.translate_rounded,
+                                        color: Colors.white,
                                       ),
                                     ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Container(
-                                        margin: EdgeInsets.fromLTRB(
-                                            5.0, 0.0, 5.0, 5.0),
-                                        child: Image.asset(
-                                          "assets/images/profile_chat.png",
-                                          height: 30,
-                                          width: 30,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                  SizedBox(
+                                    width: 1,
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    /*FEEDBACK*/
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 5.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: 2,
-                          ),
-                          _isFeedbackLoading
-                              ? CircularProgressIndicator() // Show a loader while loading
-                              : TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _isFeedbackLoading = true;
-                                    });
-                                    fetchDataAndShowBottomSheet(userText, "F")
-                                        .whenComplete(() {
-                                      setState(() {
-                                        _isFeedbackLoading = false;
-                                      });
-                                    });
-                                  },
-                                  child: const Text(
-                                    "Grammar Checker",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                  ],
-                )
-              : Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.0),
-                    color: AppColors.secondaryColor.withOpacity(0.1),
-                  ),
-                  padding: EdgeInsets.all(10.0),
-                  child: Text("Couldn\'t capture your voice"),
-                ),
-
-          /*Ai Row*/
-          aiDialogText != ""
-              ? Column(
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 7,
-                          child: Container(
-                            padding: EdgeInsets.all(5.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                    margin:
-                                        EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
-                                    child: Image.asset(
-                                      "assets/images/risho_guru_icon.png",
-                                      height: 30,
-                                      width: 30,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 7,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12.0),
-                                      color: AppColors.primaryColor
-                                          .withOpacity(0.3),
-                                    ),
-                                    padding: EdgeInsets.all(10.0),
-                                    child: Text(
-                                      aiDialogText,
-                                    ),
-                                  ),
-                                ),
-                              ],
                             ),
                           ),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    Source urlSource = UrlSource(aiDialogAudio);
-                                    audioPlayer.play(urlSource);
-                                  },
-                                  icon: Icon(
-                                    Icons.volume_down_rounded,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: IconButton(
+                        ],
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _isFeedbackLoading
+                                ? CircularProgressIndicator() // Show a loader while loading
+                                : TextButton(
                                     onPressed: () {
-                                      showDialog<String>(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            AlertDialog(
-                                          title: const Text('Translation'),
-                                          content: Text(aiTranslation),
-                                        ),
-                                      );
+                                      setState(() {
+                                        _isSuggestAnsActive = true;
+                                      });
+
+                                      fetchDataAndShowBottomSheet(
+                                              widget.aiDialogue, "S")
+                                          .whenComplete(() {});
                                     },
-                                    icon: const Icon(
-                                      Icons.translate_rounded,
-                                      color: Colors.white,
+                                    child: Text(
+                                      "Suggest Answer",
+                                      style: TextStyle(color: Colors.white),
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 1,
-                                ),
-                              ],
+                            SizedBox(
+                              width: 2,
                             ),
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _isFeedbackLoading
-                              ? CircularProgressIndicator() // Show a loader while loading
-                              : TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _isSuggestAnsActive = true;
-                                    });
-
-                                    fetchDataAndShowBottomSheet(
-                                            widget.aiDialogue, "S")
-                                        .whenComplete(() {});
-                                  },
-                                  child: Text(
-                                    "Suggest Answer",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                          SizedBox(
-                            width: 2,
-                          ),
-                        ],
                       ),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                  ],
-                )
-              : SizedBox(
-                  width: 2,
+                      SizedBox(
+                        height: 5.0,
+                      ),
+                    ],
+                  )
+                : SizedBox(
+                    width: 2,
+                  ),
+          ],
+        ),
+      );
+    } else if (errorCode == 201) {
+      return Container(
+        margin: const EdgeInsets.all(5.0),
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: AppColors.primaryCardColor,
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Text(
+                "Sorry: ${doConversationProvider.conversationResponse!.message}",
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
                 ),
-        ],
-      ),
-    );
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryCardColor),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const PackagesScreen()),
+                  );
+                },
+                child: const Text(
+                  "Purchase Minutes",
+                  style: TextStyle(
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      return Container(
+        padding: EdgeInsets.all(12.0),
+        child: Text(doConversationProvider.conversationResponse!.message!),
+      );
+    }
   }
 
   Widget buildAiTextResponse(
@@ -918,310 +974,359 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
     NextQuestionProvider nextQuesProvider,
   ) {
     final response = nextQuesProvider.nextQuestionResponse;
-    String aiDialogAudio = response!.aiDialogAudio!;
-    String aiDialogText = response!.aiDialog ?? "";
-    String userAudio = response!.userAudio!;
-    double accuracyScore = response!.accuracyScore!;
-    double fluencyScore = response!.fluencyScore!;
-    double completenessScore = response!.completenessScore!;
-    double prosodyScore = response!.prosodyScore!;
-    String userText = response!.userText ?? "";
-    String userTranslation = response!.userTextBn ?? "Not Found";
-    String aiTranslation = response!.aiDialogBn ?? "Not Found";
-    if (aiDialogAudio != null) {
-      Source urlSource = UrlSource(aiDialogAudio);
-      audioPlayer.play(urlSource);
-    }
-    // setState(() {
-    //   latestQuestion = aiDialogText;
-    // });
+    int errorCode = response!.errorCode!;
+    if (errorCode == 200) {
+      String aiDialogAudio = response!.aiDialogAudio!;
+      String aiDialogText = response!.aiDialog ?? "";
+      String userAudio = response!.userAudio!;
+      double accuracyScore = response!.accuracyScore!;
+      double fluencyScore = response!.fluencyScore!;
+      double completenessScore = response!.completenessScore!;
+      double prosodyScore = response!.prosodyScore!;
+      String userText = response!.userText ?? "";
+      String userTranslation = response!.userTextBn ?? "Not Found";
+      String aiTranslation = response!.aiDialogBn ?? "Not Found";
+      if (aiDialogAudio != null) {
+        Source urlSource = UrlSource(aiDialogAudio);
+        audioPlayer.play(urlSource);
+      }
 
-    return Container(
-      padding: EdgeInsets.all(5.0),
-      child: Column(
-        children: [
-          /*UserRow*/
-          userText != ""
-              ? Column(
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 3,
-                          child: Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+      return Container(
+        padding: EdgeInsets.all(5.0),
+        child: Column(
+          children: [
+            /*UserRow*/
+            userText != ""
+                ? Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: Container(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        ShowInfoDialog(
+                                            userText,
+                                            accuracyScore,
+                                            fluencyScore,
+                                            completenessScore,
+                                            prosodyScore);
+                                      },
+                                      icon: const Icon(
+                                        Icons.info_outline,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        showDialog<String>(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              AlertDialog(
+                                            title: const Text('Translation'),
+                                            content: Text(userTranslation),
+                                          ),
+                                        );
+                                      },
+                                      icon: const Icon(
+                                        Icons.translate_rounded,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        Source urlSource = UrlSource(userAudio);
+                                        audioPlayer.play(urlSource);
+                                        // print(urlSource);
+                                      },
+                                      icon: const Icon(
+                                        Icons.volume_down_rounded,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 7,
+                            child: Column(
                               children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      ShowInfoDialog(
-                                          userText,
-                                          accuracyScore,
-                                          fluencyScore,
-                                          completenessScore,
-                                          prosodyScore);
-                                    },
-                                    icon: const Icon(
-                                      Icons.info_outline,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: IconButton(
-                                    onPressed: () {
-                                      showDialog<String>(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            AlertDialog(
-                                          title: const Text('Translation'),
-                                          content: Text(userTranslation),
+                                Container(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Expanded(
+                                        flex: 7,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(12.0),
+                                            color: AppColors.secondaryColor
+                                                .withOpacity(0.3),
+                                          ),
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Text(
+                                            _isUserTranslation == false
+                                                ? userText
+                                                : userTranslation,
+                                          ),
                                         ),
-                                      );
-                                    },
-                                    icon: const Icon(
-                                      Icons.translate_rounded,
-                                      color: Colors.white,
-                                    ),
+                                      ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                          margin: EdgeInsets.fromLTRB(
+                                              5.0, 0.0, 5.0, 5.0),
+                                          child: Image.asset(
+                                            "assets/images/profile_chat.png",
+                                            height: 30,
+                                            width: 30,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Expanded(
-                                  flex: 1,
-                                  child: IconButton(
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      /*FEEDBACK*/
+                      Container(
+                        padding:
+                            const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 5.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const SizedBox(
+                              width: 2,
+                            ),
+                            _isFeedbackLoading
+                                ? const CircularProgressIndicator() // Show a loader while loading
+                                : TextButton(
                                     onPressed: () {
-                                      Source urlSource = UrlSource(userAudio);
-                                      audioPlayer.play(urlSource);
-                                      // print(urlSource);
+                                      setState(() {
+                                        _isFeedbackLoading = true;
+                                      });
+                                      fetchDataAndShowBottomSheet(userText, "F")
+                                          .whenComplete(() {
+                                        setState(() {
+                                          _isFeedbackLoading = false;
+                                        });
+                                      });
                                     },
-                                    icon: const Icon(
+                                    child: const Text(
+                                      "Correction",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5.0,
+                      ),
+                    ],
+                  )
+                : SizedBox(
+                    width: 2,
+                  ),
+            /*Ai Row*/
+            aiDialogText != ""
+                ? Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 7,
+                            child: Container(
+                              padding: EdgeInsets.all(5.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      margin: EdgeInsets.fromLTRB(
+                                          5.0, 0.0, 5.0, 5.0),
+                                      child: Image.asset(
+                                        "assets/images/risho_guru_icon.png",
+                                        height: 30,
+                                        width: 30,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 7,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                        color: AppColors.primaryColor
+                                            .withOpacity(0.3),
+                                      ),
+                                      padding: EdgeInsets.all(10.0),
+                                      child: Text(
+                                        aiDialogText,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: Container(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      Source urlSource =
+                                          UrlSource(aiDialogAudio);
+                                      audioPlayer.play(urlSource);
+                                    },
+                                    icon: Icon(
                                       Icons.volume_down_rounded,
                                       color: Colors.white,
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 7,
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Expanded(
-                                      flex: 7,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(12.0),
-                                          color: AppColors.secondaryColor
-                                              .withOpacity(0.3),
-                                        ),
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Text(
-                                          _isUserTranslation == false
-                                              ? userText
-                                              : userTranslation,
-                                        ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        showDialog<String>(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              AlertDialog(
+                                            title: const Text('Translation'),
+                                            content: Text(aiTranslation),
+                                          ),
+                                        );
+                                      },
+                                      icon: const Icon(
+                                        Icons.translate_rounded,
+                                        color: Colors.white,
                                       ),
                                     ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Container(
-                                        margin: EdgeInsets.fromLTRB(
-                                            5.0, 0.0, 5.0, 5.0),
-                                        child: Image.asset(
-                                          "assets/images/profile_chat.png",
-                                          height: 30,
-                                          width: 30,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                  SizedBox(
+                                    width: 1,
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    /*FEEDBACK*/
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 5.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const SizedBox(
-                            width: 2,
-                          ),
-                          _isFeedbackLoading
-                              ? const CircularProgressIndicator() // Show a loader while loading
-                              : TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _isFeedbackLoading = true;
-                                    });
-                                    fetchDataAndShowBottomSheet(userText, "F")
-                                        .whenComplete(() {
-                                      setState(() {
-                                        _isFeedbackLoading = false;
-                                      });
-                                    });
-                                  },
-                                  child: const Text(
-                                    "Grammar Checker",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                  ],
-                )
-              : SizedBox(
-                  width: 2,
-                ),
-          /*Ai Row*/
-          aiDialogText != ""
-              ? Column(
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 7,
-                          child: Container(
-                            padding: EdgeInsets.all(5.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Container(
-                                    margin:
-                                        EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
-                                    child: Image.asset(
-                                      "assets/images/risho_guru_icon.png",
-                                      height: 30,
-                                      width: 30,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 7,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12.0),
-                                      color: AppColors.primaryColor
-                                          .withOpacity(0.3),
-                                    ),
-                                    padding: EdgeInsets.all(10.0),
-                                    child: Text(
-                                      aiDialogText,
-                                    ),
-                                  ),
-                                ),
-                              ],
                             ),
                           ),
-                        ),
-                        Expanded(
-                          flex: 3,
-                          child: Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    Source urlSource = UrlSource(aiDialogAudio);
-                                    audioPlayer.play(urlSource);
-                                  },
-                                  icon: Icon(
-                                    Icons.volume_down_rounded,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: IconButton(
+                        ],
+                      ),
+                      /*Suggest Answer*/
+                      Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _isFeedbackLoading
+                                ? CircularProgressIndicator() // Show a loader while loading
+                                : TextButton(
                                     onPressed: () {
-                                      showDialog<String>(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            AlertDialog(
-                                          title: const Text('Translation'),
-                                          content: Text(aiTranslation),
-                                        ),
-                                      );
+                                      setState(() {
+                                        _isSuggestAnsActive = true;
+                                      });
+
+                                      fetchDataAndShowBottomSheet(
+                                              widget.aiDialogue, "S")
+                                          .whenComplete(() {});
                                     },
-                                    icon: const Icon(
-                                      Icons.translate_rounded,
-                                      color: Colors.white,
+                                    child: Text(
+                                      "Suggest Answer",
+                                      style: TextStyle(color: Colors.white),
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 1,
-                                ),
-                              ],
+                            SizedBox(
+                              width: 2,
                             ),
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
-                    /*Suggest Answer*/
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _isFeedbackLoading
-                              ? CircularProgressIndicator() // Show a loader while loading
-                              : TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _isSuggestAnsActive = true;
-                                    });
-
-                                    fetchDataAndShowBottomSheet(
-                                            widget.aiDialogue, "S")
-                                        .whenComplete(() {});
-                                  },
-                                  child: Text(
-                                    "Suggest Answer",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                          SizedBox(
-                            width: 2,
-                          ),
-                        ],
                       ),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                  ],
-                )
-              : SizedBox(
-                  width: 2,
-                  child: Text(
-                      doConversationProvider.conversationResponse!.message ??
-                          "Some error in server"),
+                      SizedBox(
+                        height: 5.0,
+                      ),
+                    ],
+                  )
+                : SizedBox(
+                    width: 2,
+                    child: Text(
+                        doConversationProvider.conversationResponse!.message ??
+                            "Some error in server"),
+                  ),
+          ],
+        ),
+      );
+    } else if (errorCode == 201) {
+      return Container(
+        margin: const EdgeInsets.all(5.0),
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: AppColors.primaryCardColor,
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Text(
+                "Sorry: ${doConversationProvider.conversationResponse!.message}",
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
                 ),
-        ],
-      ),
-    );
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryCardColor),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const PackagesScreen()),
+                  );
+                },
+                child: const Text(
+                  "Purchase Minutes",
+                  style: TextStyle(
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      return Container(
+        padding: EdgeInsets.all(12.0),
+        child: Text(doConversationProvider.conversationResponse!.message!),
+      );
+    }
   }
 
   Future ShowInfoDialog(String userText, double accuracyScore,

@@ -38,6 +38,10 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
     userName = Provider.of<AuthProvider>(context).user!.username;
     subscriptionStatusProvider.fetchSubscriptionData(userId!);
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<SubscriptionStatusProvider>().fetchSubscriptionData(userId);
+    });
+
     return SafeArea(
       child: Scaffold(
         /*appBar: AppBar(
@@ -254,7 +258,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                   width: 50,
                                   height: 55,
                                 ),
-                                Text(
+                                const Text(
                                   "Homework Token",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
@@ -266,39 +270,44 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
+                                      const Text(
                                         "Used",
                                         style: TextStyle(),
                                       ),
                                       userId != null
-                                          ? FutureBuilder(
-                                              future: subscriptionStatusProvider
-                                                  .fetchSubscriptionData(
-                                                      userId!),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState ==
-                                                    ConnectionState.waiting) {
-                                                  return const SpinKitThreeInOut(
-                                                    size: 10.0,
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                  );
-                                                  // Show a loading indicator while fetching data
-                                                } else if (snapshot.hasError) {
-                                                  return Text(
-                                                      'Error: ${snapshot.error}');
-                                                } else {
-                                                  // Once the data is loaded, display the ticketsAvailable value
-                                                  final ticketsAvailable =
-                                                      subscriptionStatusProvider
-                                                          .subscriptionStatus
-                                                          ?.ticketUsed
-                                                          .toString();
-                                                  return Text(
-                                                    ticketsAvailable.toString(),
-                                                    style: TextStyle(),
-                                                  );
+                                          ? Consumer<
+                                              SubscriptionStatusProvider>(
+                                              builder: (context,
+                                                  subscriptionProvider, child) {
+                                                if (subscriptionProvider
+                                                    .isFetching) {
+                                                  return const SpinKitPulse(
+                                                      color: AppColors
+                                                          .primaryColor,
+                                                      size: 14);
                                                 }
+
+                                                if (subscriptionProvider
+                                                        .subscriptionStatus ==
+                                                    null) {
+                                                  return Center(
+                                                      child: Text(
+                                                          'No subscription data available.'));
+                                                }
+
+                                                return Center(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        '${subscriptionProvider.subscriptionStatus!.ticketUsed}',
+                                                      ),
+                                                      // Add more details as needed
+                                                    ],
+                                                  ),
+                                                );
                                               },
                                             )
                                           : Text(
@@ -319,36 +328,44 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                         style: TextStyle(),
                                       ),
                                       userId != null
-                                          ? FutureBuilder(
-                                              future: subscriptionStatusProvider
-                                                  .fetchSubscriptionData(
-                                                      userId!),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState ==
-                                                    ConnectionState.waiting) {
-                                                  return const SpinKitThreeInOut(
-                                                    size: 10.0,
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                  ); // Show a loading indicator while fetching data
-                                                } else if (snapshot.hasError) {
-                                                  return Text(
-                                                      'Error: ${snapshot.error}');
-                                                } else {
-                                                  // Once the data is loaded, display the ticketsAvailable value
-                                                  final ticketsAvailable =
-                                                      subscriptionStatusProvider
-                                                          .subscriptionStatus
-                                                          ?.ticketsAvailable
-                                                          .toString();
-                                                  return Text(
-                                                    ticketsAvailable.toString(),
-                                                    style: TextStyle(),
-                                                  );
+                                          ? Consumer<
+                                              SubscriptionStatusProvider>(
+                                              builder: (context,
+                                                  subscriptionProvider, child) {
+                                                if (subscriptionProvider
+                                                    .isFetching) {
+                                                  return const SpinKitPulse(
+                                                      color: AppColors
+                                                          .primaryColor,
+                                                      size: 14);
                                                 }
+
+                                                if (subscriptionProvider
+                                                        .subscriptionStatus ==
+                                                    null) {
+                                                  return Center(
+                                                      child: Text('--'));
+                                                }
+
+                                                return Center(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        subscriptionProvider
+                                                            .subscriptionStatus!
+                                                            .ticketsAvailable
+                                                            .toString(),
+                                                      ),
+                                                      // Add more details as needed
+                                                    ],
+                                                  ),
+                                                );
                                               },
                                             )
-                                          : Text(
+                                          : const Text(
                                               "**",
                                               style: TextStyle(),
                                             ),
@@ -393,33 +410,41 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                         style: TextStyle(),
                                       ),
                                       userId != null
-                                          ? FutureBuilder(
-                                              future: subscriptionStatusProvider
-                                                  .fetchSubscriptionData(
-                                                      userId!),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState ==
-                                                    ConnectionState.waiting) {
-                                                  return const SpinKitThreeInOut(
-                                                    size: 10.0,
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                  ); // Show a loading indicator while fetching data
-                                                } else if (snapshot.hasError) {
-                                                  return Text(
-                                                      'Error: ${snapshot.error}');
-                                                } else {
-                                                  // Once the data is loaded, display the ticketsAvailable value
-                                                  final ticketsAvailable =
-                                                      subscriptionStatusProvider
-                                                          .subscriptionStatus
-                                                          ?.commentUsed
-                                                          .toString();
-                                                  return Text(
-                                                    ticketsAvailable.toString(),
-                                                    style: TextStyle(),
-                                                  );
+                                          ? Consumer<
+                                              SubscriptionStatusProvider>(
+                                              builder: (context,
+                                                  subscriptionProvider, child) {
+                                                if (subscriptionProvider
+                                                    .isFetching) {
+                                                  return const SpinKitPulse(
+                                                      color: AppColors
+                                                          .primaryColor,
+                                                      size: 14);
                                                 }
+
+                                                if (subscriptionProvider
+                                                        .subscriptionStatus ==
+                                                    null) {
+                                                  return Center(
+                                                      child: Text('--'));
+                                                }
+
+                                                return Center(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        subscriptionProvider
+                                                            .subscriptionStatus!
+                                                            .commentUsed
+                                                            .toString(),
+                                                      ),
+                                                      // Add more details as needed
+                                                    ],
+                                                  ),
+                                                );
                                               },
                                             )
                                           : Text(
@@ -441,36 +466,42 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                           style: TextStyle(),
                                         ),
                                         userId != null
-                                            ? FutureBuilder(
-                                                future:
-                                                    subscriptionStatusProvider
-                                                        .fetchSubscriptionData(
-                                                            userId!),
-                                                builder: (context, snapshot) {
-                                                  if (snapshot
-                                                          .connectionState ==
-                                                      ConnectionState.waiting) {
-                                                    return const SpinKitThreeInOut(
-                                                      size: 10.0,
-                                                      color: AppColors
-                                                          .primaryColor,
-                                                    ); // Show a loading indicator while fetching data
-                                                  } else if (snapshot
-                                                      .hasError) {
-                                                    return Text(
-                                                        'Error: ${snapshot.error}');
-                                                  } else {
-                                                    // Once the data is loaded, display the ticketsAvailable value
-                                                    final commentsAvailable =
-                                                        subscriptionStatusProvider
-                                                            .subscriptionStatus
-                                                            ?.commentsAvailable;
-                                                    return Text(
-                                                      commentsAvailable
-                                                          .toString(),
-                                                      style: TextStyle(),
-                                                    );
+                                            ? Consumer<
+                                                SubscriptionStatusProvider>(
+                                                builder: (context,
+                                                    subscriptionProvider,
+                                                    child) {
+                                                  if (subscriptionProvider
+                                                      .isFetching) {
+                                                    return const SpinKitPulse(
+                                                        color: AppColors
+                                                            .primaryColor,
+                                                        size: 14);
                                                   }
+
+                                                  if (subscriptionProvider
+                                                          .subscriptionStatus ==
+                                                      null) {
+                                                    return Center(
+                                                        child: Text('--'));
+                                                  }
+
+                                                  return Center(
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          subscriptionProvider
+                                                              .subscriptionStatus!
+                                                              .commentsAvailable
+                                                              .toString(),
+                                                        ),
+                                                        // Add more details as needed
+                                                      ],
+                                                    ),
+                                                  );
                                                 },
                                               )
                                             : Text(
@@ -527,34 +558,41 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                         style: TextStyle(),
                                       ),
                                       userId != null
-                                          ? FutureBuilder(
-                                              future: subscriptionStatusProvider
-                                                  .fetchSubscriptionData(
-                                                      userId!),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState ==
-                                                    ConnectionState.waiting) {
-                                                  return const SpinKitThreeInOut(
-                                                    size: 10.0,
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                  );
-                                                  // Show a loading indicator while fetching data
-                                                } else if (snapshot.hasError) {
-                                                  return Text(
-                                                      'Error: ${snapshot.error}');
-                                                } else {
-                                                  // Once the data is loaded, display the ticketsAvailable value
-                                                  final audioMinutesUsed =
-                                                      subscriptionStatusProvider
-                                                          .subscriptionStatus
-                                                          ?.audioMinutesUsed
-                                                          .toString();
-                                                  return Text(
-                                                    audioMinutesUsed.toString(),
-                                                    style: TextStyle(),
-                                                  );
+                                          ? Consumer<
+                                              SubscriptionStatusProvider>(
+                                              builder: (context,
+                                                  subscriptionProvider, child) {
+                                                if (subscriptionProvider
+                                                    .isFetching) {
+                                                  return const SpinKitPulse(
+                                                      color: AppColors
+                                                          .primaryColor,
+                                                      size: 14);
                                                 }
+
+                                                if (subscriptionProvider
+                                                        .subscriptionStatus ==
+                                                    null) {
+                                                  return Center(
+                                                      child: Text('--'));
+                                                }
+
+                                                return Center(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        subscriptionProvider
+                                                            .subscriptionStatus!
+                                                            .audioMinutesUsed
+                                                            .toString(),
+                                                      ),
+                                                      // Add more details as needed
+                                                    ],
+                                                  ),
+                                                );
                                               },
                                             )
                                           : Text(
@@ -575,33 +613,41 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                         style: TextStyle(),
                                       ),
                                       userId != null
-                                          ? FutureBuilder(
-                                              future: subscriptionStatusProvider
-                                                  .fetchSubscriptionData(
-                                                      userId!),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState ==
-                                                    ConnectionState.waiting) {
-                                                  return const SpinKitThreeInOut(
-                                                    size: 10.0,
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                  ); // Show a loading indicator while fetching data
-                                                } else if (snapshot.hasError) {
-                                                  return Text(
-                                                      'Error: ${snapshot.error}');
-                                                } else {
-                                                  // Once the data is loaded, display the ticketsAvailable value
-                                                  final audioRemains =
-                                                      subscriptionStatusProvider
-                                                          .subscriptionStatus
-                                                          ?.audioReamins
-                                                          .toString();
-                                                  return Text(
-                                                    audioRemains.toString(),
-                                                    style: TextStyle(),
-                                                  );
+                                          ? Consumer<
+                                              SubscriptionStatusProvider>(
+                                              builder: (context,
+                                                  subscriptionProvider, child) {
+                                                if (subscriptionProvider
+                                                    .isFetching) {
+                                                  return const SpinKitPulse(
+                                                      color: AppColors
+                                                          .primaryColor,
+                                                      size: 14);
                                                 }
+
+                                                if (subscriptionProvider
+                                                        .subscriptionStatus ==
+                                                    null) {
+                                                  return Center(
+                                                      child: Text('--'));
+                                                }
+
+                                                return Center(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        subscriptionProvider
+                                                            .subscriptionStatus!
+                                                            .audioReamins
+                                                            .toString(),
+                                                      ),
+                                                      // Add more details as needed
+                                                    ],
+                                                  ),
+                                                );
                                               },
                                             )
                                           : Text(
@@ -646,35 +692,42 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                               children: [
                                 Text("Active Package: "),
                                 userId != null
-                                    ? FutureBuilder(
-                                        future: subscriptionStatusProvider
-                                            .fetchSubscriptionData(userId!),
-                                        builder: (context, snapshot) {
-                                          if (snapshot.connectionState ==
-                                              ConnectionState.waiting) {
-                                            return const SpinKitThreeInOut(
-                                              size: 10.0,
-                                              color: AppColors.primaryColor,
-                                            ); // Show a loading indicator while fetching data
-                                          } else if (snapshot.hasError) {
-                                            return Text(
-                                                'Error: ${snapshot.error}');
-                                          } else {
-                                            // Once the data is loaded, display the ticketsAvailable value
-                                            final ticketsAvailable =
-                                                subscriptionStatusProvider
-                                                    .subscriptionStatus
-                                                    ?.packageName
-                                                    .toString();
-                                            return Text(
-                                              ticketsAvailable.toString(),
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
+                                    ? Consumer<SubscriptionStatusProvider>(
+                                        builder: (context, subscriptionProvider,
+                                            child) {
+                                          if (subscriptionProvider.isFetching) {
+                                            return const SpinKitPulse(
                                                 color: AppColors.primaryColor,
-                                                fontSize: 20,
-                                              ),
-                                            );
+                                                size: 14);
                                           }
+
+                                          if (subscriptionProvider
+                                                  .subscriptionStatus ==
+                                              null) {
+                                            return Center(child: Text('--'));
+                                          }
+
+                                          return Center(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  subscriptionProvider
+                                                      .subscriptionStatus!
+                                                      .packageName
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                    color:
+                                                        AppColors.primaryColor,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 24,
+                                                  ),
+                                                ),
+                                                // Add more details as needed
+                                              ],
+                                            ),
+                                          );
                                         },
                                       )
                                     : Text(
@@ -702,30 +755,39 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                   children: [
                                     Text("Purchased Date"),
                                     userId != null
-                                        ? FutureBuilder(
-                                            future: subscriptionStatusProvider
-                                                .fetchSubscriptionData(userId),
-                                            builder: (context, snapshot) {
-                                              if (snapshot.connectionState ==
-                                                  ConnectionState.waiting) {
-                                                return const SpinKitThreeInOut(
-                                                  size: 10.0,
-                                                  color: AppColors.primaryColor,
-                                                ); // Show a loading indicator while fetching data
-                                              } else if (snapshot.hasError) {
-                                                return Text('Error: ');
-                                              } else {
-                                                // Once the data is loaded, display the ticketsAvailable value
-                                                final ticketsAvailable =
-                                                    subscriptionStatusProvider
-                                                        .subscriptionStatus
-                                                        ?.datePurchased;
-                                                return Text(
-                                                  ticketsAvailable.toString(),
-                                                  softWrap: true,
-                                                  style: TextStyle(),
-                                                );
+                                        ? Consumer<SubscriptionStatusProvider>(
+                                            builder: (context,
+                                                subscriptionProvider, child) {
+                                              if (subscriptionProvider
+                                                  .isFetching) {
+                                                return const SpinKitPulse(
+                                                    color:
+                                                        AppColors.primaryColor,
+                                                    size: 14);
                                               }
+
+                                              if (subscriptionProvider
+                                                      .subscriptionStatus ==
+                                                  null) {
+                                                return Center(
+                                                    child: Text('--'));
+                                              }
+
+                                              return Center(
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      subscriptionProvider
+                                                          .subscriptionStatus!
+                                                          .datePurchased
+                                                          .toString(),
+                                                    ),
+                                                    // Add more details as needed
+                                                  ],
+                                                ),
+                                              );
                                             },
                                           )
                                         : Text(
@@ -744,32 +806,39 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                   children: [
                                     Text("Validity Till"),
                                     userId != null
-                                        ? FutureBuilder(
-                                            future: subscriptionStatusProvider
-                                                .fetchSubscriptionData(userId),
-                                            builder: (context, snapshot) {
-                                              if (snapshot.connectionState ==
-                                                  ConnectionState.waiting) {
-                                                return const SpinKitThreeInOut(
-                                                  size: 10.0,
-                                                  color: AppColors.primaryColor,
-                                                ); // Show a loading indicator while fetching data
-                                              } else if (snapshot.hasError) {
-                                                return Text(
-                                                    'Error: ${snapshot.error}');
-                                              } else {
-                                                // Once the data is loaded, display the ticketsAvailable value
-                                                final ticketsAvailable =
-                                                    subscriptionStatusProvider
-                                                        .subscriptionStatus
-                                                        ?.validityDate;
-
-                                                return Text(
-                                                  ticketsAvailable.toString(),
-                                                  softWrap: true,
-                                                  style: TextStyle(),
-                                                );
+                                        ? Consumer<SubscriptionStatusProvider>(
+                                            builder: (context,
+                                                subscriptionProvider, child) {
+                                              if (subscriptionProvider
+                                                  .isFetching) {
+                                                return const SpinKitPulse(
+                                                    color:
+                                                        AppColors.primaryColor,
+                                                    size: 14);
                                               }
+
+                                              if (subscriptionProvider
+                                                      .subscriptionStatus ==
+                                                  null) {
+                                                return Center(
+                                                    child: Text('--'));
+                                              }
+
+                                              return Center(
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      subscriptionProvider
+                                                          .subscriptionStatus!
+                                                          .validityDate
+                                                          .toString(),
+                                                    ),
+                                                    // Add more details as needed
+                                                  ],
+                                                ),
+                                              );
                                             },
                                           )
                                         : Text(

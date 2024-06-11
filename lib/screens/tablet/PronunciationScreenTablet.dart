@@ -15,6 +15,7 @@ import '../../models/validateSpokenSentenceDataModel.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/nextQuestionProvider.dart';
 import '../../providers/validateSpokenSentenceProvider.dart';
+import '../packages_screen.dart';
 
 class PronunciationScreenTablet extends StatefulWidget {
   final int conversationId;
@@ -444,298 +445,349 @@ class _PronunciationScreenTabletState extends State<PronunciationScreenTablet> {
 
   Widget buildAiResponse(BuildContext context, AsyncSnapshot<void> snapshot) {
     if (snapshot.connectionState == ConnectionState.done) {
-      String aiDialogAudio = doGuidedConversationProvider
-          .guidedConversationResponse!.conversationAudioFile!;
-      String aiDialogText = doGuidedConversationProvider
-              .guidedConversationResponse!.conversationEn ??
-          "";
-      // String userAudio = doGuidedConversationProvider.guidedConversationResponse!.userAudio!;
-      double accuracyScore = doGuidedConversationProvider
-              .guidedConversationResponse!.accuracyScore ??
-          0.0;
-      double fluencyScore = doGuidedConversationProvider
-              .guidedConversationResponse!.fluencyScore ??
-          0.0;
-      double completenessScore = doGuidedConversationProvider
-              .guidedConversationResponse!.completenessScore ??
-          0.0;
-      double prosodyScore = doGuidedConversationProvider
-              .guidedConversationResponse!.prosodyScore ??
-          0.0;
+      int errorCode =
+          doGuidedConversationProvider.guidedConversationResponse!.error!;
+      if (errorCode == 200) {
+        String aiDialogAudio = doGuidedConversationProvider
+            .guidedConversationResponse!.conversationAudioFile!;
+        String aiDialogText = doGuidedConversationProvider
+                .guidedConversationResponse!.conversationEn ??
+            "";
+        // String userAudio = doGuidedConversationProvider.guidedConversationResponse!.userAudio!;
+        double accuracyScore = doGuidedConversationProvider
+                .guidedConversationResponse!.accuracyScore ??
+            0.0;
+        double fluencyScore = doGuidedConversationProvider
+                .guidedConversationResponse!.fluencyScore ??
+            0.0;
+        double completenessScore = doGuidedConversationProvider
+                .guidedConversationResponse!.completenessScore ??
+            0.0;
+        double prosodyScore = doGuidedConversationProvider
+                .guidedConversationResponse!.prosodyScore ??
+            0.0;
 
-      List<WordInfo>? words =
-          doGuidedConversationProvider.guidedConversationResponse?.words;
+        List<WordInfo>? words =
+            doGuidedConversationProvider.guidedConversationResponse?.words;
 
-      String userText =
-          doGuidedConversationProvider.guidedConversationResponse!.speechText ??
-              "";
-      String userTranslation = doGuidedConversationProvider
-              .guidedConversationResponse!.speechTextBn ??
-          "Not Found";
-      String aiTranslation = doGuidedConversationProvider
-              .guidedConversationResponse!.conversationBn ??
-          "Not Found";
+        String userText = doGuidedConversationProvider
+                .guidedConversationResponse!.speechText ??
+            "";
+        String userTranslation = doGuidedConversationProvider
+                .guidedConversationResponse!.speechTextBn ??
+            "Not Found";
+        String aiTranslation = doGuidedConversationProvider
+                .guidedConversationResponse!.conversationBn ??
+            "Not Found";
 
-      int dialogId =
-          doGuidedConversationProvider.guidedConversationResponse!.dialogId ??
-              0;
-      int seqNumber =
-          doGuidedConversationProvider.guidedConversationResponse!.seqNumber ??
-              0;
-      String discussionTopic = doGuidedConversationProvider
-              .guidedConversationResponse!.discussionTopic ??
-          "null";
-      String discusTitle = doGuidedConversationProvider
-              .guidedConversationResponse!.discusTitle ??
-          "null";
+        int dialogId =
+            doGuidedConversationProvider.guidedConversationResponse!.dialogId ??
+                0;
+        int seqNumber = doGuidedConversationProvider
+                .guidedConversationResponse!.seqNumber ??
+            0;
+        String discussionTopic = doGuidedConversationProvider
+                .guidedConversationResponse!.discussionTopic ??
+            "null";
+        String discusTitle = doGuidedConversationProvider
+                .guidedConversationResponse!.discusTitle ??
+            "null";
 
-      _dialogId = dialogId.toString();
-      _seqNumber = seqNumber;
-      _discussionTopic = discussionTopic.toString();
-      _discusTitle = discusTitle.toString();
+        _dialogId = dialogId.toString();
+        _seqNumber = seqNumber;
+        _discussionTopic = discussionTopic.toString();
+        _discusTitle = discusTitle.toString();
 
-      Source urlSource = UrlSource(aiDialogAudio);
-      audioPlayer.play(urlSource);
-      return Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.all(5.0),
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            /*UserRow*/
-            userText != ""
-                ? Column(
-                    children: [
-                      /*USERNAME*/
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 8,
-                            child: Container(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      margin: EdgeInsets.fromLTRB(
-                                          5.0, 0.0, 5.0, 5.0),
-                                      child: Image.asset(
-                                        "assets/images/profile_chat.png",
-                                        height: 30,
-                                        width: 30,
+        Source urlSource = UrlSource(aiDialogAudio);
+        audioPlayer.play(urlSource);
+        return Container(
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.all(5.0),
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              /*UserRow*/
+              userText != ""
+                  ? Column(
+                      children: [
+                        /*USERNAME*/
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 8,
+                              child: Container(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        margin: EdgeInsets.fromLTRB(
+                                            5.0, 0.0, 5.0, 5.0),
+                                        child: Image.asset(
+                                          "assets/images/profile_chat.png",
+                                          height: 30,
+                                          width: 30,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Expanded(
-                                    flex: 7,
-                                    child: Text(
-                                      userName,
+                                    Expanded(
+                                      flex: 7,
+                                      child: Text(
+                                        userName,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      /*content*/
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
-                        child: Row(
-                          children: [
-                            Flexible(
-                              flex: 6,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                  color:
-                                      AppColors.secondaryColor.withOpacity(0.3),
+                                  ],
                                 ),
-                                padding: EdgeInsets.all(10.0),
-                                child: Text(
-                                  "$userText ( $userTranslation )",
-                                ),
-                              ),
-                            ),
-                            Flexible(
-                              flex: 1,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      /*Source urlSource =
-                                          UrlSource(aiDialogAudio);
-                                      audioPlayer.play(urlSource);*/
-                                    },
-                                    icon: Icon(
-                                      Icons.volume_down_rounded,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
                               ),
                             ),
                           ],
                         ),
-                      ),
-                      /*FEEDBACK*/
-                      Container(
-                        padding:
-                            const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 5.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _isFeedbackLoading = true;
-                                });
-                                fetchDataAndShowBottomSheet(userText, "F")
-                                    .whenComplete(() {
-                                  setState(() {
-                                    _isFeedbackLoading = false;
-                                  });
-                                });
-                              },
-                              child: Text(
-                                "Feedback",
-                                style: TextStyle(color: Colors.white),
+                        /*content*/
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+                          child: Row(
+                            children: [
+                              Flexible(
+                                flex: 6,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                    color: AppColors.secondaryColor
+                                        .withOpacity(0.3),
+                                  ),
+                                  padding: EdgeInsets.all(10.0),
+                                  child: Text(
+                                    "$userText ( $userTranslation )",
+                                  ),
+                                ),
                               ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _isFeedbackLoading = true;
-                                });
-                                ShowInfoDialog(
-                                    userText,
-                                    accuracyScore,
-                                    fluencyScore,
-                                    completenessScore,
-                                    prosodyScore,
-                                    words);
-                                /*fetchDataAndShowBottomSheet(userText, "F")
+                              Flexible(
+                                flex: 1,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        /*Source urlSource =
+                                          UrlSource(aiDialogAudio);
+                                      audioPlayer.play(urlSource);*/
+                                      },
+                                      icon: Icon(
+                                        Icons.volume_down_rounded,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        /*FEEDBACK*/
+                        Container(
+                          padding:
+                              const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 5.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _isFeedbackLoading = true;
+                                  });
+                                  fetchDataAndShowBottomSheet(userText, "F")
+                                      .whenComplete(() {
+                                    setState(() {
+                                      _isFeedbackLoading = false;
+                                    });
+                                  });
+                                },
+                                child: Text(
+                                  "Feedback",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _isFeedbackLoading = true;
+                                  });
+                                  ShowInfoDialog(
+                                      userText,
+                                      accuracyScore,
+                                      fluencyScore,
+                                      completenessScore,
+                                      prosodyScore,
+                                      words);
+                                  /*fetchDataAndShowBottomSheet(userText, "F")
                                   .whenComplete(() {
                                 setState(() {
                                   _isFeedbackLoading = false;
                                 });
                               });*/
-                              },
-                              child: Text(
-                                "Accuracy",
-                                style: TextStyle(color: Colors.white),
+                                },
+                                child: Text(
+                                  "Accuracy",
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
+                      ],
+                    )
+                  : Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12.0),
+                        color: AppColors.secondaryColor.withOpacity(0.1),
                       ),
-                    ],
-                  )
-                : Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12.0),
-                      color: AppColors.secondaryColor.withOpacity(0.1),
+                      padding: EdgeInsets.all(10.0),
+                      child: Text("Couldn\'t capture your voice"),
                     ),
-                    padding: EdgeInsets.all(10.0),
-                    child: Text("Couldn\'t capture your voice"),
-                  ),
 
-            /*Ai Row*/
-            aiDialogText != ""
-                ? Column(
-                    children: [
-                      /*AI NAME*/
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 8,
-                            child: Container(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      margin: EdgeInsets.fromLTRB(
-                                          5.0, 0.0, 5.0, 5.0),
-                                      child: Image.asset(
-                                        "assets/images/risho_guru_icon.png",
-                                        height: 30,
-                                        width: 30,
+              /*Ai Row*/
+              aiDialogText != ""
+                  ? Column(
+                      children: [
+                        /*AI NAME*/
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 8,
+                              child: Container(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        margin: EdgeInsets.fromLTRB(
+                                            5.0, 0.0, 5.0, 5.0),
+                                        child: Image.asset(
+                                          "assets/images/risho_guru_icon.png",
+                                          height: 30,
+                                          width: 30,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Expanded(
-                                    flex: 7,
-                                    child: Text(
-                                      widget.actorName,
+                                    Expanded(
+                                      flex: 7,
+                                      child: Text(
+                                        widget.actorName,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      /*Content*/
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
-                        child: Row(
-                          children: [
-                            Flexible(
-                              flex: 6,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                  color:
-                                      AppColors.primaryColor.withOpacity(0.3),
+                                  ],
                                 ),
-                                padding: EdgeInsets.all(10.0),
-                                child: Text(
-                                  "$aiDialogText ( $aiTranslation )",
-                                ),
-                              ),
-                            ),
-                            Flexible(
-                              flex: 1,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      /*Source urlSource =
-                                          UrlSource(aiDialogAudio);
-                                      audioPlayer.play(urlSource);*/
-                                      Source urlSource =
-                                          UrlSource(aiDialogAudio);
-                                      audioPlayer.play(urlSource);
-                                    },
-                                    icon: Icon(
-                                      Icons.volume_down_rounded,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
                               ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
-                  )
-                : SizedBox(
-                    width: 2,
+                        /*Content*/
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(8.0, 0.0, 0.0, 0.0),
+                          child: Row(
+                            children: [
+                              Flexible(
+                                flex: 6,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                    color:
+                                        AppColors.primaryColor.withOpacity(0.3),
+                                  ),
+                                  padding: EdgeInsets.all(10.0),
+                                  child: Text(
+                                    "$aiDialogText ( $aiTranslation )",
+                                  ),
+                                ),
+                              ),
+                              Flexible(
+                                flex: 1,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        /*Source urlSource =
+                                          UrlSource(aiDialogAudio);
+                                      audioPlayer.play(urlSource);*/
+                                        Source urlSource =
+                                            UrlSource(aiDialogAudio);
+                                        audioPlayer.play(urlSource);
+                                      },
+                                      icon: Icon(
+                                        Icons.volume_down_rounded,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  : SizedBox(
+                      width: 2,
+                    ),
+            ],
+          ),
+        );
+      } else if (errorCode == 201) {
+        return Container(
+          margin: const EdgeInsets.all(5.0),
+          padding: const EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            color: AppColors.primaryCardColor,
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Text(
+                  "Sorry: ${doGuidedConversationProvider.guidedConversationResponse!.message}",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
                   ),
-          ],
-        ),
-      );
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryCardColor),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const PackagesScreen()),
+                    );
+                  },
+                  child: const Text(
+                    "Purchase Minutes",
+                    style: TextStyle(
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      } else {
+        return Container(
+          padding: const EdgeInsets.all(12.0),
+          child: Text(
+              doGuidedConversationProvider.guidedConversationResponse!.message),
+        );
+      }
     } else {
       // While the future is still loading, return a loading indicator or placeholder
-      return CircularProgressIndicator();
+      return const CircularProgressIndicator();
     }
   }
 
