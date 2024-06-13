@@ -585,20 +585,62 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
             String aiDialog =
                 doConversationProvider.conversationResponse!.aiDialogue!;
 
-            /*setState(() {
-              latestQuestion = aiDialog;
-            });*/
-            // updateLatestQuestion(aiDialog);
-            return buildAiResponse(context, snapshot);
+            int? errorCode =
+                doConversationProvider.conversationResponse!.errorCode;
+            print(errorCode);
+
+            if (errorCode == 200) {
+              return buildAiResponse(context, snapshot);
+            } else if (errorCode == 201) {
+              return Container(
+                margin: const EdgeInsets.all(5.0),
+                padding: const EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryCardColor,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        "Sorry: ${doConversationProvider.conversationResponse!.message}",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primaryCardColor),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const PackagesScreen()),
+                          );
+                        },
+                        child: const Text(
+                          "Purchase Minutes",
+                          style: TextStyle(
+                            color: AppColors.primaryColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            } else {
+              return Container(
+                padding: EdgeInsets.all(12.0),
+                child: Text(
+                    doConversationProvider.conversationResponse!.message ??
+                        "--"),
+              );
+            }
           }
         });
   }
-
-  // void updateLatestQuestion(String latestQue) {
-  //   setState(() {
-  //     latestQuestion = latestQue;
-  //   });
-  // }
 
   Widget buildAiResponse(BuildContext context, AsyncSnapshot<void> snapshot) {
     int errorCode = doConversationProvider.conversationResponse!.errorCode!;
