@@ -27,7 +27,7 @@ class ValidateVocabPronunciationDataModel {
       Map<String, dynamic> jsonData) {
     // final jsonData = json.decode(jsonString);
     return ValidateVocabPronunciationDataModel(
-      error: jsonData['error'],
+      error: jsonData['errorcode'],
       message: jsonData['message'],
       accuracyScore: jsonData['accuracyScore'].toDouble(),
       fluencyScore: jsonData['fluencyScore'].toDouble(),

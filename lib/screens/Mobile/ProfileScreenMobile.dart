@@ -52,10 +52,10 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
           centerTitle: true,
           automaticallyImplyLeading: true,
         ),*/
-        body: LiquidPullToRefresh(
+        body: RefreshIndicator(
           onRefresh: _refresh,
-          showChildOpacityTransition: false,
-          springAnimationDurationInMilliseconds: 1000,
+          // showChildOpacityTransition: false,
+          // springAnimationDurationInMilliseconds: 1000,
           color: AppColors.secondaryCardColor,
           backgroundColor: AppColors.primaryColor,
           child: SingleChildScrollView(

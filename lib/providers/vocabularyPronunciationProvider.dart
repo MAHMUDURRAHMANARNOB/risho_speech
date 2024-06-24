@@ -35,13 +35,32 @@ class ValidatePronunciationProvider extends ChangeNotifier {
         audioFile: audioFile,
         categoryName: categoryName,
       );
-      print(
-          "1stResponse from fetchValidateVocabPronunciationResponse: $response");
-      _validateVocabPronunciationDataModel =
-          ValidateVocabPronunciationDataModel.fromJson(response);
-      print("Response from fetchValidateVocabPronunciationResponse: $response");
-      notifyListeners();
-      return response;
+      if (response['errorcode'] == 200) {
+        print(
+            "1stResponse from fetchValidateVocabPronunciationResponse: $response");
+        _validateVocabPronunciationDataModel =
+            ValidateVocabPronunciationDataModel.fromJson(response);
+        print(
+            "Response from fetchValidateVocabPronunciationResponse: $response");
+        notifyListeners();
+        return response;
+      } else {
+        _validateVocabPronunciationDataModel =
+            ValidateVocabPronunciationDataModel(
+          error: response['errorcode'],
+          message: response['message'],
+          accuracyScore: null,
+          fluencyScore: null,
+          completenessScore: null,
+          prosodyScore: null,
+          speechText: null,
+          speechTextbn: null,
+          fileLoc: null,
+          words: [],
+        );
+        notifyListeners();
+        return response;
+      }
     } catch (error) {
       print('Error in fetchValidateVocabPronunciationResponse: $error');
       throw Exception('Failed to load data. Check your network connection.');

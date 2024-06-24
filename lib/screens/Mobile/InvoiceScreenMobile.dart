@@ -556,7 +556,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
     // Initialize shurjopay
     /*ShurjoPay shurjoPay = ShurjoPay();*/
     // ShurjoPay _shurjoPayService = ShurjopayRequestModel(configs: configs, currency: currency, amount: amount, orderID: orderID, customerName: customerName, customerPhoneNumber: customerPhoneNumber, customerAddress: customerAddress, customerCity: customerCity, customerPostcode: customerPostcode, returnURL: returnURL, cancelURL: cancelURL);
-    initializeShurjopay(environment: "live");
+    initializeShurjopay(environment: "sandbox");
     ShurjoPay shurjoPay = ShurjoPay();
     ShurjopayConfigs shurjopayConfigs = ShurjopayConfigs(
       prefix: "RIG",
@@ -570,8 +570,8 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
         currency: "BDT",
         amount: _payableAmount,
         orderID: generatedTransectionId.toString(),
-        customerName: _packageName,
-        customerPhoneNumber: "01758387250",
+        customerName: "widget.packageName",
+        customerPhoneNumber: "01751111111",
         customerAddress: "Bangladesh",
         customerCity: "Dhaka",
         customerPostcode: "1230",
