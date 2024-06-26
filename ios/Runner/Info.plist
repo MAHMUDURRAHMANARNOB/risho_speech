@@ -63,6 +63,10 @@
     <string>We need access to speech recognition</string>
     <key>com.apple.security.device.audio-input</key>
     <true/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+	<string>shurjopay</string>
+	</array>
 
 
 

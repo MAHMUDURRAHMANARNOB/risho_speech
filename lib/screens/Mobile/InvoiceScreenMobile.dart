@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -88,9 +89,9 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(Icons.chevron_left),
+          icon: const Icon(Icons.chevron_left),
         ),
-        title: Text(
+        title: const Text(
           "Invoice",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
@@ -98,7 +99,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Text(
+            const Text(
               "Purchase Invoice",
               style: TextStyle(
                 fontSize: 24,
@@ -106,8 +107,8 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
               ),
             ),
             Container(
-              margin: EdgeInsets.all(10.0),
-              padding: EdgeInsets.all(10.0),
+              margin: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(10.0),
               width: double.infinity,
               decoration: BoxDecoration(
                 color: AppColors.primaryCardColor,
@@ -130,98 +131,98 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         "PackageName ",
                         style: TextStyle(fontSize: 16),
                       ),
                       Text(
                         _packageName,
-                        style: TextStyle(fontSize: 16),
+                        style: const TextStyle(fontSize: 16),
                       ),
                     ],
                   ),
-                  Divider(
+                  const Divider(
                     thickness: 2,
                     color: Colors.white,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         "Base Price ",
                         style: TextStyle(fontSize: 16),
                       ),
                       Text(
                         _packageValue.toString(),
-                        style: TextStyle(fontSize: 16),
+                        style: const TextStyle(fontSize: 16),
                       ),
                     ],
                   ),
-                  Divider(
+                  const Divider(
                     thickness: 2,
                     color: Colors.white,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         "Discount ",
                         style: TextStyle(fontSize: 16),
                       ),
                       Text(
                         _discountValue.toString(),
-                        style: TextStyle(fontSize: 16),
+                        style: const TextStyle(fontSize: 16),
                       ),
                     ],
                   ),
-                  Divider(
+                  const Divider(
                     thickness: 2,
                     color: Colors.white,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         "Main Amount ",
                         style: TextStyle(fontSize: 16),
                       ),
                       Text(
                         _mainAmount.toString(),
-                        style: TextStyle(fontSize: 16),
+                        style: const TextStyle(fontSize: 16),
                       ),
                     ],
                   ),
-                  Divider(
+                  const Divider(
                     thickness: 2,
                     color: Colors.white,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         "Coupon Discount ",
                         style: TextStyle(fontSize: 16),
                       ),
                       Text(
                         _couponDiscountAmount.toString(),
-                        style: TextStyle(fontSize: 16),
+                        style: const TextStyle(fontSize: 16),
                       ),
                     ],
                   ),
-                  Divider(
+                  const Divider(
                     thickness: 2,
                     color: Colors.white,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         "Payable Amount ",
                         style: TextStyle(fontSize: 16),
                       ),
                       Text(
                         _payableAmount.toStringAsFixed(2),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: AppColors.primaryColor,
@@ -229,21 +230,21 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                       ),
                     ],
                   ),
-                  Divider(
+                  const Divider(
                     thickness: 2,
                     color: Colors.white,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         "TransectionId",
                         style: TextStyle(fontSize: 16),
                       ),
                       status == "true"
                           ? Text(
-                              "${generatedTransectionId}",
-                              style: TextStyle(fontSize: 16),
+                              "$generatedTransectionId",
+                              style: const TextStyle(fontSize: 16),
                             )
                           : const Text(
                               "No transaction yet",
@@ -254,20 +255,20 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             status == "true"
-                ? SizedBox(width: 2)
+                ? const SizedBox(width: 2)
                 : Visibility(
                     visible: !_isApplied,
                     child: Container(
-                      padding: EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(10.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
                             child: Text(
                               "Coupon Code",
                               style: TextStyle(
@@ -281,7 +282,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                             controller: couponCodeController,
                             keyboardType: TextInputType.text,
                             cursorColor: AppColors.primaryColor,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.black,
                               fontSize: 14,
                             ),
@@ -303,20 +304,20 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                                     10.0), // Border radius
                               ),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
+                                borderSide: const BorderSide(
                                     color: AppColors
                                         .primaryColor), // Border color when focused
                                 borderRadius: BorderRadius.circular(
                                     8.0), // Border radius when focused
                               ),
                               contentPadding:
-                                  EdgeInsets.symmetric(vertical: 15.0),
+                                  const EdgeInsets.symmetric(vertical: 15.0),
                             ),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 width: 1,
                               ),
                               ElevatedButton(
@@ -328,7 +329,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                                 onPressed: () {
                                   _handleApplyButton(context);
                                 },
-                                child: Text(
+                                child: const Text(
                                   "Apply",
                                   style: TextStyle(
                                     color: AppColors.primaryColor,
@@ -341,18 +342,18 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                       ),
                     ),
                   ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             status == "true"
                 ? Container(
                     width: double.infinity,
-                    padding: EdgeInsets.all(10.0),
-                    margin: EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.all(10.0),
+                    margin: const EdgeInsets.all(10.0),
                     decoration: BoxDecoration(
                         color: AppColors.secondaryCardColorGreenish,
                         borderRadius: BorderRadius.circular(8)),
-                    child: Text(
+                    child: const Text(
                       "Purchased Successfully,\n Now you can continue your study.",
                       textAlign: TextAlign.center,
                       style:
@@ -361,14 +362,16 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                   )
                 : Container(
                     width: double.infinity,
-                    margin: EdgeInsets.all(10.0),
+                    margin: const EdgeInsets.all(10.0),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primaryColor),
                       onPressed: () {
                         generatedTransectionId =
                             DateTime.now().millisecondsSinceEpoch;
-                        print("$generatedTransectionId");
+                        if (kDebugMode) {
+                          print("$generatedTransectionId");
+                        }
                         setState(() {
                           generatedTransectionId;
                         });
@@ -383,7 +386,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                         );
                         _initiatePayment();
                       },
-                      child: Text(
+                      child: const Text(
                         "Purchase",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
@@ -414,7 +417,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
               color: AppColors.primaryColor,
             ),*/
                 AlertDialog(
-              contentPadding: EdgeInsets.all(10.0),
+              contentPadding: const EdgeInsets.all(10.0),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -423,7 +426,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                     width: 80,
                     height: 80,
                   ),
-                  SpinKitThreeInOut(
+                  const SpinKitThreeInOut(
                     color: AppColors.primaryColor,
                   ),
                 ],
@@ -438,7 +441,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
         context,
         'Oops!',
         'You have to write a valid Coupon code first.',
-        Icon(
+        const Icon(
           Icons.report_gmailerrorred_rounded,
           color: Colors.red,
           size: 30,
@@ -457,12 +460,12 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
           title: Text(
             title,
             style: title == "Sweet!"
-                ? TextStyle(
+                ? const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 34,
                     color: AppColors.primaryColor,
                   )
-                : TextStyle(
+                : const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 34,
                     color: Colors.redAccent,
@@ -497,8 +500,10 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
           _couponPartnerId = partnerId;
         }
       });
-      print(
-          "payable amount$_payableAmount - Discount from coupon $_couponDiscountAmount");
+      if (kDebugMode) {
+        print(
+            "payable amount$_payableAmount - Discount from coupon $_couponDiscountAmount");
+      }
 
       Navigator.of(context).pop();
       if (errorCode == 200) {
@@ -509,7 +514,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
           context,
           "Sweet!",
           "You are going to receive BDT: $discount% discount",
-          Icon(
+          const Icon(
             FontAwesomeIcons.checkCircle,
             color: AppColors.primaryColor,
             size: 30,
@@ -520,7 +525,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
           context,
           "Oops!",
           message,
-          Icon(
+          const Icon(
             Icons.report_gmailerrorred_rounded,
             color: Colors.red,
             size: 30,
@@ -531,7 +536,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
           context,
           "Oops!",
           message,
-          Icon(
+          const Icon(
             Icons.report_gmailerrorred_rounded,
             color: Colors.red,
             size: 30,
@@ -543,7 +548,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
         context,
         "Error",
         error.toString(),
-        Icon(
+        const Icon(
           Icons.report_gmailerrorred_rounded,
           color: Colors.red,
           size: 30,
@@ -556,16 +561,16 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
     // Initialize shurjopay
     /*ShurjoPay shurjoPay = ShurjoPay();*/
     // ShurjoPay _shurjoPayService = ShurjopayRequestModel(configs: configs, currency: currency, amount: amount, orderID: orderID, customerName: customerName, customerPhoneNumber: customerPhoneNumber, customerAddress: customerAddress, customerCity: customerCity, customerPostcode: customerPostcode, returnURL: returnURL, cancelURL: cancelURL);
-    initializeShurjopay(environment: "sandbox");
+    initializeShurjopay(environment: "live");
     ShurjoPay shurjoPay = ShurjoPay();
     ShurjopayConfigs shurjopayConfigs = ShurjopayConfigs(
-      prefix: "RIG",
-      userName: "Risho.Guru",
-      password: "rishyqb8\$ts&\$#dn",
+      prefix: "TLH",
+      userName: "TalentLensHub",
+      password: "talety4r5p8mpz&v",
       clientIP: "127.0.0.1",
     );
 
-    final shurjopayRequestModel = await ShurjopayRequestModel(
+    final shurjopayRequestModel = ShurjopayRequestModel(
         configs: shurjopayConfigs,
         currency: "BDT",
         amount: _payableAmount,
@@ -584,7 +589,9 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
       context: context,
       shurjopayRequestModel: shurjopayRequestModel,
     );
-    print(shurjopayResponseModel.errorCode);
+    if (kDebugMode) {
+      print(shurjopayResponseModel.errorCode);
+    }
 
     ShurjopayVerificationModel shurjopayVerificationModel =
         ShurjopayVerificationModel();
@@ -594,14 +601,22 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
         shurjopayVerificationModel = await shurjoPay.verifyPayment(
           orderID: shurjopayResponseModel.shurjopayOrderID!,
         );
-        print(shurjopayVerificationModel.spCode);
-        print(shurjopayVerificationModel.spMessage);
+        if (kDebugMode) {
+          print(shurjopayVerificationModel.spCode);
+        }
+        if (kDebugMode) {
+          print(shurjopayVerificationModel.spMessage);
+        }
         if (shurjopayVerificationModel.spCode == "1000") {
-          print(
-              "Payment Varified - ${shurjopayVerificationModel.spMessage}, ${shurjopayVerificationModel.spCode}");
+          if (kDebugMode) {
+            print(
+                "Payment Varified - ${shurjopayVerificationModel.spMessage}, ${shurjopayVerificationModel.spCode}");
+          }
         } else {
-          print(
-              "Payment not Varified - ${shurjopayVerificationModel.spMessage}, ${shurjopayVerificationModel.spCode}");
+          if (kDebugMode) {
+            print(
+                "Payment not Varified - ${shurjopayVerificationModel.spMessage}, ${shurjopayVerificationModel.spCode}");
+          }
         }
 
         ApiService.receivePayment(

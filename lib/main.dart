@@ -25,6 +25,7 @@ import 'package:risho_speech/screens/RegistrationScreen.dart';
 import 'package:risho_speech/screens/SplashScreen.dart';
 import 'package:risho_speech/screens/WelcomeScreen.dart';
 import 'package:risho_speech/utils/theme/theme.dart';
+import 'package:shurjopay/utilities/functions.dart';
 import 'package:upgrader/upgrader.dart';
 
 Future<void> main() async {
