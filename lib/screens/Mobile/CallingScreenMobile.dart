@@ -274,11 +274,11 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
         body: Container(
           decoration: BoxDecoration(
             color: AppColors.backgroundColorDark,
-            image: DecorationImage(
+            /*image: DecorationImage(
               opacity: 0.3,
               image: AssetImage("assets/images/caller_bg.png"),
               fit: BoxFit.cover,
-            ),
+            ),*/
           ),
           child: Column(
             children: [

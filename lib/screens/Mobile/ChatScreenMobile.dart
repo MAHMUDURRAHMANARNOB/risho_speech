@@ -182,214 +182,216 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
     final username =
         Provider.of<AuthProvider>(context).user?.name ?? 'UserName';
     userId = Provider.of<AuthProvider>(context).user?.id ?? 123;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Risho"),
-      ),
-      body: Column(
-        children: [
-          /*top*/
-          Expanded(
-            flex: 2,
-            child: SingleChildScrollView(
-              controller: _scrollController,
-              physics: BouncingScrollPhysics(),
-              child: Column(
-                children: _conversationComponents,
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("Risho"),
+        ),
+        body: Column(
+          children: [
+            /*top*/
+            Expanded(
+              flex: 2,
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                physics: BouncingScrollPhysics(),
+                child: Column(
+                  children: _conversationComponents,
+                ),
               ),
             ),
-          ),
-          /*Bottom control*/
-          Visibility(
-            visible: _isSuggestAnsActive,
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppColors.secondaryColor.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(16.0),
-              ),
-              margin: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Text(
-                      suggestedAnswer ?? "",
-                      style: TextStyle(color: Colors.white),
+            /*Bottom control*/
+            Visibility(
+              visible: _isSuggestAnsActive,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColors.secondaryColor.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(16.0),
+                ),
+                margin: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Text(
+                        suggestedAnswer ?? "",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
+                    IconButton(
+                      style: ElevatedButton.styleFrom(),
+                      onPressed: () {
+                        setState(() {
+                          _isSuggestAnsActive = false;
+                          suggestedAnswer = null;
+                        });
+                      },
+                      icon: Icon(
+                        Icons.close,
+                        color: AppColors.secondaryColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: AppColors.primaryColor.withOpacity(0.2),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(24.0),
+                  topRight: Radius.circular(24.0),
+                ),
+              ),
+              padding: const EdgeInsets.all(5.0),
+              child: Column(
+                children: [
+                  /*Question Asking*/
+                  _isRecording
+                      ? Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(10.0),
+                          child: Text("Recording in progress ..."),
+                        )
+                      : TextField(
+                          controller: _askQuescontroller,
+                          maxLines: 3,
+                          minLines: 1,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: screenHeight * 0.020,
+                          ),
+                          cursorColor: AppColors.primaryColor,
+                          decoration: const InputDecoration(
+                            hintText: 'Speak or Type..',
+                            border: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 10.0),
+                          ),
+                          onChanged: (value) {
+                            inputText = value;
+                            setState(() {
+                              _isTextQuestion = value.isNotEmpty;
+                              _isMyMessage = true;
+                            });
+                          },
+                        ),
+                  SizedBox(
+                    height: 5,
                   ),
-                  IconButton(
-                    style: ElevatedButton.styleFrom(),
-                    onPressed: () {
-                      setState(() {
-                        _isSuggestAnsActive = false;
-                        suggestedAnswer = null;
-                      });
-                    },
-                    icon: Icon(
-                      Icons.close,
-                      color: AppColors.secondaryColor,
+                  /*SEND / VOICE*/
+                  _isTextQuestion == true
+                      ? IconButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            elevation: 4,
+                          ),
+                          onPressed: () {
+                            // Add your logic to send the message
+                            _scrollController.animateTo(
+                                _scrollController.position.maxScrollExtent,
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeOut);
+                            setState(() {
+                              _conversationComponents
+                                  .add(UserTextAIResponse(inputText, username));
+                              /*_conversationComponents
+                                  .add(AIResponseBox(audioFile!, sessionId));*/
+
+                              _askQuescontroller.clear();
+                              _isSuggestAnsActive = false;
+                            });
+                          },
+                          icon: Container(
+                            padding: EdgeInsets.all(screenHeight * 0.010),
+                            child: Icon(
+                              Icons.send_rounded,
+                              color: AppColors.primaryColor,
+                              size: screenHeight * 0.03,
+                            ),
+                          ))
+                      : AvatarGlow(
+                          animate: _isRecording,
+                          curve: Curves.fastOutSlowIn,
+                          glowColor: AppColors.primaryColor,
+                          duration: const Duration(milliseconds: 1000),
+                          repeat: true,
+                          glowRadiusFactor: 1,
+                          child: IconButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: _isRecording == false
+                                  ? Colors.white
+                                  : AppColors.primaryColor,
+                              elevation: 4,
+                            ),
+                            onPressed: () async {
+                              /*_onMicrophoneButtonPressed;*/
+                              if (!_isRecording) {
+                                await startRecording();
+                              } else {
+                                await stopRecording();
+                              }
+                              setState(
+                                  () {}); // Update UI based on recording state
+                            },
+                            icon: Container(
+                              padding: EdgeInsets.all(screenHeight * 0.020),
+                              child: Icon(
+                                _isRecording == false
+                                    ? Icons.keyboard_voice_rounded
+                                    : Icons.stop_rounded,
+                                /*Icons.keyboard_voice_rounded,*/
+                                color: _isRecording == false
+                                    ? AppColors.primaryColor
+                                    : Colors.white,
+                                size: screenHeight * 0.04,
+                              ),
+                            ),
+                          ),
+                        ),
+                  // New Question
+                  Container(
+                    margin: EdgeInsets.fromLTRB(0.0, 0.0, 5.0, 5.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: 1,
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primaryColor,
+                            elevation: 3,
+                          ),
+                          onPressed: () {
+                            // Add your logic to send the message
+                            _scrollController.animateTo(
+                                _scrollController.position.maxScrollExtent,
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeOut);
+                            setState(() {
+                              _conversationComponents.add(UserTextAIResponse(
+                                  "Ask me another Ques", username));
+                            });
+                          },
+                          child: Text(
+                            "New Ques.",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: AppColors.backgroundColorDark,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(24.0),
-                topRight: Radius.circular(24.0),
-              ),
-            ),
-            padding: const EdgeInsets.all(5.0),
-            child: Column(
-              children: [
-                /*Question Asking*/
-                _isRecording
-                    ? Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.all(10.0),
-                        child: Text("Recording in progress ..."),
-                      )
-                    : TextField(
-                        controller: _askQuescontroller,
-                        maxLines: 3,
-                        minLines: 1,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: screenHeight * 0.020,
-                        ),
-                        cursorColor: AppColors.primaryColor,
-                        decoration: const InputDecoration(
-                          hintText: 'Type or Speak..',
-                          border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 10.0),
-                        ),
-                        onChanged: (value) {
-                          inputText = value;
-                          setState(() {
-                            _isTextQuestion = value.isNotEmpty;
-                            _isMyMessage = true;
-                          });
-                        },
-                      ),
-                SizedBox(
-                  height: 5,
-                ),
-                /*SEND / VOICE*/
-                _isTextQuestion == true
-                    ? IconButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          elevation: 4,
-                        ),
-                        onPressed: () {
-                          // Add your logic to send the message
-                          _scrollController.animateTo(
-                              _scrollController.position.maxScrollExtent,
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeOut);
-                          setState(() {
-                            _conversationComponents
-                                .add(UserTextAIResponse(inputText, username));
-                            /*_conversationComponents
-                                .add(AIResponseBox(audioFile!, sessionId));*/
-
-                            _askQuescontroller.clear();
-                            _isSuggestAnsActive = false;
-                          });
-                        },
-                        icon: Container(
-                          padding: EdgeInsets.all(screenHeight * 0.010),
-                          child: Icon(
-                            Icons.send_rounded,
-                            color: AppColors.primaryColor,
-                            size: screenHeight * 0.03,
-                          ),
-                        ))
-                    : AvatarGlow(
-                        animate: _isRecording,
-                        curve: Curves.fastOutSlowIn,
-                        glowColor: AppColors.primaryColor,
-                        duration: const Duration(milliseconds: 1000),
-                        repeat: true,
-                        glowRadiusFactor: 1,
-                        child: IconButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: _isRecording == false
-                                ? Colors.white
-                                : AppColors.primaryColor,
-                            elevation: 4,
-                          ),
-                          onPressed: () async {
-                            /*_onMicrophoneButtonPressed;*/
-                            if (!_isRecording) {
-                              await startRecording();
-                            } else {
-                              await stopRecording();
-                            }
-                            setState(
-                                () {}); // Update UI based on recording state
-                          },
-                          icon: Container(
-                            padding: EdgeInsets.all(screenHeight * 0.020),
-                            child: Icon(
-                              _isRecording == false
-                                  ? Icons.keyboard_voice_rounded
-                                  : Icons.stop_rounded,
-                              /*Icons.keyboard_voice_rounded,*/
-                              color: _isRecording == false
-                                  ? AppColors.primaryColor
-                                  : Colors.white,
-                              size: screenHeight * 0.04,
-                            ),
-                          ),
-                        ),
-                      ),
-                // New Question
-                Container(
-                  margin: EdgeInsets.fromLTRB(0.0, 0.0, 5.0, 5.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: 1,
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryColor,
-                          elevation: 3,
-                        ),
-                        onPressed: () {
-                          // Add your logic to send the message
-                          _scrollController.animateTo(
-                              _scrollController.position.maxScrollExtent,
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeOut);
-                          setState(() {
-                            _conversationComponents.add(UserTextAIResponse(
-                                "Ask me another Ques", username));
-                          });
-                        },
-                        child: Text(
-                          "New Ques.",
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -632,11 +634,22 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
               );
             } else {
               return Container(
+                margin: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.0),
+                  color: AppColors.secondaryColor.withOpacity(0.1),
+                ),
+                padding: EdgeInsets.all(10.0),
+                child: Text(
+                    doConversationProvider.conversationResponse!.message ??
+                        "404: Server Issue"),
+              );
+              /*return Container(
                 padding: EdgeInsets.all(12.0),
                 child: Text(
                     doConversationProvider.conversationResponse!.message ??
                         "--"),
-              );
+              );*/
             }
           }
         });

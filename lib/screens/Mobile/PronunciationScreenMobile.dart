@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:risho_speech/models/doGuidedConverationDataModel.dart';
@@ -263,127 +264,129 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
         Provider.of<AuthProvider>(context).user?.name ?? 'UserName';
     userId = Provider.of<AuthProvider>(context).user?.id ?? 123;
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.primaryCardColor,
-        title: Text(
-          widget.discusTitle,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.primaryCardColor,
+          title: Text(
+            widget.discusTitle,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
           ),
+          centerTitle: true,
         ),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          /*Top*/
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: _conversationComponents,
+        body: Column(
+          children: [
+            /*Top*/
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: _conversationComponents,
+                ),
               ),
             ),
-          ),
 
-          /*BottomControl*/
-          Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: AppColors.primaryCardColor,
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(80),
-                topLeft: Radius.circular(80),
+            /*BottomControl*/
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: AppColors.primaryCardColor,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(80),
+                  topLeft: Radius.circular(80),
+                ),
               ),
-            ),
-            padding: const EdgeInsets.all(5.0),
-            child: Column(
-              children: [
-                /* SEND / VOICE */
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    /*Expanded(
-                      flex: 1,
-                      child: SizedBox(
-                        width: 20,
-                      ),
-                    ),*/
-                    Flexible(
-                      flex: 2,
-                      child: AvatarGlow(
-                        animate: _isRecording,
-                        curve: Curves.fastOutSlowIn,
-                        glowColor: AppColors.primaryColor,
-                        duration: const Duration(milliseconds: 1000),
-                        repeat: true,
-                        glowRadiusFactor: 1,
-                        child: Container(
-                          margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-                          child: IconButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: _isRecording == false
-                                  ? Colors.white
-                                  : AppColors.primaryColor,
-                              elevation: 4,
-                            ),
-                            onPressed: () async {
-                              // Add your logic to send the message
-                              if (!_isRecording) {
-                                await startRecording();
-                              } else {
-                                await stopRecording();
-                              }
-                              setState(() {});
-                            },
-                            icon: Container(
-                              padding: EdgeInsets.all(20),
-                              child: Icon(
-                                _isRecording == false
-                                    ? Icons.keyboard_voice_rounded
-                                    : Icons.stop_rounded,
-                                color: _isRecording == false
-                                    ? AppColors.primaryColor
-                                    : Colors.white,
-                                size: 30,
+              padding: const EdgeInsets.all(5.0),
+              child: Column(
+                children: [
+                  /* SEND / VOICE */
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      /*Expanded(
+                        flex: 1,
+                        child: SizedBox(
+                          width: 20,
+                        ),
+                      ),*/
+                      Flexible(
+                        flex: 2,
+                        child: AvatarGlow(
+                          animate: _isRecording,
+                          curve: Curves.fastOutSlowIn,
+                          glowColor: AppColors.primaryColor,
+                          duration: const Duration(milliseconds: 1000),
+                          repeat: true,
+                          glowRadiusFactor: 1,
+                          child: Container(
+                            margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                            child: IconButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: _isRecording == false
+                                    ? Colors.white
+                                    : AppColors.primaryColor,
+                                elevation: 4,
+                              ),
+                              onPressed: () async {
+                                // Add your logic to send the message
+                                if (!_isRecording) {
+                                  await startRecording();
+                                } else {
+                                  await stopRecording();
+                                }
+                                setState(() {});
+                              },
+                              icon: Container(
+                                padding: EdgeInsets.all(20),
+                                child: Icon(
+                                  _isRecording == false
+                                      ? Icons.keyboard_voice_rounded
+                                      : Icons.stop_rounded,
+                                  color: _isRecording == false
+                                      ? AppColors.primaryColor
+                                      : Colors.white,
+                                  size: 30,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    /*Expanded(
-                      flex: 1,
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primaryColor,
-                          ),
-                          onPressed: () {},
-                          child: const Text(
-                            "Next",
-                            style: TextStyle(color: Colors.white),
+                      /*Expanded(
+                        flex: 1,
+                        child: Container(
+                          margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryColor,
+                            ),
+                            onPressed: () {},
+                            child: const Text(
+                              "Next",
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
-                      ),
-                    ),*/
-                  ],
-                ),
-                Text(
-                  "You have to say the Text ${widget.actorName} is saying",
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
+                      ),*/
+                    ],
                   ),
-                ),
-              ],
+                  Text(
+                    "You have to say the Text ${widget.actorName} is saying",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
+        // bottomSheet: BottomSection(),
       ),
-      // bottomSheet: BottomSection(),
     );
   }
 
@@ -431,7 +434,9 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
           } else {
             String aiDialog = doGuidedConversationProvider
                 .guidedConversationResponse!.conversationEn!;
-
+            if (kDebugMode) {
+              print("aiDialog - $aiDialog");
+            }
             /*setState(() {
               latestQuestion = aiDialog;
             });*/
@@ -471,9 +476,16 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
         String userText = doGuidedConversationProvider
                 .guidedConversationResponse!.speechText ??
             "";
+        if (kDebugMode) {
+          print("userText - $userText");
+        }
+
         String userTranslation = doGuidedConversationProvider
                 .guidedConversationResponse!.speechTextBn ??
             "Not Found";
+        if (kDebugMode) {
+          print("userTranslation - $userTranslation");
+        }
         String aiTranslation = doGuidedConversationProvider
                 .guidedConversationResponse!.conversationBn ??
             "Not Found";
@@ -719,7 +731,7 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
                                             UrlSource(aiDialogAudio);
                                         audioPlayer.play(urlSource);
                                       },
-                                      icon: Icon(
+                                      icon: const Icon(
                                         Icons.volume_down_rounded,
                                         color: Colors.white,
                                       ),
@@ -779,7 +791,11 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
         );
       } else {
         return Container(
-          padding: EdgeInsets.all(12.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12.0),
+            color: AppColors.secondaryColor.withOpacity(0.1),
+          ),
+          padding: EdgeInsets.all(10.0),
           child: Text(
               doGuidedConversationProvider.guidedConversationResponse!.message),
         );

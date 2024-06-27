@@ -49,7 +49,7 @@ class DoGuidedConversationDataModel {
 
   factory DoGuidedConversationDataModel.fromJson(Map<String, dynamic> json) {
     return DoGuidedConversationDataModel(
-      error: json['error'],
+      error: json['errorcode'],
       message: json['message'],
       convid: json['convid'],
       actorName: json['actorName'],
@@ -77,7 +77,7 @@ class DoGuidedConversationDataModel {
       speechText: json['speechText'],
       speechTextBn: json['speechTextbn'],
       fileLoc: json['fileLoc'],
-      dialogId: json['dialogid'],
+      dialogId: json['dialogid '],
       words: json['words'] != null
           ? List<WordInfo>.from(json['words'].map((x) => WordInfo.fromJson(x)))
           : [],

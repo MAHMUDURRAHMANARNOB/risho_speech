@@ -259,13 +259,15 @@ class ApiService {
         var responseBody = await response.stream.bytesToString();
         var respon = json.decode(responseBody);
         print(respon);
-        print("dialogId: ${respon['dialogId'].runtimeType}");
-        print(respon['convid'].runtimeType);
-        print(respon['seqNumber'].runtimeType);
-        print(respon['accuracyScore'].runtimeType);
-        print(respon['fluencyScore'].runtimeType);
-        print(respon['completenessScore'].runtimeType);
-        print(respon['prosodyScore'].runtimeType);
+        print("errorcode: ${respon['errorcode'].runtimeType}");
+        print("dialogId: ${respon['dialogid '].runtimeType}");
+        print("convid: ${respon['convid'].runtimeType}");
+        print("actorName: ${respon['actorName'].runtimeType}");
+        print("speechText: ${respon['speechText'].runtimeType}");
+        /*print("convid: ${respon['convid'].runtimeType}");
+        print("convid: ${respon['convid'].runtimeType}");
+        print("convid: ${respon['convid'].runtimeType}");
+        print("convid: ${respon['convid'].runtimeType}");*/
         // print(respon['dialogid'].runtimeType);
         return json.decode(responseBody);
       } else {

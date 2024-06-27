@@ -45,7 +45,7 @@ class DoGuidedConversationProvider extends ChangeNotifier {
         userName: userName!,
         dialogSeqNo: dialogSeqNo!,
       );
-      if (response['error'] == 200) {
+      if (response['errorcode'] == 200) {
         _doGuidedConversationDataModel =
             DoGuidedConversationDataModel.fromJson(response);
 
@@ -54,7 +54,7 @@ class DoGuidedConversationProvider extends ChangeNotifier {
         return response;
       } else {
         _doGuidedConversationDataModel = DoGuidedConversationDataModel(
-          error: response['error'],
+          error: response['errorcode'],
           message: response['message'],
           convid: null,
           actorName: '',
