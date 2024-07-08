@@ -35,7 +35,7 @@ dependencies:
   audioplayers: ^6.0.0
   record: ^4.4.4
 
-  shurjopay: ^2.0.3
+  shurjopay: ^2.0.5
   liquid_pull_to_refresh: ^3.0.1
   speech_to_text: ^6.6.0
   avatar_glow: ^3.0.1

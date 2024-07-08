@@ -564,9 +564,13 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
     initializeShurjopay(environment: "live");
     ShurjoPay shurjoPay = ShurjoPay();
     ShurjopayConfigs shurjopayConfigs = ShurjopayConfigs(
-      prefix: "TLH",
+      /*prefix: "TLH",
       userName: "TalentLensHub",
       password: "talety4r5p8mpz&v",
+      clientIP: "127.0.0.1",*/
+      prefix: "RIG",
+      userName: "Risho.Guru",
+      password: "rishyqb8\$ts&\$#dn",
       clientIP: "127.0.0.1",
     );
 

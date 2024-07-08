@@ -951,7 +951,7 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                                       });
 
                                       fetchDataAndShowBottomSheet(
-                                              widget.aiDialogue, "S")
+                                              aiDialogText, "S")
                                           .whenComplete(() {});
                                     },
                                     child: Text(
@@ -1309,7 +1309,7 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                                       });
 
                                       fetchDataAndShowBottomSheet(
-                                              widget.aiDialogue, "S")
+                                              aiDialogText, "S")
                                           .whenComplete(() {});
                                     },
                                     child: Text(
