@@ -63,6 +63,8 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
   late TextEditingController couponCodeController = TextEditingController();
 
   CouponDiscountProvider couponDiscountProvider = CouponDiscountProvider();
+  late ShurjoPay shurjoPay;
+  late ShurjopayConfigs shurjopayConfigs;
 
   @override
   void initState() {
@@ -75,6 +77,18 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
     _payableAmount = widget.payableAmount;
     _mainAmount = widget.payableAmount;
     _isApplied = false;
+
+    shurjoPay = ShurjoPay();
+    shurjopayConfigs = ShurjopayConfigs(
+      /*prefix: "TLH",
+      userName: "TalentLensHub",
+      password: "talety4r5p8mpz&v",
+      clientIP: "127.0.0.1",*/
+      prefix: "RIG",
+      userName: "Risho.Guru",
+      password: "rishyqb8\$ts&\$#dn",
+      clientIP: "127.0.0.1",
+    );
   }
 
   @override
@@ -561,18 +575,18 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
     // Initialize shurjopay
     /*ShurjoPay shurjoPay = ShurjoPay();*/
     // ShurjoPay _shurjoPayService = ShurjopayRequestModel(configs: configs, currency: currency, amount: amount, orderID: orderID, customerName: customerName, customerPhoneNumber: customerPhoneNumber, customerAddress: customerAddress, customerCity: customerCity, customerPostcode: customerPostcode, returnURL: returnURL, cancelURL: cancelURL);
-    initializeShurjopay(environment: "live");
-    ShurjoPay shurjoPay = ShurjoPay();
+    // initializeShurjopay(environment: "live");
+    /*ShurjoPay shurjoPay = ShurjoPay();
     ShurjopayConfigs shurjopayConfigs = ShurjopayConfigs(
-      /*prefix: "TLH",
+      */ /*prefix: "TLH",
       userName: "TalentLensHub",
       password: "talety4r5p8mpz&v",
-      clientIP: "127.0.0.1",*/
+      clientIP: "127.0.0.1",*/ /*
       prefix: "RIG",
       userName: "Risho.Guru",
       password: "rishyqb8\$ts&\$#dn",
       clientIP: "127.0.0.1",
-    );
+    );*/
 
     final shurjopayRequestModel = ShurjopayRequestModel(
         configs: shurjopayConfigs,

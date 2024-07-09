@@ -19,7 +19,7 @@ dependencies:
   logger: ^2.3.0
   font_awesome_flutter: ^9.0.0
   hovering: ^1.0.4
-
+  shimmer: ^3.0.0
   html: ^0.15.4
   custom_button_builder: ^0.0.1
   flutter_hooks: ^0.20.3

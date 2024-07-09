@@ -624,7 +624,7 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                                     const Padding(
                                       padding: EdgeInsets.all(8.0),
                                       child: Text(
-                                        "Phone Call",
+                                        "Conversation Practice",
                                         style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold,

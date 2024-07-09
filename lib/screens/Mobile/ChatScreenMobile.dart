@@ -12,6 +12,7 @@ import 'package:risho_speech/models/validateSpokenSentenceDataModel.dart';
 import 'package:risho_speech/providers/nextQuestionProvider.dart';
 import 'package:risho_speech/providers/suggestAnswerProvider.dart';
 import 'package:risho_speech/ui/colors.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../providers/auth_provider.dart';
 import '../../providers/doConversationProvider.dart';
@@ -238,11 +239,12 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
             ),
             Container(
               decoration: BoxDecoration(
-                color: AppColors.primaryColor.withOpacity(0.2),
+                // color: AppColors.primaryColor.withOpacity(0.2),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(24.0),
                   topRight: Radius.circular(24.0),
                 ),
+                border: Border.all(color: AppColors.primaryColor, width: 0.1),
               ),
               padding: const EdgeInsets.all(5.0),
               child: Column(
@@ -283,85 +285,92 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                     height: 5,
                   ),
                   /*SEND / VOICE*/
-                  _isTextQuestion == true
-                      ? IconButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            elevation: 4,
-                          ),
-                          onPressed: () {
-                            // Add your logic to send the message
-                            _scrollController.animateTo(
-                                _scrollController.position.maxScrollExtent,
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeOut);
-                            setState(() {
-                              _conversationComponents
-                                  .add(UserTextAIResponse(inputText, username));
-                              /*_conversationComponents
-                                  .add(AIResponseBox(audioFile!, sessionId));*/
+                  Stack(
+                    children: [
+                      // Send or Voice button
+                      Align(
+                        alignment: Alignment.center,
+                        child: _isTextQuestion == true
+                            ? IconButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  elevation: 4,
+                                ),
+                                onPressed: () {
+                                  // Add your logic to send the message
+                                  _scrollController.animateTo(
+                                      _scrollController
+                                          .position.maxScrollExtent,
+                                      duration:
+                                          const Duration(milliseconds: 300),
+                                      curve: Curves.easeOut);
+                                  setState(() {
+                                    _conversationComponents.add(
+                                        UserTextAIResponse(
+                                            inputText, username));
+                                    /*_conversationComponents
+                                      .add(AIResponseBox(audioFile!, sessionId));*/
 
-                              _askQuescontroller.clear();
-                              _isSuggestAnsActive = false;
-                            });
-                          },
-                          icon: Container(
-                            padding: EdgeInsets.all(screenHeight * 0.010),
-                            child: Icon(
-                              Icons.send_rounded,
-                              color: AppColors.primaryColor,
-                              size: screenHeight * 0.03,
-                            ),
-                          ))
-                      : AvatarGlow(
-                          animate: _isRecording,
-                          curve: Curves.fastOutSlowIn,
-                          glowColor: AppColors.primaryColor,
-                          duration: const Duration(milliseconds: 1000),
-                          repeat: true,
-                          glowRadiusFactor: 1,
-                          child: IconButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: _isRecording == false
-                                  ? Colors.white
-                                  : AppColors.primaryColor,
-                              elevation: 4,
-                            ),
-                            onPressed: () async {
-                              /*_onMicrophoneButtonPressed;*/
-                              if (!_isRecording) {
-                                await startRecording();
-                              } else {
-                                await stopRecording();
-                              }
-                              setState(
-                                  () {}); // Update UI based on recording state
-                            },
-                            icon: Container(
-                              padding: EdgeInsets.all(screenHeight * 0.020),
-                              child: Icon(
-                                _isRecording == false
-                                    ? Icons.keyboard_voice_rounded
-                                    : Icons.stop_rounded,
-                                /*Icons.keyboard_voice_rounded,*/
-                                color: _isRecording == false
-                                    ? AppColors.primaryColor
-                                    : Colors.white,
-                                size: screenHeight * 0.04,
+                                    _askQuescontroller.clear();
+                                    _isSuggestAnsActive = false;
+                                  });
+                                },
+                                icon: Container(
+                                  padding: EdgeInsets.all(screenHeight * 0.010),
+                                  child: Icon(
+                                    Icons.send_rounded,
+                                    color: AppColors.primaryColor,
+                                    size: screenHeight * 0.03,
+                                  ),
+                                ))
+                            : AvatarGlow(
+                                animate: _isRecording,
+                                curve: Curves.fastOutSlowIn,
+                                glowColor: AppColors.primaryColor,
+                                duration: const Duration(milliseconds: 1000),
+                                repeat: true,
+                                glowRadiusFactor: 1,
+                                child: IconButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: _isRecording == false
+                                        ? Colors.white
+                                        : AppColors.primaryColor,
+                                    elevation: 4,
+                                  ),
+                                  onPressed: () async {
+                                    /*_onMicrophoneButtonPressed;*/
+                                    if (!_isRecording) {
+                                      await startRecording();
+                                    } else {
+                                      await stopRecording();
+                                    }
+                                    setState(
+                                        () {}); // Update UI based on recording state
+                                  },
+                                  icon: Container(
+                                    padding:
+                                        EdgeInsets.all(screenHeight * 0.020),
+                                    child: Icon(
+                                      _isRecording == false
+                                          ? Icons.keyboard_voice_rounded
+                                          : Icons.stop_rounded,
+                                      /*Icons.keyboard_voice_rounded,*/
+                                      color: _isRecording == false
+                                          ? AppColors.primaryColor
+                                          : Colors.white,
+                                      size: screenHeight * 0.04,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                  // New Question
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0.0, 0.0, 5.0, 5.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          width: 1,
-                        ),
-                        ElevatedButton(
+                      ),
+
+                      // New Question
+                      Positioned(
+                        // alignment: Alignment.centerRight,
+                        right: 2,
+                        bottom: 10,
+                        child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primaryColor,
                             elevation: 3,
@@ -384,8 +393,8 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -525,8 +534,8 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
               children: [
                 _isFeedbackLoading
                     ? CircularProgressIndicator() // Show a loader while loading
-                    : TextButton(
-                        onPressed: () {
+                    : GestureDetector(
+                        onTap: () {
                           setState(() {
                             _isSuggestAnsActive = true;
                           });
@@ -536,7 +545,10 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                         },
                         child: Text(
                           "Suggest Answer",
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                 SizedBox(
@@ -558,9 +570,45 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
             widget.id, sessionId, audio, '', '', widget.isFemale, username),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const SpinKitThreeInOut(
-              color: AppColors.primaryColor,
-            ); // Loading state
+            /*return Container(
+              child: const Row(
+                children: [
+                  Text("Risho is Analyzing"),
+                  SpinKitThreeInOut(
+                    color: AppColors.primaryColor,
+                  ),
+                ],
+              ),
+            ); */ // Loading state
+            return Container(
+              padding: EdgeInsets.all(10.0),
+              child: Row(
+                children: [
+                  Container(
+                    margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
+                    child: Image.asset(
+                      "assets/images/risho_guru_icon.png",
+                      height: 30,
+                      width: 30,
+                    ),
+                  ),
+                  SizedBox(
+                    child: Shimmer.fromColors(
+                      baseColor: AppColors.primaryColor,
+                      highlightColor: Colors.white,
+                      child: const Text(
+                        'Analyzing...',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
           } else if (snapshot.hasError) {
             return Container(
               margin: const EdgeInsets.all(5.0),
@@ -644,383 +692,328 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                     doConversationProvider.conversationResponse!.message ??
                         "404: Server Issue"),
               );
-              /*return Container(
-                padding: EdgeInsets.all(12.0),
-                child: Text(
-                    doConversationProvider.conversationResponse!.message ??
-                        "--"),
-              );*/
             }
           }
         });
   }
 
   Widget buildAiResponse(BuildContext context, AsyncSnapshot<void> snapshot) {
-    int errorCode = doConversationProvider.conversationResponse!.errorCode!;
-
-    if (errorCode == 200) {
-      String aiDialogAudio =
-          doConversationProvider.conversationResponse!.aiDialogueAudio!;
-      String aiDialogText =
-          doConversationProvider.conversationResponse!.aiDialogue ?? "";
-      String userAudio =
-          doConversationProvider.conversationResponse!.userAudio!;
-      double accuracyScore =
-          doConversationProvider.conversationResponse!.accuracyScore ?? 0.0;
-      double fluencyScore =
-          doConversationProvider.conversationResponse!.fluencyScore ?? 0.0;
-      double completenessScore =
-          doConversationProvider.conversationResponse!.completenessScore ?? 0.0;
-      double prosodyScore =
-          doConversationProvider.conversationResponse!.prosodyScore ?? 0.0;
-      String userText =
-          doConversationProvider.conversationResponse!.userText ?? "";
-      String userTranslation =
-          doConversationProvider.conversationResponse!.userTextBn ??
-              "Not Found";
-      String aiTranslation =
-          doConversationProvider.conversationResponse!.aiDialogueBn ??
-              "Not Found";
-      Source urlSource = UrlSource(aiDialogAudio);
-      audioPlayer.play(urlSource);
-      return Container(
-        padding: EdgeInsets.all(5.0),
-        child: Column(
-          children: [
-            /*UserRow*/
-            userText != ""
-                ? Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 3,
-                            child: Container(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: IconButton(
-                                      onPressed: () {
-                                        ShowInfoDialog(
-                                            userText,
-                                            accuracyScore,
-                                            fluencyScore,
-                                            completenessScore,
-                                            prosodyScore);
-                                      },
-                                      icon: const Icon(
-                                        Icons.info_outline,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: IconButton(
-                                      onPressed: () {
-                                        showDialog<String>(
-                                          context: context,
-                                          builder: (BuildContext context) =>
-                                              AlertDialog(
-                                            title: const Text('Translation'),
-                                            content: Text(userTranslation),
-                                          ),
-                                        );
-                                      },
-                                      icon: const Icon(
-                                        Icons.translate_rounded,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: IconButton(
-                                      onPressed: () {
-                                        Source urlSource = UrlSource(userAudio);
-                                        audioPlayer.play(urlSource);
-                                        // print(urlSource);
-                                      },
-                                      icon: const Icon(
-                                        Icons.volume_down_rounded,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            flex: 7,
-                            child: Column(
+    String aiDialogAudio =
+        doConversationProvider.conversationResponse!.aiDialogueAudio!;
+    String aiDialogText =
+        doConversationProvider.conversationResponse!.aiDialogue ?? "";
+    String userAudio = doConversationProvider.conversationResponse!.userAudio!;
+    double accuracyScore =
+        doConversationProvider.conversationResponse!.accuracyScore ?? 0.0;
+    double fluencyScore =
+        doConversationProvider.conversationResponse!.fluencyScore ?? 0.0;
+    double completenessScore =
+        doConversationProvider.conversationResponse!.completenessScore ?? 0.0;
+    double prosodyScore =
+        doConversationProvider.conversationResponse!.prosodyScore ?? 0.0;
+    String userText =
+        doConversationProvider.conversationResponse!.userText ?? "";
+    String userTranslation =
+        doConversationProvider.conversationResponse!.userTextBn ?? "Not Found";
+    String aiTranslation =
+        doConversationProvider.conversationResponse!.aiDialogueBn ??
+            "Not Found";
+    Source urlSource = UrlSource(aiDialogAudio);
+    audioPlayer.play(urlSource);
+    return Container(
+      padding: EdgeInsets.all(5.0),
+      child: Column(
+        children: [
+          /*UserRow*/
+          userText != ""
+              ? Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Container(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Expanded(
-                                        flex: 7,
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                            color: AppColors.secondaryColor
-                                                .withOpacity(0.3),
-                                          ),
-                                          padding: EdgeInsets.all(10.0),
-                                          child: Text(
-                                            _isUserTranslation == false
-                                                ? userText
-                                                : userTranslation,
-                                          ),
+                                Expanded(
+                                  flex: 1,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      ShowInfoDialog(
+                                          userText,
+                                          accuracyScore,
+                                          fluencyScore,
+                                          completenessScore,
+                                          prosodyScore);
+                                    },
+                                    icon: const Icon(
+                                      Icons.info_outline,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      showDialog<String>(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            AlertDialog(
+                                          title: const Text('Translation'),
+                                          content: Text(userTranslation),
                                         ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: Container(
-                                          margin: EdgeInsets.fromLTRB(
-                                              5.0, 0.0, 5.0, 5.0),
-                                          child: Image.asset(
-                                            "assets/images/profile_chat.png",
-                                            height: 30,
-                                            width: 30,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                      );
+                                    },
+                                    icon: const Icon(
+                                      Icons.translate_rounded,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      Source urlSource = UrlSource(userAudio);
+                                      audioPlayer.play(urlSource);
+                                      // print(urlSource);
+                                    },
+                                    icon: const Icon(
+                                      Icons.volume_down_rounded,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
+                        ),
+                        Expanded(
+                          flex: 7,
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Expanded(
+                                      flex: 7,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(12.0),
+                                          color: AppColors.secondaryColor
+                                              .withOpacity(0.3),
+                                        ),
+                                        padding: EdgeInsets.all(10.0),
+                                        child: Text(
+                                          _isUserTranslation == false
+                                              ? userText
+                                              : userTranslation,
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        margin: EdgeInsets.fromLTRB(
+                                            5.0, 0.0, 5.0, 5.0),
+                                        child: Image.asset(
+                                          "assets/images/profile_chat.png",
+                                          height: 30,
+                                          width: 30,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    /*FEEDBACK*/
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: 2,
+                          ),
+                          _isFeedbackLoading
+                              ? CircularProgressIndicator() // Show a loader while loading
+                              : GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _isFeedbackLoading = true;
+                                    });
+                                    fetchDataAndShowBottomSheet(userText, "F")
+                                        .whenComplete(() {
+                                      setState(() {
+                                        _isFeedbackLoading = false;
+                                      });
+                                    });
+                                  },
+                                  child: const Text(
+                                    "Check Accuracy",
+                                    style: TextStyle(
+                                      color: AppColors.secondaryColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
                         ],
                       ),
-                      /*FEEDBACK*/
-                      Padding(
-                        padding:
-                            const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 5.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              width: 2,
-                            ),
-                            _isFeedbackLoading
-                                ? CircularProgressIndicator() // Show a loader while loading
-                                : TextButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        _isFeedbackLoading = true;
-                                      });
-                                      fetchDataAndShowBottomSheet(userText, "F")
-                                          .whenComplete(() {
-                                        setState(() {
-                                          _isFeedbackLoading = false;
-                                        });
-                                      });
-                                    },
-                                    child: const Text(
-                                      "Correction",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5.0,
-                      ),
-                    ],
-                  )
-                : Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12.0),
-                      color: AppColors.secondaryColor.withOpacity(0.1),
                     ),
-                    padding: EdgeInsets.all(10.0),
-                    child: Text("Couldn\'t capture your voice"),
+                    SizedBox(
+                      height: 5.0,
+                    ),
+                  ],
+                )
+              : Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0),
+                    color: AppColors.secondaryColor.withOpacity(0.1),
                   ),
+                  padding: EdgeInsets.all(10.0),
+                  child: Text("Couldn\'t capture your voice"),
+                ),
 
-            /*Ai Row*/
-            aiDialogText != ""
-                ? Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 7,
-                            child: Container(
-                              padding: EdgeInsets.all(5.0),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      margin: EdgeInsets.fromLTRB(
-                                          5.0, 0.0, 5.0, 5.0),
-                                      child: Image.asset(
-                                        "assets/images/risho_guru_icon.png",
-                                        height: 30,
-                                        width: 30,
-                                      ),
+          /*Ai Row*/
+          aiDialogText != ""
+              ? Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 7,
+                          child: Container(
+                            padding: EdgeInsets.all(5.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    margin:
+                                        EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
+                                    child: Image.asset(
+                                      "assets/images/risho_guru_icon.png",
+                                      height: 30,
+                                      width: 30,
                                     ),
                                   ),
-                                  Expanded(
-                                    flex: 7,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                        color: AppColors.primaryColor
-                                            .withOpacity(0.3),
-                                      ),
-                                      padding: EdgeInsets.all(10.0),
-                                      child: Text(
-                                        aiDialogText,
-                                      ),
+                                ),
+                                Expanded(
+                                  flex: 7,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12.0),
+                                      color: AppColors.primaryColor
+                                          .withOpacity(0.3),
+                                    ),
+                                    padding: EdgeInsets.all(10.0),
+                                    child: Text(
+                                      aiDialogText,
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
-                          Expanded(
-                            flex: 3,
-                            child: Container(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  IconButton(
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    Source urlSource = UrlSource(aiDialogAudio);
+                                    audioPlayer.play(urlSource);
+                                  },
+                                  icon: Icon(
+                                    Icons.volume_down_rounded,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: IconButton(
                                     onPressed: () {
-                                      Source urlSource =
-                                          UrlSource(aiDialogAudio);
-                                      audioPlayer.play(urlSource);
+                                      showDialog<String>(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            AlertDialog(
+                                          title: const Text('Translation'),
+                                          content: Text(aiTranslation),
+                                        ),
+                                      );
                                     },
-                                    icon: Icon(
-                                      Icons.volume_down_rounded,
+                                    icon: const Icon(
+                                      Icons.translate_rounded,
                                       color: Colors.white,
                                     ),
                                   ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: IconButton(
-                                      onPressed: () {
-                                        showDialog<String>(
-                                          context: context,
-                                          builder: (BuildContext context) =>
-                                              AlertDialog(
-                                            title: const Text('Translation'),
-                                            content: Text(aiTranslation),
-                                          ),
-                                        );
-                                      },
-                                      icon: const Icon(
-                                        Icons.translate_rounded,
-                                        color: Colors.white,
-                                      ),
+                                ),
+                                SizedBox(
+                                  width: 1,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _isFeedbackLoading
+                              ? CircularProgressIndicator() // Show a loader while loading
+                              : GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _isSuggestAnsActive = true;
+                                    });
+
+                                    fetchDataAndShowBottomSheet(
+                                            aiDialogText, "S")
+                                        .whenComplete(() {});
+                                  },
+                                  child: Text(
+                                    "Suggest Answer",
+                                    style: TextStyle(
+                                      color: AppColors.primaryColor,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  SizedBox(
-                                    width: 1,
-                                  ),
-                                ],
-                              ),
-                            ),
+                                ),
+                          SizedBox(
+                            width: 2,
                           ),
                         ],
                       ),
-                      Padding(
-                        padding:
-                            const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            _isFeedbackLoading
-                                ? CircularProgressIndicator() // Show a loader while loading
-                                : TextButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        _isSuggestAnsActive = true;
-                                      });
-
-                                      fetchDataAndShowBottomSheet(
-                                              aiDialogText, "S")
-                                          .whenComplete(() {});
-                                    },
-                                    child: Text(
-                                      "Suggest Answer",
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                            SizedBox(
-                              width: 2,
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 5.0,
-                      ),
-                    ],
-                  )
-                : SizedBox(
-                    width: 2,
-                  ),
-          ],
-        ),
-      );
-    } else if (errorCode == 201) {
-      return Container(
-        margin: const EdgeInsets.all(5.0),
-        padding: const EdgeInsets.all(8.0),
-        decoration: BoxDecoration(
-          color: AppColors.primaryCardColor,
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Text(
-                "Sorry: ${doConversationProvider.conversationResponse!.message}",
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
+                    ),
+                    SizedBox(
+                      height: 5.0,
+                    ),
+                  ],
+                )
+              : SizedBox(
+                  width: 2,
                 ),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryCardColor),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const PackagesScreen()),
-                  );
-                },
-                child: const Text(
-                  "Purchase Minutes",
-                  style: TextStyle(
-                    color: AppColors.primaryColor,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    } else {
-      return Container(
-        padding: EdgeInsets.all(12.0),
-        child: Text(doConversationProvider.conversationResponse!.message!),
-      );
-    }
+        ],
+      ),
+    );
   }
 
   Widget buildAiTextResponse(
@@ -1175,8 +1168,8 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                             ),
                             _isFeedbackLoading
                                 ? const CircularProgressIndicator() // Show a loader while loading
-                                : TextButton(
-                                    onPressed: () {
+                                : GestureDetector(
+                                    onTap: () {
                                       setState(() {
                                         _isFeedbackLoading = true;
                                       });
@@ -1188,8 +1181,11 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                                       });
                                     },
                                     child: const Text(
-                                      "Correction",
-                                      style: TextStyle(color: Colors.white),
+                                      "Check Accuracy",
+                                      style: TextStyle(
+                                        color: AppColors.secondaryColor,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                           ],
@@ -1302,8 +1298,8 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                           children: [
                             _isFeedbackLoading
                                 ? CircularProgressIndicator() // Show a loader while loading
-                                : TextButton(
-                                    onPressed: () {
+                                : GestureDetector(
+                                    onTap: () {
                                       setState(() {
                                         _isSuggestAnsActive = true;
                                       });
@@ -1314,7 +1310,10 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                                     },
                                     child: Text(
                                       "Suggest Answer",
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(
+                                        color: AppColors.primaryColor,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                             SizedBox(
@@ -1388,192 +1387,55 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
       double fluencyScore, double completenessScore, double prosodyScore) {
     return showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (context) {
-        return Container(
-          width: double.infinity,
-          margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                userText,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/images/accuracy.png",
-                    width: 20,
-                    height: 20,
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Accuracy Score:"),
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 8,
-                                child: LinearProgressIndicator(
-                                  value: accuracyScore /
-                                      100, // value should be between 0 and 1
-                                  backgroundColor: Colors.grey[300],
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      AppColors.primaryColor),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 2,
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Text("${accuracyScore.toString()}%"),
-                              ),
-                            ],
-                          ),
-                        ],
+        return DraggableScrollableSheet(
+            initialChildSize: 0.5,
+            // initial height 50% of the screen
+            minChildSize: 0.5,
+            // minimum height 50% of the screen
+            maxChildSize: 0.9,
+            // maximum height 100% of the screen
+            expand: false,
+            builder: (BuildContext context, ScrollController scrollController) {
+              return SingleChildScrollView(
+                controller: scrollController,
+                child: Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.fromLTRB(10.0, 12.0, 10.0, 0.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        userText,
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
                       ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/images/fluency.png",
-                    width: 20,
-                    height: 20,
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Fluency Score:"),
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 8,
-                                child: LinearProgressIndicator(
-                                  value: fluencyScore /
-                                      100, // value should be between 0 and 1
-                                  backgroundColor: Colors.grey[300],
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      AppColors.primaryColor),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 2,
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Text("${fluencyScore.toString()}%"),
-                              ),
-                            ],
-                          ),
-                        ],
+                      info_bar(
+                        title: 'Accuracy Score',
+                        number: accuracyScore,
+                        imagePath: "assets/images/accuracy.png",
                       ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/images/solution.png",
-                    width: 20,
-                    height: 20,
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Completeness Score:"),
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 8,
-                                child: LinearProgressIndicator(
-                                  value: completenessScore /
-                                      100, // value should be between 0 and 1
-                                  backgroundColor: Colors.grey[300],
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      AppColors.primaryColor),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 2,
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Text("${completenessScore.toString()}%"),
-                              ),
-                            ],
-                          ),
-                        ],
+                      info_bar(
+                        title: 'Fluency Score',
+                        number: fluencyScore,
+                        imagePath: "assets/images/fluency.png",
                       ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/images/prosody.png",
-                    width: 20,
-                    height: 20,
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Prosody Score:"),
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 8,
-                                child: LinearProgressIndicator(
-                                  value: prosodyScore /
-                                      100, // value should be between 0 and 1
-                                  backgroundColor: Colors.grey[300],
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      AppColors.primaryColor),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 2,
-                              ),
-                              Expanded(
-                                flex: 2,
-                                child: Text("${prosodyScore.toString()}%"),
-                              ),
-                            ],
-                          ),
-                        ],
+                      info_bar(
+                        title: 'Completeness Score:',
+                        number: completenessScore,
+                        imagePath: "assets/images/solution.png",
                       ),
-                    ),
+                      info_bar(
+                        title: 'Prosody Score:',
+                        number: prosodyScore,
+                        imagePath: "assets/images/prosody.png",
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ],
-          ),
-        );
+                ),
+              );
+            });
       },
     );
   }
@@ -1660,7 +1522,7 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
   }
 
   // Modified FeedbackBottomDialog function to accept data
-  Future<void> FeedbackBottomDialog(
+  /*Future<void> FeedbackBottomDialog(
     String userText,
     ValidateSentenceDataModel? responseData,
   ) async {
@@ -1672,41 +1534,118 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
             child: CircularProgressIndicator(),
           );
         } else {
-          return SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Feedback",
-                    style: TextStyle(
-                        // color: AppColors.primaryColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24),
+          return DraggableScrollableSheet(
+              initialChildSize: 0.5,
+              // Initial height 50% of the screen
+              minChildSize: 0.5,
+              // Minimum height 50% of the screen
+              maxChildSize: 0.9,
+              // Maximum height 100% of the screen
+              expand: false,
+              builder:
+                  (BuildContext context, ScrollController scrollController) {
+                return SingleChildScrollView(
+                  controller: _scrollController,
+                  // physics: AlwaysScrollableScrollPhysics(),
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Feedback",
+                          style: TextStyle(
+                              // color: AppColors.primaryColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24),
+                        ),
+                        buildFeedbackContentColumn(
+                          'Correct Sentence:',
+                          responseData.correctSentence,
+                        ),
+                        buildFeedbackContentColumn(
+                          'Explanation:',
+                          responseData.explanation,
+                        ),
+                        buildFeedbackContentColumn(
+                          'Alternate Sentence:',
+                          responseData.alternate,
+                        ),
+                        buildFeedbackContentColumn(
+                          'Bangla Explanation:',
+                          responseData.banglaExplanation,
+                        ),
+                      ],
+                    ),
                   ),
-                  buildFeedbackContentColumn(
-                    'Correct Sentence:',
-                    responseData.correctSentence,
+                );
+              });
+        }
+      },
+    );
+  }*/
+  Future<void> FeedbackBottomDialog(
+    String userText,
+    ValidateSentenceDataModel? responseData,
+  ) async {
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        if (responseData == null) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          return DraggableScrollableSheet(
+            initialChildSize: 0.5,
+            // Initial height 50% of the screen
+            minChildSize: 0.5,
+            // Minimum height 50% of the screen
+            maxChildSize: 0.9,
+            // Maximum height 100% of the screen
+            expand: false,
+            builder: (BuildContext context, ScrollController scrollController) {
+              return SingleChildScrollView(
+                controller: scrollController,
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Feedback",
+                        style: TextStyle(
+                            // color: AppColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24),
+                      ),
+                      buildFeedbackContentColumn(
+                        'Correct Sentence:',
+                        responseData.correctSentence,
+                      ),
+                      buildFeedbackContentColumn(
+                        'Explanation:',
+                        responseData.explanation,
+                      ),
+                      buildFeedbackContentColumn(
+                        'Alternate Sentence:',
+                        responseData.alternate,
+                      ),
+                      buildFeedbackContentColumn(
+                        'Bangla Explanation:',
+                        responseData.banglaExplanation,
+                      ),
+                    ],
                   ),
-                  buildFeedbackContentColumn(
-                    'Explanation:',
-                    responseData.explanation,
-                  ),
-                  buildFeedbackContentColumn(
-                    'Alternate Sentence:',
-                    responseData.alternate,
-                  ),
-                  buildFeedbackContentColumn(
-                    'Bangla Explanation:',
-                    responseData.banglaExplanation,
-                  ),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           );
         }
       },
@@ -1721,8 +1660,34 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
             59350, widget.id, sessionId!, text, widget.isFemale, username),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const SpinKitThreeInOut(
-              color: AppColors.primaryColor,
+            return Container(
+              padding: EdgeInsets.all(10.0),
+              child: Row(
+                children: [
+                  Container(
+                    margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
+                    child: Image.asset(
+                      "assets/images/risho_guru_icon.png",
+                      height: 30,
+                      width: 30,
+                    ),
+                  ),
+                  SizedBox(
+                    child: Shimmer.fromColors(
+                      baseColor: AppColors.primaryColor,
+                      highlightColor: Colors.white,
+                      child: const Text(
+                        'Analyzing...',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ); // Loading state
           } else if (snapshot.hasError) {
             return Container(
@@ -1747,7 +1712,62 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
               ),
             );
           } else {
-            return buildAiTextResponse(context, snapshot, nextQuesProvider);
+            int? errorCode = nextQuesProvider.nextQuestionResponse!.errorCode;
+            /*doConversationProvider.conversationResponse!.errorCode;*/
+            print(errorCode);
+            if (errorCode == 200) {
+              return buildAiTextResponse(context, snapshot, nextQuesProvider);
+            } else if (errorCode == 201) {
+              return Container(
+                margin: const EdgeInsets.all(5.0),
+                padding: const EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryCardColor,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        "Sorry: ${nextQuesProvider.nextQuestionResponse!.message}",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primaryCardColor),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const PackagesScreen()),
+                          );
+                        },
+                        child: const Text(
+                          "Purchase Minutes",
+                          style: TextStyle(
+                            color: AppColors.primaryColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            } else {
+              return Container(
+                margin: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.0),
+                  color: AppColors.secondaryColor.withOpacity(0.1),
+                ),
+                padding: EdgeInsets.all(10.0),
+                child: Text(nextQuesProvider.nextQuestionResponse!.message ??
+                    "404: Server Issue"),
+              );
+            }
           }
         });
   }
@@ -1863,5 +1883,66 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
             );
           }
         });*/
+  }
+}
+
+class info_bar extends StatelessWidget {
+  const info_bar({
+    super.key,
+    required this.title,
+    required this.number,
+    required this.imagePath,
+  });
+
+  final String title;
+  final double number;
+  final String imagePath;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset(
+          /*"assets/images/accuracy.png"*/
+          imagePath,
+          width: 20,
+          height: 20,
+        ),
+        Expanded(
+          flex: 1,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(/*"Accuracy Score:"*/ title),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 8,
+                      child: LinearProgressIndicator(
+                        value: /*accuracyScore*/
+                            number / 100, // value should be between 0 and 1
+                        backgroundColor: Colors.grey[300],
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.primaryColor),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 2,
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Text("${number.toString()}%"),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

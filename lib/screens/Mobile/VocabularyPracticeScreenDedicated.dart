@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import 'package:record/record.dart';
 import 'package:risho_speech/screens/Common/RecordingButton.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../models/vocabularyPronunciationDataModel.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/vocabularyPracticeListProvider.dart';
@@ -216,9 +217,39 @@ class _VocabularyPracticeScreenState extends State<VocabularyPracticeScreen> {
         ),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const SpinKitThreeInOut(
+            /*return const SpinKitThreeInOut(
               color: AppColors.primaryColor,
-            ); // Loading state
+            );*/ // Loading state
+            return Container(
+              padding: EdgeInsets.all(10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
+                    child: Image.asset(
+                      "assets/images/risho_guru_icon.png",
+                      height: 30,
+                      width: 30,
+                    ),
+                  ),
+                  SizedBox(
+                    child: Shimmer.fromColors(
+                      baseColor: AppColors.primaryColor,
+                      highlightColor: Colors.white,
+                      child: const Text(
+                        'Analyzing...',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
           } else if (snapshot.hasError) {
             return Container(
               margin: const EdgeInsets.all(5.0),

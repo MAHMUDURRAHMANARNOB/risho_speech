@@ -29,6 +29,7 @@ import 'package:shurjopay/utilities/functions.dart';
 import 'package:upgrader/upgrader.dart';
 
 Future<void> main() async {
+  initializeShurjopay(environment: "live");
   runApp(
     MultiProvider(
       providers: [

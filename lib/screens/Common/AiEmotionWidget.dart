@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
+
+import '../../ui/colors.dart';
 
 class AiEmotionWidget extends StatelessWidget {
   final bool isAiSaying;
@@ -36,6 +39,7 @@ class AiEmotionWidget extends StatelessWidget {
             text: '$AIName is Saying',
             screenHeight: screenHeight,
             screenWidth: screenWidth,
+            highlightColor: AppColors.secondaryColor,
           )
         else if (isAiAnalyzing)
           _buildEmotionWidget(
@@ -43,6 +47,7 @@ class AiEmotionWidget extends StatelessWidget {
             text: '$AIName is Preparing',
             screenHeight: screenHeight,
             screenWidth: screenWidth,
+            highlightColor: AppColors.primaryColor,
           )
         else if (isAiListening)
           _buildEmotionWidget(
@@ -50,6 +55,7 @@ class AiEmotionWidget extends StatelessWidget {
             text: '$AIName is Listening',
             screenHeight: screenHeight,
             screenWidth: screenWidth,
+            highlightColor: AppColors.primaryContainerColor,
           )
         else if (isAiWaiting)
           _buildEmotionWidget(
@@ -57,6 +63,7 @@ class AiEmotionWidget extends StatelessWidget {
             text: 'Waiting for your response',
             screenHeight: screenHeight,
             screenWidth: screenWidth,
+            highlightColor: Colors.white,
           )
         else
           _buildEmotionWidget(
@@ -64,6 +71,7 @@ class AiEmotionWidget extends StatelessWidget {
             text: 'Waiting for your response',
             screenHeight: screenHeight,
             screenWidth: screenWidth,
+            highlightColor: Colors.white,
           )
       ],
     );
@@ -74,6 +82,7 @@ class AiEmotionWidget extends StatelessWidget {
     required String text,
     required double screenHeight,
     required double screenWidth,
+    required Color highlightColor,
   }) {
     return Column(
       children: [
@@ -82,13 +91,25 @@ class AiEmotionWidget extends StatelessWidget {
           height: screenHeight * 0.2, // Adjusted height based on screen height
           width: screenWidth * 0.35,
         ),
-        Text(
+        Shimmer.fromColors(
+          baseColor: Colors.white,
+          highlightColor: highlightColor,
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        /*Text(
           text,
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: screenHeight * 0.025,
           ),
-        ),
+        ),*/
       ],
     );
   }
