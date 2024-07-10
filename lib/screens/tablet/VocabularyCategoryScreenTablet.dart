@@ -181,6 +181,7 @@ class _VocabularyCategoryScreenTabletState
                             },
                             child: Card(
                               clipBehavior: Clip.antiAlias,
+                              color: AppColors.primaryCardColor,
                               child: Container(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -190,7 +191,7 @@ class _VocabularyCategoryScreenTabletState
                                       flex: 3,
                                       child: Container(
                                         width: double.infinity,
-                                        color: Colors.white,
+                                        color: AppColors.vocabularyCatCardColor,
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(8.0),

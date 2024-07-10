@@ -13,6 +13,7 @@ import 'package:risho_speech/providers/doGuidedConversationProvider.dart';
 import 'package:risho_speech/providers/nextQuestionProvider.dart';
 import 'package:risho_speech/providers/optProvider.dart';
 import 'package:risho_speech/providers/packagesProvider.dart';
+import 'package:risho_speech/providers/resetPasswordProvider.dart';
 import 'package:risho_speech/providers/spokenLessonListProvider.dart';
 import 'package:risho_speech/providers/subscriptionStatus_provider.dart';
 import 'package:risho_speech/providers/suggestAnswerProvider.dart';
@@ -59,6 +60,7 @@ Future<void> main() async {
         ChangeNotifierProvider(
             create: (context) => SubscriptionStatusProvider()),
         ChangeNotifierProvider(create: (context) => CouponDiscountProvider()),
+        ChangeNotifierProvider(create: (context) => ResetPasswordProvider()),
       ],
       child: UpgradeAlert(
         child: RishoSpeech(),

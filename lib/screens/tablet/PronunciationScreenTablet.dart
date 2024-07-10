@@ -10,6 +10,7 @@ import 'package:record/record.dart';
 import 'package:risho_speech/models/doGuidedConverationDataModel.dart';
 import 'package:risho_speech/providers/doGuidedConversationProvider.dart';
 import 'package:risho_speech/ui/colors.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../models/validateSpokenSentenceDataModel.dart';
 import '../../providers/auth_provider.dart';
@@ -405,9 +406,38 @@ class _PronunciationScreenTabletState extends State<PronunciationScreenTablet> {
             _seqNumber),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const SpinKitThreeInOut(
+            /*return const SpinKitThreeInOut(
               color: AppColors.primaryColor,
-            ); // Loading state
+            ); */ // Loading state
+            return Container(
+              padding: EdgeInsets.all(10.0),
+              child: Row(
+                children: [
+                  Container(
+                    margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
+                    child: Image.asset(
+                      "assets/images/risho_guru_icon.png",
+                      height: 30,
+                      width: 30,
+                    ),
+                  ),
+                  SizedBox(
+                    child: Shimmer.fromColors(
+                      baseColor: AppColors.primaryColor,
+                      highlightColor: Colors.white,
+                      child: const Text(
+                        'Analyzing...',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
           } else if (snapshot.hasError) {
             return Container(
               margin: const EdgeInsets.all(5.0),
@@ -802,235 +832,256 @@ class _PronunciationScreenTabletState extends State<PronunciationScreenTablet> {
     print("words: ${words?[2].word}");
     return showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (context) {
-        return SingleChildScrollView(
-          child: Container(
-            width: double.infinity,
-            margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-            padding: EdgeInsets.all(10.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  userText,
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                Row(
+        return DraggableScrollableSheet(
+          initialChildSize: 0.5,
+          // initial height 50% of the screen
+          minChildSize: 0.5,
+          // minimum height 50% of the screen
+          maxChildSize: 0.9,
+          // maximum height 100% of the screen
+          expand: false,
+          builder: (BuildContext context, ScrollController scrollController) {
+            return SingleChildScrollView(
+              controller: scrollController,
+              child: Container(
+                width: double.infinity,
+                margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+                padding: EdgeInsets.all(10.0),
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      "assets/images/accuracy.png",
-                      width: 20,
-                      height: 20,
+                    Text(
+                      userText,
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Accuracy Score:"),
-                            Row(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/images/accuracy.png",
+                          width: 20,
+                          height: 20,
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Expanded(
-                                  flex: 8,
-                                  child: LinearProgressIndicator(
-                                    value: accuracyScore /
-                                        100, // value should be between 0 and 1
-                                    backgroundColor: Colors.grey[300],
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        AppColors.primaryColor),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 2,
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: Text("${accuracyScore.toString()}%"),
+                                Text("Accuracy Score:"),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 8,
+                                      child: LinearProgressIndicator(
+                                        value: accuracyScore / 100,
+                                        // value should be between 0 and 1
+                                        backgroundColor: Colors.grey[300],
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                AppColors.primaryColor),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 2,
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child:
+                                          Text("${accuracyScore.toString()}%"),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                          ],
+                          ),
                         ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/images/fluency.png",
+                          width: 20,
+                          height: 20,
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Fluency Score:"),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 8,
+                                      child: LinearProgressIndicator(
+                                        value: fluencyScore / 100,
+                                        // value should be between 0 and 1
+                                        backgroundColor: Colors.grey[300],
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                AppColors.primaryColor),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 2,
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child:
+                                          Text("${fluencyScore.toString()}%"),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/images/solution.png",
+                          width: 20,
+                          height: 20,
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Completeness Score:"),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 8,
+                                      child: LinearProgressIndicator(
+                                        value: completenessScore / 100,
+                                        // value should be between 0 and 1
+                                        backgroundColor: Colors.grey[300],
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                AppColors.primaryColor),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 2,
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Text(
+                                          "${completenessScore.toString()}%"),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/images/prosody.png",
+                          width: 20,
+                          height: 20,
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Prosody Score:"),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 8,
+                                      child: LinearProgressIndicator(
+                                        value: prosodyScore / 100,
+                                        // value should be between 0 and 1
+                                        backgroundColor: Colors.grey[300],
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                AppColors.primaryColor),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 2,
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child:
+                                          Text("${prosodyScore.toString()}%"),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: DataTable(
+                        columnSpacing: 10,
+                        columns: [
+                          DataColumn(label: Text('Word')),
+                          DataColumn(label: Text('Accuracy Score')),
+                          DataColumn(label: Text('Comments')),
+                        ],
+                        rows: words?.map((word) {
+                              String errorType = word.errorType ?? '';
+                              if (word.errorType == "None") {
+                                errorType = "Perfect";
+                              } else {
+                                errorType = word.errorType ?? '';
+                              }
+                              return DataRow(
+                                cells: [
+                                  DataCell(
+                                    Text(word.word ?? ""),
+                                  ),
+                                  DataCell(
+                                    Text(word.accuracyScore.toString() ?? ""),
+                                  ),
+                                  DataCell(
+                                    Text(
+                                      errorType,
+                                      style: TextStyle(
+                                          color: errorType != "Perfect"
+                                              ? AppColors.secondaryColor
+                                              : AppColors.primaryColor,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }).toList() ??
+                            [],
                       ),
                     ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      "assets/images/fluency.png",
-                      width: 20,
-                      height: 20,
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Fluency Score:"),
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 8,
-                                  child: LinearProgressIndicator(
-                                    value: fluencyScore /
-                                        100, // value should be between 0 and 1
-                                    backgroundColor: Colors.grey[300],
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        AppColors.primaryColor),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 2,
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: Text("${fluencyScore.toString()}%"),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      "assets/images/solution.png",
-                      width: 20,
-                      height: 20,
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Completeness Score:"),
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 8,
-                                  child: LinearProgressIndicator(
-                                    value: completenessScore /
-                                        100, // value should be between 0 and 1
-                                    backgroundColor: Colors.grey[300],
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        AppColors.primaryColor),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 2,
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child:
-                                      Text("${completenessScore.toString()}%"),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      "assets/images/prosody.png",
-                      width: 20,
-                      height: 20,
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Prosody Score:"),
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 8,
-                                  child: LinearProgressIndicator(
-                                    value: prosodyScore /
-                                        100, // value should be between 0 and 1
-                                    backgroundColor: Colors.grey[300],
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        AppColors.primaryColor),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 2,
-                                ),
-                                Expanded(
-                                  flex: 2,
-                                  child: Text("${prosodyScore.toString()}%"),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: DataTable(
-                    columnSpacing: 10,
-                    columns: [
-                      DataColumn(label: Text('Word')),
-                      DataColumn(label: Text('Accuracy Score')),
-                      DataColumn(label: Text('Comments')),
-                    ],
-                    rows: words?.map((word) {
-                          String errorType = word.errorType ?? '';
-                          if (word.errorType == "None") {
-                            errorType = "Perfect";
-                          } else {
-                            errorType = word.errorType ?? '';
-                          }
-                          return DataRow(
-                            cells: [
-                              DataCell(
-                                Text(word.word ?? ""),
-                              ),
-                              DataCell(
-                                Text(word.accuracyScore.toString() ?? ""),
-                              ),
-                              DataCell(
-                                Text(
-                                  errorType,
-                                  style: TextStyle(
-                                      color: errorType != "Perfect"
-                                          ? AppColors.secondaryColor
-                                          : AppColors.primaryColor,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ],
-                          );
-                        }).toList() ??
-                        [],
-                  ),
-                ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         );
       },
     );
@@ -1114,47 +1165,60 @@ class _PronunciationScreenTabletState extends State<PronunciationScreenTablet> {
   ) async {
     return showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (context) {
         if (responseData == null) {
           return const Center(
             child: CircularProgressIndicator(),
           );
         } else {
-          return SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Feedback",
-                    style: TextStyle(
-                        // color: AppColors.primaryColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24),
+          return DraggableScrollableSheet(
+            initialChildSize: 0.5,
+            // Initial height 50% of the screen
+            minChildSize: 0.5,
+            // Minimum height 50% of the screen
+            maxChildSize: 0.9,
+            // Maximum height 100% of the screen
+            expand: false,
+            builder: (BuildContext context, ScrollController scrollController) {
+              return SingleChildScrollView(
+                controller: scrollController,
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Feedback",
+                        style: TextStyle(
+                            // color: AppColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24),
+                      ),
+                      buildFeedbackContentColumn(
+                        'Correct Sentence:',
+                        responseData.correctSentence,
+                      ),
+                      buildFeedbackContentColumn(
+                        'Explanation:',
+                        responseData.explanation,
+                      ),
+                      buildFeedbackContentColumn(
+                        'Alternate Sentence:',
+                        responseData.alternate,
+                      ),
+                      buildFeedbackContentColumn(
+                        'Bangla Explanation:',
+                        responseData.banglaExplanation,
+                      ),
+                    ],
                   ),
-                  buildFeedbackContentColumn(
-                    'Correct Sentence:',
-                    responseData.correctSentence,
-                  ),
-                  buildFeedbackContentColumn(
-                    'Explanation:',
-                    responseData.explanation,
-                  ),
-                  buildFeedbackContentColumn(
-                    'Alternate Sentence:',
-                    responseData.alternate,
-                  ),
-                  buildFeedbackContentColumn(
-                    'Bangla Explanation:',
-                    responseData.banglaExplanation,
-                  ),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           );
         }
       },

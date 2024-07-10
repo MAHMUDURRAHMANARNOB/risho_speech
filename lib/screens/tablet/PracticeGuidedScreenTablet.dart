@@ -330,15 +330,15 @@ class _PracticeGuidedScreenTabletState
                             bottomRight: Radius.circular(10.0),
                             bottomLeft: Radius.circular(10.0),
                           ),
-                          /*gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                AppColors.secondaryCardColorGreenish,
-                                Colors.cyan,
-                              ],
-                            ),*/
-                          color: Colors.cyan.withOpacity(0.7),
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              AppColors.primaryColor.withOpacity(0.4),
+                              Colors.cyan,
+                            ],
+                          ),
+                          // color: Colors.cyan.withOpacity(0.7),
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,

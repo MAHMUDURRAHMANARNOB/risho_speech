@@ -14,6 +14,7 @@ import '../../providers/spokenLessonListProvider.dart';
 
 class PracticeGuidedScreenMobile extends StatefulWidget {
   final String screenName;
+
   const PracticeGuidedScreenMobile({super.key, required this.screenName});
 
   @override
@@ -93,7 +94,7 @@ class _PracticeGuidedScreenMobileState
                     aiDialogueAudio: aiDialogueAudio!,
                     aiTranslation: aiTranslation ?? "Not found",
                     actorName: actorName ?? "Not found",
-                isFemale: isFemale ?? "N",
+                    isFemale: isFemale ?? "N",
                   )),
         );
         /*showDialog(
@@ -313,15 +314,16 @@ class _PracticeGuidedScreenMobileState
                         width: MediaQuery.of(context).size.width * 0.4,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8.0),
-                          /*gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                AppColors.secondaryCardColorGreenish,
-                                Colors.cyan,
-                              ],
-                            ),*/
-                          color: Colors.cyan.withOpacity(0.7),
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              AppColors.primaryColor.withOpacity(0.4),
+                              Colors.cyan,
+                            ],
+                          ),
+                          /*color: */ /*Colors.cyan.withOpacity(0.7)*/ /*
+                              AppColors.vocabularyCatCardColor,*/
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -333,8 +335,8 @@ class _PracticeGuidedScreenMobileState
                                 padding: const EdgeInsets.fromLTRB(
                                     10.0, 10.0, 10.0, 10.0),
                                 child: Text(
-                                  lesson
-                                      .conversationName, // Display conversationName
+                                  lesson.conversationName,
+                                  // Display conversationName
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
                                     // fontSize: 16,
@@ -358,8 +360,8 @@ class _PracticeGuidedScreenMobileState
                                         bottomRight: Radius.circular(8.0)),
                                     color: AppColors.cardbasic),
                                 child: Text(
-                                  lesson
-                                      .conversationDetails, // Display conversationName
+                                  lesson.conversationDetails,
+                                  // Display conversationName
                                   textAlign: TextAlign.start,
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 3,
@@ -381,7 +383,7 @@ class _PracticeGuidedScreenMobileState
     );
   }
 
-  /*Widget PGLFutureBuilder(Function(int, int) fetchSessionId) {
+/*Widget PGLFutureBuilder(Function(int, int) fetchSessionId) {
     return FutureBuilder<void>(
       future: spokenLessonListProvider.fetchSpokenLessonListResponse(),
       builder: (context, snapshot) {

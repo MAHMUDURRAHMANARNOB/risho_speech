@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/auth_provider.dart';
@@ -117,12 +118,112 @@ class _PackagesScreenMobileState extends State<PackagesScreenMobile> {
                         textAlign: TextAlign.justify,
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Iconsax.ticket,
+                                color: AppColors.primaryColor,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "Tickets",
+                                style: TextStyle(),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            margin: EdgeInsets.all(5.0),
+                            padding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4.0),
+                              color: AppColors.primaryColor,
+                            ),
+                            child: Text(
+                              noOfTickets.toString(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Iconsax.document_code_2,
+                                color: AppColors.primaryColor,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "Comments",
+                              ),
+                            ],
+                          ),
+                          Container(
+                            margin: EdgeInsets.all(5.0),
+                            padding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4.0),
+                              color: AppColors.primaryColor,
+                            ),
+                            child: Text(
+                              noOfComments.toString(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Iconsax.timer,
+                                color: AppColors.primaryColor,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "Minutes",
+                              ),
+                            ],
+                          ),
+                          Container(
+                            margin: EdgeInsets.all(5.0),
+                            padding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4.0),
+                              color: AppColors.primaryColor,
+                            ),
+                            child: Text(
+                              audiominutes.toString(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
           ),
-          Padding(
+          /*Padding(
             padding: const EdgeInsets.all(2.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -209,7 +310,7 @@ class _PackagesScreenMobileState extends State<PackagesScreenMobile> {
                 ),
               ],
             ),
-          ),
+          ),*/
           Padding(
             padding: const EdgeInsets.all(5.0),
             child: Row(

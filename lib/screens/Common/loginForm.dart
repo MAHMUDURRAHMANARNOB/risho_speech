@@ -9,6 +9,7 @@ import '../../models/user.dart';
 import '../../providers/auth_provider.dart';
 import '../../ui/colors.dart';
 import '../Dashboard.dart';
+import '../forget_pass_screen.dart';
 import 'error_dialog.dart';
 
 class Loginform extends StatefulWidget {
@@ -24,6 +25,7 @@ class _LoginformState extends State<Loginform> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool _obscureText = true;
+
   // Initially hide the password
   void _togglePasswordVisibility() {
     setState(() {
@@ -84,7 +86,8 @@ class _LoginformState extends State<Loginform> {
                     ),
                     hintText: 'Your Username or Email',
                     filled: true,
-                    fillColor: Colors.grey[200], // Background color
+                    fillColor: Colors.grey[200],
+                    // Background color
                     border: OutlineInputBorder(
                       borderRadius:
                           BorderRadius.circular(10.0), // Border radius
@@ -138,7 +141,8 @@ class _LoginformState extends State<Loginform> {
                     hintStyle: TextStyle(color: Colors.grey[400]),
                     hintText: 'Your Password',
                     filled: true,
-                    fillColor: Colors.grey[200], // Background color
+                    fillColor: Colors.grey[200],
+                    // Background color
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0), // Border radius
                     ),
@@ -169,7 +173,7 @@ class _LoginformState extends State<Loginform> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => RegistrationScreen(),
+                          builder: (context) => ForgetPassScreen(),
                         ),
                       );
                     },

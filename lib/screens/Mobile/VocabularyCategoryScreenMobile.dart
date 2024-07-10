@@ -173,63 +173,78 @@ class _VocabularyCategoryScreenMobileState
                             );
                           },
                           child: Card(
+                            color: AppColors.primaryCardColor,
                             clipBehavior: Clip.antiAlias,
-                            child: Container(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    flex: 3,
-                                    child: Container(
-                                      width: double.infinity,
-                                      color: Colors.white,
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        child: category.imageUrl == null
-                                            ? Image.asset(
-                                                "assets/images/risho_guru_icon.png",
-                                                height: 200,
-                                              )
-                                            : Image.network(
-                                                category.imageUrl!,
-                                                height: 200,
-                                                fit: BoxFit.fitHeight,
-                                                loadingBuilder:
-                                                    (BuildContext context,
-                                                        Widget child,
-                                                        ImageChunkEvent?
-                                                            loadingProgress) {
-                                                  if (loadingProgress == null)
-                                                    return child;
-                                                  return Center(
-                                                    child:
-                                                        CircularProgressIndicator(
-                                                      color: AppColors
-                                                          .primaryColor,
-                                                      value: loadingProgress
-                                                                  .expectedTotalBytes !=
-                                                              null
-                                                          ? loadingProgress
-                                                                  .cumulativeBytesLoaded /
-                                                              loadingProgress
-                                                                  .expectedTotalBytes!
-                                                          : null,
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                      ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: Container(
+                                    width: double.infinity,
+                                    color: AppColors.vocabularyCatCardColor,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      child: category.imageUrl == null
+                                          ? Image.asset(
+                                              "assets/images/risho_guru_icon.png",
+                                              height: 200,
+                                            )
+                                          : Image.network(
+                                              category.imageUrl!,
+                                              height: 200,
+                                              fit: BoxFit.fitHeight,
+                                              loadingBuilder:
+                                                  (BuildContext context,
+                                                      Widget child,
+                                                      ImageChunkEvent?
+                                                          loadingProgress) {
+                                                if (loadingProgress == null) {
+                                                  return child;
+                                                }
+                                                return Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    color:
+                                                        AppColors.primaryColor,
+                                                    value: loadingProgress
+                                                                .expectedTotalBytes !=
+                                                            null
+                                                        ? loadingProgress
+                                                                .cumulativeBytesLoaded /
+                                                            loadingProgress
+                                                                .expectedTotalBytes!
+                                                        : null,
+                                                  ),
+                                                );
+                                              },
+                                            ),
                                     ),
                                   ),
-                                  SizedBox(
-                                    height: 10,
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    capitalize(category.vocCatName ?? ""),
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                    textAlign: TextAlign.center,
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                ),
+                                /*Expanded(
+                                  flex: 1,
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
                                     child: Text(
-                                      capitalize(category.vocCatName ?? ""),
+                                      capitalize(category.vocCatNameBn ?? ""),
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
@@ -239,34 +254,18 @@ class _VocabularyCategoryScreenMobileState
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
-                                  /*Expanded(
-                                    flex: 1,
-                                    child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        capitalize(category.vocCatNameBn ?? ""),
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ),*/
-                                  /*Text(
-                                    capitalize(category.vocaDescription ?? ""),
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    textAlign: TextAlign.center,
-                                  ),*/
-                                ],
-                              ),
+                                ),*/
+                                /*Text(
+                                  capitalize(category.vocaDescription ?? ""),
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  textAlign: TextAlign.center,
+                                ),*/
+                              ],
                             ),
                           ),
                         );

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class AppColors {
   // static const Color primaryColor = Color(0xFF78B27F);
   static const Color primaryColor = Color(0xFF2CA948);
+
   // static const Color secondaryColor = Color(0xFFD29B3F);
   static const Color secondaryColor = Color(0xFFFAB510);
   static const Color backgroundColorDark = Color(0xFF1C1D1E);
@@ -14,6 +15,8 @@ class AppColors {
   static const Color ExpandedCourseCardColor = Color(0xFF424549);
   static const Color ChapterTitle = Color(0xFFFDEFAE);
   static const Color cardbasic = Color(0xFF1F2937);
+
+  static const Color vocabularyCatCardColor = Color(0xFF30332F);
 
 // Add more color constants as needed
 }
