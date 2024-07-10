@@ -31,6 +31,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
   TextEditingController emailController = TextEditingController();
   TextEditingController mobileController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
   // Initially hide the password
   void _togglePasswordVisibility() {
     setState(() {
@@ -127,7 +128,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   ),
                   hintText: 'Your Full Name',
                   filled: true,
-                  fillColor: Colors.grey[200], // Background color
+                  fillColor: Colors.grey[200],
+                  // Background color
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0), // Border radius
                   ),
@@ -179,7 +181,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   ),
                   hintText: 'Generated Username',
                   filled: true,
-                  fillColor: Colors.grey[200], // Background color
+                  fillColor: Colors.grey[200],
+                  // Background color
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0), // Border radius
                   ),
@@ -222,7 +225,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   ),
                   hintText: 'Your Email',
                   filled: true,
-                  fillColor: Colors.grey[200], // Background color
+                  fillColor: Colors.grey[200],
+                  // Background color
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0), // Border radius
                   ),
@@ -283,7 +287,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   ),
                   hintText: 'Your Phone No',
                   filled: true,
-                  fillColor: Colors.grey[200], // Background color
+                  fillColor: Colors.grey[200],
+                  // Background color
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0), // Border radius
                   ),
@@ -336,7 +341,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   hintStyle: TextStyle(color: Colors.grey[400]),
                   hintText: 'Your Password',
                   filled: true,
-                  fillColor: Colors.grey[200], // Background color
+                  fillColor: Colors.grey[200],
+                  // Background color
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0), // Border radius
                   ),
@@ -515,7 +521,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
             ),
           ),
           const SizedBox(height: 5), // Add vertical space
-          Row(
+
+          /*Signup with google*/
+          /*Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
@@ -544,10 +552,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
               ),
             ],
           ),
-          /*const SizedBox(height: 20),*/ // Add vertical space
-          /*Signup with google*/
+          const SizedBox(height: 20),*/ // Add vertical space
           const SizedBox(height: 5),
-          Container(
+          /*Container(
             width: double.infinity,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -584,7 +591,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 ),
               ],
             ),
-          ),
+          ),*/
 
           /*const SizedBox(height: 20),*/
           Row(

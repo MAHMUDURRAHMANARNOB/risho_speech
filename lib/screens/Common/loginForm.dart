@@ -274,7 +274,7 @@ class _LoginformState extends State<Loginform> {
             ),
             const SizedBox(height: 10),
             /*Login with others*/
-            Container(
+            /*Container(
               width: double.infinity,
               constraints: BoxConstraints(
                 minWidth: 100.0,
@@ -352,7 +352,7 @@ class _LoginformState extends State<Loginform> {
                   ),
                 ],
               ),
-            ),
+            ),*/
 
             const SizedBox(height: 10),
             /*Signup*/
