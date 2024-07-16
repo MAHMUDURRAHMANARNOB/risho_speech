@@ -12,6 +12,7 @@ import 'package:record/record.dart';
 import 'package:risho_speech/models/callAndConversationDataModel.dart';
 import 'package:risho_speech/providers/callAndConversationProvider.dart';
 import 'package:risho_speech/ui/colors.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 import '../../models/validateSpokenSentenceDataModel.dart';
 import '../../providers/auth_provider.dart';
@@ -339,6 +340,7 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
                                   _completenessScore,
                                   _prosodyScore,
                                   _userAudio,
+                                  0,
                                   _words);
                             },
                             icon: Container(
@@ -701,6 +703,8 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
                 "Not Found";
         String userAudio =
             callConversationProvider.callConversationResponse!.userAudio!;
+        double pronScore =
+            callConversationProvider.callConversationResponse!.pronScore!;
 
         _aiAudioPath = aiDialogAudio;
 
@@ -801,6 +805,7 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
                                       completenessScore,
                                       prosodyScore,
                                       _userAudio,
+                                      pronScore,
                                       words);
                                   /*fetchDataAndShowBottomSheet(userText, "F")
                                   .whenComplete(() {
@@ -962,6 +967,7 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
     double completenessScore,
     double prosodyScore,
     String userAudio,
+    double pronScore,
     List<WordScore>? words,
   ) {
     // print("words: ${words?[2].word}");
@@ -1034,9 +1040,113 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
                         ),
                       ],
                     ),
+                    SizedBox(height: 10),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        /*Pronunciation Score*/
+                        /*Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryColor,
+                            borderRadius: BorderRadius.circular(24.0),
+                          ),
+                          padding: EdgeInsets.all(20.0),
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: AppColors.backgroundColorDark,
+                                  borderRadius: BorderRadius.circular(24.0),
+                                ),
+                                padding: EdgeInsets.all(8.0),
+                                child: Text(
+                                  */ /*pronScore.toString()*/ /*
+                                  "98.0",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              const Text(
+                                "Overall Pronunciation Score",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),*/
+                        Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.secondaryCardColorGreenish
+                                .withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(24.0),
+                          ),
+                          child: SfRadialGauge(
+                            animationDuration: 500,
+                            title:
+                                GaugeTitle(text: 'Overall Pronunciation Score'),
+                            axes: <RadialAxis>[
+                              RadialAxis(
+                                radiusFactor: 0.9,
+                                minimum: 0,
+                                maximum: 100,
+                                showLabels: false,
+                                // showTicks: false,
+                                ranges: <GaugeRange>[
+                                  GaugeRange(
+                                    startValue: 0,
+                                    endValue: 33.3,
+                                    color: Colors.redAccent,
+                                    startWidth: 20.0,
+                                    endWidth: 20.0,
+                                  ),
+                                  GaugeRange(
+                                    startValue: 33.3,
+                                    endValue: 66.6,
+                                    color: Colors.orangeAccent,
+                                    startWidth: 20.0,
+                                    endWidth: 20.0,
+                                  ),
+                                  GaugeRange(
+                                    startValue: 66.6,
+                                    endValue: 100,
+                                    color: Colors.green,
+                                    startWidth: 20.0,
+                                    endWidth: 20.0,
+                                  ),
+                                ],
+                                pointers: <GaugePointer>[
+                                  NeedlePointer(
+                                    value: prosodyScore,
+                                    needleLength: 0.7,
+                                    // needleEndWidth: 4,
+                                    enableAnimation: true,
+                                    needleColor: AppColors.primaryColor,
+                                    animationType: AnimationType.slowMiddle,
+                                    animationDuration: 500,
+                                  ),
+                                ],
+                                annotations: <GaugeAnnotation>[
+                                  GaugeAnnotation(
+                                    widget: Text(
+                                      pronScore.toString(),
+                                      style: const TextStyle(
+                                        fontSize: 32,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                    positionFactor: 0.5,
+                                    angle: 90,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        /*Accuracy Score*/
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

@@ -25,7 +25,9 @@ class CallConversationProvider extends ChangeNotifier {
       _callConversationDataModel;
 
   bool get isAiSaying => _isAiSaying;
+
   bool get isAiAnalyging => _isAiAnalyging;
+
   bool get isAiWaiting => _isAiWaiting;
 
   Future<Map<String, dynamic>> fetchCallConversationResponse(
@@ -82,7 +84,10 @@ class CallConversationProvider extends ChangeNotifier {
           userText: '',
           userTextBn: '',
           userAudio: '',
+          pronScore: null,
           isFemale: '',
+          grammarScore: null,
+          vocaScore: null,
         );
         _isAiAnalyging = false; // Set to false when API call fails
         _isAiWaiting = true;

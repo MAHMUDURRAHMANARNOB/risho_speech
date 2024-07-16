@@ -12,6 +12,9 @@ class CallConversationDataModel {
   final double? fluencyScore;
   final double? completenessScore;
   final double? prosodyScore;
+  final double? pronScore;
+  final double? grammarScore;
+  final double? vocaScore;
   final String? isFemale;
   final List<WordScore>? wordScores;
 
@@ -29,6 +32,9 @@ class CallConversationDataModel {
     required this.fluencyScore,
     required this.completenessScore,
     required this.prosodyScore,
+    required this.pronScore,
+    required this.grammarScore,
+    required this.vocaScore,
     required this.isFemale,
     required this.wordScores,
   });
@@ -48,6 +54,9 @@ class CallConversationDataModel {
       fluencyScore: json['fluencyScore'].toDouble(),
       completenessScore: json['completenessScore'].toDouble(),
       prosodyScore: json['prosodyScore'].toDouble(),
+      pronScore: json['pronScore'].toDouble(),
+      grammarScore: json['grammarScore'].toDouble(),
+      vocaScore: json['vocaScore'].toDouble(),
       isFemale: json['isFemale'],
       wordScores: json['wordscore'] != null
           ? List<WordScore>.from(
