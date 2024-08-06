@@ -2,8 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:iconsax/iconsax.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 
 import '../screens/HomeScreen.dart';
+import '../screens/IELTSHomeScreen.dart';
 import '../screens/ProfileScreen.dart';
 import '../ui/colors.dart';
 
@@ -45,8 +49,8 @@ class _NavigationPageState extends State<NavigationPage> {
   final List<CustomDestination> destinations = [
     CustomDestination(
         title: 'Home', imagePath: 'assets/images/risho_guru_icon.png'),
-    /*CustomDestination(
-        title: 'Courses', imagePath: 'assets/images/risho_guru_icon.png'),*/
+    CustomDestination(
+        title: 'Courses', imagePath: 'assets/images/risho_guru_icon.png'),
     CustomDestination(
         title: 'Profile', imagePath: 'assets/images/man_chat.png'),
   ];
@@ -54,34 +58,34 @@ class _NavigationPageState extends State<NavigationPage> {
   final destinationsMobile = <NavigationDestination>[
     const NavigationDestination(
       icon: Icon(
-        Icons.home_outlined,
+        Iconsax.home,
         color: AppColors.primaryColor,
       ),
       label: 'Home',
       selectedIcon: Icon(
-        Icons.home_rounded,
+        IconsaxPlusBold.home_1,
         color: AppColors.primaryColor,
       ),
     ),
-    /*const NavigationDestination(
-      icon: Icon(
-        Icons.menu_book_rounded,
-        color: AppColors.primaryColor,
-      ),
-      label: 'Learn',
-      selectedIcon: Icon(
-        FontAwesomeIcons.bookOpen,
-        color: AppColors.primaryColor,
-      ),
-    ),*/
     const NavigationDestination(
       icon: Icon(
-        Icons.person_outline_rounded,
+        Iconsax.language_circle,
+        color: AppColors.primaryColor,
+      ),
+      label: 'IELTS',
+      selectedIcon: Icon(
+        IconsaxPlusBold.language_circle,
+        color: AppColors.primaryColor,
+      ),
+    ),
+    const NavigationDestination(
+      icon: Icon(
+        Iconsax.user,
         color: AppColors.primaryColor,
       ),
       label: 'Profile',
       selectedIcon: Icon(
-        Icons.person,
+        IconsaxPlusBold.user,
         color: AppColors.primaryColor,
       ),
     ),
@@ -262,10 +266,10 @@ class _NavigationPageState extends State<NavigationPage> {
       case 0:
         return HomeScreen();
         break;
-      /*case 1:
-        return LearnScreen();
-        break;*/
       case 1:
+        return IELTSHoneScreen();
+        break;
+      case 2:
         return ProfileScreen();
         break;
 
@@ -280,10 +284,10 @@ class _NavigationPageState extends State<NavigationPage> {
       case 0:
         return HomeScreen();
         break;
-      /*case 1:
-        return LearnScreen();
-        break;*/
       case 1:
+        return IELTSHoneScreen();
+        break;
+      case 2:
         return ProfileScreen();
         break;
       default:
