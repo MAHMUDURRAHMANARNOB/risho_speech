@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:risho_speech/screens/IeltsCoursesScreen.dart';
+import 'package:risho_speech/screens/InstructionIeltsListeningScreen.dart';
 import 'package:risho_speech/ui/colors.dart';
 
 import '../../models/ieltsCourseListDataModel.dart';
@@ -37,7 +38,14 @@ class _IELTSHomeScreenMobileState extends State<IELTSHomeScreenMobile> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(40.0),
                         child: GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const InstructionIeltsListeningScreen()),
+                            );
+                          },
                           child: Container(
                             margin: EdgeInsets.all(5.0),
                             // width: 200,
@@ -131,7 +139,14 @@ class _IELTSHomeScreenMobileState extends State<IELTSHomeScreenMobile> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(40.0),
                         child: GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const InstructionIeltsListeningScreen()),
+                            );
+                          },
                           child: Container(
                             margin: EdgeInsets.all(5.0),
                             // width: 200,
