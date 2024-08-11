@@ -781,4 +781,83 @@ class ApiService {
       throw Exception("Failed getPackagesList $e");
     }
   }
+
+  /*IELTS Listening Practice*/
+  /*Future<Map<String, dynamic>> getIeltsListeningExam({
+    required int userId,
+    required int listeningPart,
+    required int tokenUsed,
+    required String? ansJson,
+    required int? examinationId,
+  }) async {
+    print(
+        "listeningPart: $listeningPart, $userId, $tokenUsed, $ansJson, $examinationId");
+    try {
+      final url = '$baseUrl/startIELTSListeningExam/';
+
+      final response = await http.post(
+        Uri.parse(url),
+        body: {
+          'userId': userId.toString(),
+          'listeningPart': listeningPart.toString(),
+          'tokenused': tokenUsed.toString(),
+          'anserJson': ansJson.toString(),
+          'examinationId': examinationId.toString(),
+        },
+      );
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        print("Response in startIELTSListeningExam else" + response.body);
+        throw Exception('Failed to load data in startIELTSListeningExam');
+      }
+    } catch (e) {
+      // Handle exception
+      return {'error': e.toString()};
+    }
+  }*/
+  Future<Map<String, dynamic>> getIeltsListeningExam({
+    required int userId,
+    required int listeningPart,
+    required int tokenUsed,
+    required String? ansJson,
+    required int? examinationId,
+  }) async {
+    print(
+        "listeningPart: $listeningPart, $userId, $tokenUsed, $ansJson, $examinationId");
+
+    try {
+      final url = '$baseUrl/startIELTSListeningExam/';
+
+      // Build the request body dynamically
+      final Map<String, String> body = {
+        'userId': userId.toString(),
+        'listeningPart': listeningPart.toString(),
+        'tokenused': tokenUsed.toString(),
+      };
+
+      // Conditionally add parameters
+      if (ansJson != null && ansJson.isNotEmpty) {
+        body['anserJson'] = ansJson;
+      }
+      if (examinationId != null) {
+        body['examinationId'] = examinationId.toString();
+      }
+
+      final response = await http.post(
+        Uri.parse(url),
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        print("Response in startIELTSListeningExam else: ${response.body}");
+        throw Exception('Failed to load data in startIELTSListeningExam');
+      }
+    } catch (e) {
+      // Handle exception
+      return {'error': e.toString()};
+    }
+  }
 }

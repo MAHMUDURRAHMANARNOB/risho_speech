@@ -5,7 +5,14 @@ import '../responsive/responsive_layout.dart';
 import 'Mobile/IeltsListeningExamScreenMobile.dart';
 
 class IeltsListeningExamScreen extends StatefulWidget {
-  const IeltsListeningExamScreen({super.key});
+  final String audioFile, question;
+  final int examId;
+
+  const IeltsListeningExamScreen(
+      {super.key,
+      required this.audioFile,
+      required this.question,
+      required this.examId});
 
   @override
   State<IeltsListeningExamScreen> createState() =>
@@ -17,9 +24,18 @@ class _IeltsListeningExamScreenState extends State<IeltsListeningExamScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ResponsiveLayout(
-        mobileScaffold: IeltsListeningExamScreenMobile(),
-        tabletScaffold: IeltsListeningExamScreenMobile(),
-        desktopScaffold: IeltsListeningExamScreenTablet(),
+        mobileScaffold: IeltsListeningExamScreenMobile(
+            audioFile: widget.audioFile,
+            question: widget.question,
+            examId: widget.examId),
+        tabletScaffold: IeltsListeningExamScreenMobile(
+            audioFile: widget.audioFile,
+            question: widget.question,
+            examId: widget.examId),
+        desktopScaffold: IeltsListeningExamScreenTablet(
+            audioFile: widget.audioFile,
+            question: widget.question,
+            examId: widget.examId),
       ),
     );
   }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:risho_speech/screens/tablet/LoginScreenTablet.dart';
 
 import '../responsive/responsive_layout.dart';
-import 'Mobile/IELTSHoneScreenMobile.dart';
+import 'Mobile/LoginScreenMobile.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String id = "login_screen";

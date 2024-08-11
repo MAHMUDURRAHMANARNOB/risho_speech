@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:markdown_widget/widget/markdown.dart';
+import 'package:provider/provider.dart';
 import 'package:risho_speech/screens/IeltsListeningExamScreen.dart';
 import 'package:risho_speech/utils/device/device_utility.dart';
 
+import '../../providers/auth_provider.dart';
+import '../../providers/ieltsListeningExamQuestionProvider.dart';
 import '../../ui/colors.dart';
 
 class InstructionIeltsListeningScreenMobile extends StatefulWidget {
@@ -60,9 +63,18 @@ class _InstructionIeltsListeningScreenMobileState
 
 # Good Luck!
 """;
+  late final userId;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final userId = Provider.of<AuthProvider>(context).user?.id ?? 1;
+
     double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
@@ -83,12 +95,47 @@ class _InstructionIeltsListeningScreenMobileState
             ),
           ),
           GestureDetector(
-            onTap: () {
-              Navigator.push(
+            onTap: () async {
+              final provider =
+                  Provider.of<IeltsListeningProvider>(context, listen: false);
+
+              // Call the API and wait for the result
+              final response = await provider.getIeltsListeningExam(
+                userId: userId,
+                // Replace with actual user ID
+                listeningPart: 1,
+                // Replace with actual listening part
+                tokenUsed: 1,
+                // Replace with actual token used
+                ansJson: null,
+                // Replace with actual answer JSON if available
+                examinationId: null, // Replace with actual examination ID
+              );
+              if (response['errorcode'] == 200) {
+                // Navigate to the next screen with the necessary data
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => IeltsListeningExamScreen(
+                      audioFile:
+                          provider.listeningAudioQuestionResponse!.audioFile!,
+                      question:
+                          provider.listeningAudioQuestionResponse!.question!,
+                      examId: provider.listeningAudioQuestionResponse!.examId!,
+                    ),
+                  ),
+                );
+              } else {
+                // Handle the error (e.g., show a dialog or a snackbar)
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Error: ${response['message']}')),
+                );
+              }
+              /* Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => const IeltsListeningExamScreen()),
-              );
+              );*/
             },
             child: Container(
               width: double.infinity,
