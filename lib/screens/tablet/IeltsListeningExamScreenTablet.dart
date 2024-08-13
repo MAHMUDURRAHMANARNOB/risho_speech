@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
 
 class IeltsListeningExamScreenTablet extends StatefulWidget {
-  final String audioFile, question;
-  final int examId;
-
-  const IeltsListeningExamScreenTablet(
-      {super.key,
-      required this.audioFile,
-      required this.question,
-      required this.examId});
+  const IeltsListeningExamScreenTablet({super.key});
 
   @override
   State<IeltsListeningExamScreenTablet> createState() =>

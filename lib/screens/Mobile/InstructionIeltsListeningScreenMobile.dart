@@ -95,8 +95,8 @@ class _InstructionIeltsListeningScreenMobileState
             ),
           ),
           GestureDetector(
-            onTap: () async {
-              final provider =
+            onTap: () /*async*/ {
+              /*final provider =
                   Provider.of<IeltsListeningProvider>(context, listen: false);
 
               // Call the API and wait for the result
@@ -130,12 +130,12 @@ class _InstructionIeltsListeningScreenMobileState
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Error: ${response['message']}')),
                 );
-              }
-              /* Navigator.push(
+              }*/
+              Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => const IeltsListeningExamScreen()),
-              );*/
+              );
             },
             child: Container(
               width: double.infinity,

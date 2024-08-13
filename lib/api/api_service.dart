@@ -860,4 +860,45 @@ class ApiService {
       return {'error': e.toString()};
     }
   }
+
+  /*End Listening Test*/
+  Future<Map<String, dynamic>> endIeltsListeningExam({
+    required int userId,
+    required String? ansJson,
+    required int? examinationId,
+  }) async {
+    print("userId:  $userId,  $ansJson, $examinationId");
+
+    try {
+      final url = '$baseUrl/EndListeningTest/';
+
+      // Build the request body dynamically
+      final Map<String, String> body = {
+        'userId': userId.toString(),
+      };
+
+      // Conditionally add parameters
+      if (ansJson != null && ansJson.isNotEmpty) {
+        body['anserJson'] = ansJson;
+      }
+      if (examinationId != null) {
+        body['examinationId'] = examinationId.toString();
+      }
+
+      final response = await http.post(
+        Uri.parse(url),
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        print("Response in startIELTSListeningExam else: ${response.body}");
+        throw Exception('Failed to load data in startIELTSListeningExam');
+      }
+    } catch (e) {
+      // Handle exception
+      return {'error': e.toString()};
+    }
+  }
 }
