@@ -10,6 +10,7 @@ import 'package:risho_speech/providers/coupnDiscountProvider.dart';
 import 'package:risho_speech/providers/createUserProvider.dart';
 import 'package:risho_speech/providers/doConversationProvider.dart';
 import 'package:risho_speech/providers/doGuidedConversationProvider.dart';
+import 'package:risho_speech/providers/endIeltsListeningExamPrivider.dart';
 import 'package:risho_speech/providers/ieltsListeningExamQuestionProvider.dart';
 import 'package:risho_speech/providers/nextQuestionProvider.dart';
 import 'package:risho_speech/providers/optProvider.dart';
@@ -63,6 +64,8 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => CouponDiscountProvider()),
         ChangeNotifierProvider(create: (context) => ResetPasswordProvider()),
         ChangeNotifierProvider(create: (context) => IeltsListeningProvider()),
+        ChangeNotifierProvider(
+            create: (context) => EndIeltsListeningProvider()),
       ],
       child: UpgradeAlert(
         child: RishoSpeech(),

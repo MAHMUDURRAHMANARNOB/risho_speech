@@ -6,6 +6,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:risho_speech/providers/endIeltsListeningExamPrivider.dart';
 import 'package:risho_speech/screens/ExamAnalysisScreen.dart';
 
 import '../../providers/auth_provider.dart';
@@ -33,7 +34,7 @@ class _IeltsListeningExamScreenMobileState
     with SingleTickerProviderStateMixin {
   final GlobalKey<_answerSheetState> _answerSheetKey =
       GlobalKey<_answerSheetState>();
-
+  bool _isSubmitAnsLoading = false;
   bool isLoading = true;
   final player = AudioPlayer();
   late TabController _tabController;
@@ -146,6 +147,7 @@ class _IeltsListeningExamScreenMobileState
   }
 
   late final userId;
+  int initialTabIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -218,12 +220,14 @@ class _IeltsListeningExamScreenMobileState
                 Expanded(
                   flex: 1,
                   child: DefaultTabController(
-                    initialIndex: 0,
+                    initialIndex: initialTabIndex,
                     length: 2, // Number of tabs
                     child: TabBarView(
                       controller: _tabController,
                       children: [
-                        questionPanel(question: questionListening),
+                        questionPanel(
+                            key: ValueKey(listeningPart),
+                            question: questionListening),
                         answerSheet(
                             key: _answerSheetKey, listeningPart: listeningPart),
                       ],
@@ -232,22 +236,25 @@ class _IeltsListeningExamScreenMobileState
                 ),
 
                 // Submit button at the very bottom to call the next section
-                GestureDetector(
+                /*GestureDetector(
                   onTap: () async {
                     final answerSheetState = _answerSheetKey.currentState;
                     if (answerSheetState != null) {
-                      /*String? ansJsonString =
-                          answerSheetState.convertAndPrintAnswers();*/
+                      */ /*String? ansJsonString =
+                          answerSheetState.convertAndPrintAnswers();*/ /*
                       String? ansJsonString = answerSheetState
                           .convertAndPrintAnswers((listeningPart - 1) * 10);
                       if (ansJsonString == null) {
                         Fluttertoast.showToast(msg: "Please fill all answers.");
+                        await _showMyDialog();
                         return; // Prevent further execution if any answer is empty
                       }
 
-                      setState(() {
-                        listeningPart++;
-                      });
+                      if (listeningPart < 5) {
+                        setState(() {
+                          listeningPart++;
+                        });
+                      }
 
                       if (listeningPart <= 4) {
                         // Call the Provider and proceed with the logic as before
@@ -292,22 +299,223 @@ class _IeltsListeningExamScreenMobileState
                       }
                     }
                   },
-                  child: Container(
-                    width: double.infinity,
-                    color: AppColors.primaryColor2,
-                    padding: EdgeInsets.symmetric(vertical: 10.0),
-                    child: Text(
-                      "Submit",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
+                  child: Visibility(
+                    visible: listeningPart <= 4,
+                    child: Container(
+                      width: double.infinity,
+                      color: AppColors.primaryColor2,
+                      padding: EdgeInsets.symmetric(vertical: 10.0),
+                      child: Text(
+                        "Submit",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20),
+                      ),
+                    ),
+                  ),
+                ),*/
+                GestureDetector(
+                  onTap: () async {
+                    setState(() {
+                      _isSubmitAnsLoading = true; // Show the loader
+                    });
+                    // Show loading dialog
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      // Prevent dismissing the dialog by tapping outside
+                      builder: (BuildContext context) {
+                        return Dialog(
+                          backgroundColor: Colors.transparent,
+                          // Make background transparent
+                          child: Center(
+                            child: CircularProgressIndicator(), // Loader widget
+                          ),
+                        );
+                      },
+                    );
+
+                    final answerSheetState = _answerSheetKey.currentState;
+                    if (answerSheetState != null) {
+                      // Get the answers and validate
+                      String? ansJsonString = answerSheetState
+                          .convertAndPrintAnswers((listeningPart - 1) * 10);
+                      if (ansJsonString == null) {
+                        // Show the toast and dialog if answers are missing
+
+                        await _showErrorDialog(); // Ensure that the dialog is shown
+                        setState(() {
+                          _isSubmitAnsLoading = false; // Hide the loader
+                        });
+                        Navigator.pop(context);
+                        return; // Prevent further execution
+                      }
+
+                      if (listeningPart < 5) {
+                        // Increment listeningPart if it's less than 5
+                        setState(() {
+                          listeningPart++;
+                          initialTabIndex = 0;
+                        });
+                      }
+
+                      if (listeningPart <= 4) {
+                        // Call the provider and proceed with the logic
+
+                        final provider = Provider.of<IeltsListeningProvider>(
+                            context,
+                            listen: false);
+                        final response = await provider.getIeltsListeningExam(
+                          userId: userId,
+                          listeningPart: listeningPart,
+                          tokenUsed: 1,
+                          ansJson: ansJsonString,
+                          examinationId: examIdListening,
+                        );
+
+                        if (response['errorcode'] == 200) {
+                          // Update the UI with new questions and reset controllers
+                          setState(() {
+                            audioFileListening = provider
+                                .listeningAudioQuestionResponse!.audioFile;
+                            questionListening = provider
+                                .listeningAudioQuestionResponse!.question;
+                          });
+                          Fluttertoast.showToast(
+                            msg: "Success. Proceeding to the next one",
+                            toastLength: Toast.LENGTH_LONG,
+                            gravity: ToastGravity.TOP,
+                            backgroundColor: AppColors.primaryColor,
+                            textColor: Colors.white,
+                            fontSize: 16.0,
+                          );
+
+                          /*listeningPart++;*/
+
+                          // Reset the answer sheet for the next set of questions
+                          answerSheetState.resetControllers();
+
+                          // Update the audio player
+                          await player.setUrl(audioFileListening);
+                          setState(() {
+                            position = Duration.zero;
+                          });
+                        } else {
+                          // Handle the error (e.g., show a dialog or a snackbar)
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text('Error: ${response['message']}')),
+                          );
+                        }
+                      } else {
+                        // Navigate to the Exam Analysis Screen
+                        /*Fluttertoast.showToast(
+                          msg: "why is it coming?",
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.TOP,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );*/
+                        final provider = Provider.of<EndIeltsListeningProvider>(
+                            context,
+                            listen: false);
+                        final response = await provider.endIeltsListeningExam(
+                          userId: userId,
+                          ansJson: ansJsonString,
+                          examinationId: examIdListening,
+                        );
+                        print(response.toString());
+                        String jsonString = jsonEncode(response.toString());
+                        setState(() {
+                          _isSubmitAnsLoading = false; // Hide the loader
+                        });
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ExamAnalysisScreen(listeningData: response),
+                          ),
+                        );
+                      }
+                    } else {
+                      print("AnswerSheetState is null");
+                      _showErrorDialog();
+                    }
+                    setState(() {
+                      _isSubmitAnsLoading = false; // Hide the loader
+                    });
+                    Navigator.pop(context);
+                  },
+                  child: Visibility(
+                    visible: listeningPart <= 4,
+                    child: Container(
+                      width: double.infinity,
+                      color: AppColors.primaryColor2,
+                      padding: EdgeInsets.symmetric(vertical: 10.0),
+                      child: Text(
+                        "Submit",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 20),
+                          fontSize: 20,
+                        ),
+                      ),
                     ),
                   ),
                 ),
+                // Display loader
+                if (_isSubmitAnsLoading)
+                  Center(
+                    child: CircularProgressIndicator(), // Loader widget
+                  ),
               ],
             ),
+    );
+  }
+
+  Future<void> _showErrorDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            'OOPS!',
+            textAlign: TextAlign.center,
+            style:
+                TextStyle(fontWeight: FontWeight.bold, color: Colors.redAccent),
+          ),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                  'You have to Complete all the Answers before submitting.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryColor2),
+              child: const Text(
+                'Ok',
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

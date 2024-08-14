@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:risho_speech/screens/tablet/ExamAnalysisScreenTablet.dart';
 
+import '../models/listeningPracticeBandScoreDataModel.dart';
 import '../responsive/responsive_layout.dart';
 import 'Mobile/ExamAnalysisScreenMobile.dart';
 
 class ExamAnalysisScreen extends StatefulWidget {
-  const ExamAnalysisScreen({super.key});
+  final Map<String, dynamic> listeningData;
+
+  const ExamAnalysisScreen({super.key, required this.listeningData});
 
   @override
   State<ExamAnalysisScreen> createState() => _ExamAnalysisScreenState();
@@ -16,8 +19,12 @@ class _ExamAnalysisScreenState extends State<ExamAnalysisScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ResponsiveLayout(
-        mobileScaffold: ExamAnalysisScreenMobile(),
-        tabletScaffold: ExamAnalysisScreenMobile(),
+        mobileScaffold: ExamAnalysisScreenMobile(
+          listeningData: widget.listeningData,
+        ),
+        tabletScaffold: ExamAnalysisScreenMobile(
+          listeningData: widget.listeningData,
+        ),
         desktopScaffold: ExamAnalysisScreenTablet(),
       ),
     );

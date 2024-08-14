@@ -893,8 +893,8 @@ class ApiService {
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else {
-        print("Response in startIELTSListeningExam else: ${response.body}");
-        throw Exception('Failed to load data in startIELTSListeningExam');
+        print("Response in endIeltsListeningExam else: ${response.body}");
+        throw Exception('Failed to load data in endIeltsListeningExam');
       }
     } catch (e) {
       // Handle exception

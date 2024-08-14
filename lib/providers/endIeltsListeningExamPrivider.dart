@@ -3,16 +3,17 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../api/api_service.dart';
 import '../models/ListeningAudioQuestionResponseDataModel.dart';
+import '../models/listeningPracticeBandScoreDataModel.dart';
 
 class EndIeltsListeningProvider with ChangeNotifier {
   ApiService _apiService = ApiService();
-  Listeningaudioquestionresponsedatamodel?
-      _listeningaudioquestionresponsedatamodel;
+  ListeningPracticeBandScoreDataModel? _listeningPracticeBandScoreDataModel;
   bool _isLoading = false;
   String? _errorMessage;
 
-  Listeningaudioquestionresponsedatamodel? get listeningAudioQuestionResponse =>
-      _listeningaudioquestionresponsedatamodel;
+  ListeningPracticeBandScoreDataModel?
+      get _listeningPracticeBandScoreResponse =>
+          _listeningPracticeBandScoreDataModel;
 
   bool get isLoading => _isLoading;
 
@@ -28,7 +29,7 @@ class EndIeltsListeningProvider with ChangeNotifier {
     notifyListeners();
 
     // final url = 'your_base_url_here/startIELTSListeningExam/';
-    print("inside endIeltsListeningExam $userId ");
+    print("inside endIeltsListeningExam $userId ,$ansJson, $examinationId");
     try {
       final response = await _apiService.endIeltsListeningExam(
         userId: userId,
@@ -36,8 +37,8 @@ class EndIeltsListeningProvider with ChangeNotifier {
         examinationId: examinationId,
       );
       if (response['errorcode'] == 200) {
-        _listeningaudioquestionresponsedatamodel =
-            Listeningaudioquestionresponsedatamodel.fromJson(response);
+        _listeningPracticeBandScoreDataModel =
+            ListeningPracticeBandScoreDataModel.fromJson(response);
 
         // print("Response from ListeningAudioQuestionResponse: $response");
         _isLoading = false;
@@ -51,14 +52,14 @@ class EndIeltsListeningProvider with ChangeNotifier {
         _errorMessage = 'Failed to load data: ${response.statusCode}';
       }*/
       else {
-        _listeningaudioquestionresponsedatamodel =
+        /*_listeningaudioquestionresponsedatamodel =
             Listeningaudioquestionresponsedatamodel(
           errorCode: response['errorcode'],
           message: response['message'],
           audioFile: '',
           question: '',
           examId: null,
-        );
+        );*/
         notifyListeners();
         return response;
       }
