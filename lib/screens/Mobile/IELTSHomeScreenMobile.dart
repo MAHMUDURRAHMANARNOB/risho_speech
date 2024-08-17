@@ -4,6 +4,7 @@ import 'package:risho_speech/screens/InstructionIeltsListeningScreen.dart';
 import 'package:risho_speech/ui/colors.dart';
 
 import '../../models/ieltsCourseListDataModel.dart';
+import '../InstructionIeltsSpeakingScreen.dart';
 
 class IELTSHomeScreenMobile extends StatefulWidget {
   const IELTSHomeScreenMobile({super.key});
@@ -144,7 +145,7 @@ class _IELTSHomeScreenMobileState extends State<IELTSHomeScreenMobile> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      const InstructionIeltsListeningScreen()),
+                                      const InstructionIeltsSpeakingScreen()),
                             );
                           },
                           child: Container(

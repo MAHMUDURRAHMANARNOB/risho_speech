@@ -62,7 +62,7 @@ class _LoginformState extends State<Loginform> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Username / Email",
+                  "Username / Email / Phone",
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
@@ -84,7 +84,7 @@ class _LoginformState extends State<Loginform> {
                     hintStyle: TextStyle(
                       color: Colors.grey[400],
                     ),
-                    hintText: 'Your Username or Email',
+                    hintText: 'Your Username, Email or Phone',
                     filled: true,
                     fillColor: Colors.grey[200],
                     // Background color

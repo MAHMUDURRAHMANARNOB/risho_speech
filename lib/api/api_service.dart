@@ -626,18 +626,6 @@ class ApiService {
         var responseBody = await response.stream.bytesToString();
         var respon = json.decode(responseBody);
         print(respon);
-        /*print("SessionID: ${respon['SessionID'].runtimeType}");
-        print("errorcode: ${respon['errorcode'].runtimeType}");
-        print("AIDialoag: ${respon['AIDialoag'].runtimeType}");
-        print("AIDialoagAudio: ${respon['AIDialoagAudio'].runtimeType}");
-        print("usertext: ${respon['usertext'].runtimeType}");
-        print("usertextBn: ${respon['usertextBn'].runtimeType}");
-        print("useraudio: ${respon['useraudio'].runtimeType}");
-        print("accuracyScore: ${respon['accuracyScore'].runtimeType}");
-        print("wordscore: ${respon['wordscore'].runtimeType}");*/
-        // print("SessionID: ${respon['SessionID'].runtimeType}");
-
-        // print(respon['dialogid'].runtimeType);
         return json.decode(responseBody);
       } else {
         // Handle error
@@ -896,6 +884,72 @@ class ApiService {
         print("Response in endIeltsListeningExam else: ${response.body}");
         throw Exception('Failed to load data in endIeltsListeningExam');
       }
+    } catch (e) {
+      // Handle exception
+      return {'error': e.toString()};
+    }
+  }
+
+  Future<Map<String, dynamic>> getIeltsSpeakingExam({
+    required int userId,
+    required int? examinationId,
+    required int examStage,
+    required File? audioFile,
+    required String isFemale,
+  }) async {
+    print("listeningPart: $userId,$examStage, $examinationId, $isFemale");
+
+    try {
+      final uri = Uri.parse('$baseUrl/takeIeltsSpeakingExam/');
+
+      // Build the request body dynamically
+      var request = http.MultipartRequest('POST', uri)
+        ..fields['userid'] = userId.toString()
+        ..fields['examinationID'] = examinationId.toString()
+        ..fields['examStage'] = examStage.toString()
+        ..fields['isfemale'] = isFemale.toString();
+      /*..files.add(
+            await http.MultipartFile.fromPath('audioFile', audioFile!.path));*/
+      if (audioFile != null) {
+        request.files.add(
+            await http.MultipartFile.fromPath('audioFile', audioFile.path));
+      }
+
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        var responseBody = await response.stream.bytesToString();
+        // print(json.decode(responseBody));
+        return json.decode(responseBody);
+      } else {
+        // Handle error
+        return {'error': 'Failed to make API call'};
+      }
+
+      /*final Map<String, String> body = {
+        'userId': userId.toString(),
+        'listeningPart': listeningPart.toString(),
+        'tokenused': tokenUsed.toString(),
+      };
+
+      // Conditionally add parameters
+      if (ansJson != null && ansJson.isNotEmpty) {
+        body['anserJson'] = ansJson;
+      }
+      if (examinationId != null) {
+        body['examinationId'] = examinationId.toString();
+      }
+
+      final response = await http.post(
+        Uri.parse(url),
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        print("Response in startIELTSListeningExam else: ${response.body}");
+        throw Exception('Failed to load data in startIELTSListeningExam');
+      }*/
     } catch (e) {
       // Handle exception
       return {'error': e.toString()};

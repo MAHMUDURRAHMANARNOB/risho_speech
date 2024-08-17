@@ -63,7 +63,6 @@ class _InstructionIeltsListeningScreenMobileState
 
 # Good Luck!
 """;
-  late final userId;
 
   @override
   void initState() {
@@ -73,86 +72,49 @@ class _InstructionIeltsListeningScreenMobileState
 
   @override
   Widget build(BuildContext context) {
-    final userId = Provider.of<AuthProvider>(context).user?.id ?? 1;
-
-    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Practice Listening"),
+        title: Text(
+          "Practice Listening",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            flex: 2,
-            child: SingleChildScrollView(
-              child: Container(
-                height: screenHeight - 120,
-                padding: EdgeInsets.all(10.0),
+      body: LayoutBuilder(builder: (context, constraints) {
+        return Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
                 child: MarkdownWidget(
                   data: listeningOverview,
                 ),
               ),
             ),
-          ),
-          GestureDetector(
-            onTap: () /*async*/ {
-              /*final provider =
-                  Provider.of<IeltsListeningProvider>(context, listen: false);
-
-              // Call the API and wait for the result
-              final response = await provider.getIeltsListeningExam(
-                userId: userId,
-                // Replace with actual user ID
-                listeningPart: 1,
-                // Replace with actual listening part
-                tokenUsed: 1,
-                // Replace with actual token used
-                ansJson: null,
-                // Replace with actual answer JSON if available
-                examinationId: null, // Replace with actual examination ID
-              );
-              if (response['errorcode'] == 200) {
-                // Navigate to the next screen with the necessary data
+            GestureDetector(
+              onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => IeltsListeningExamScreen(
-                      audioFile:
-                          provider.listeningAudioQuestionResponse!.audioFile!,
-                      question:
-                          provider.listeningAudioQuestionResponse!.question!,
-                      examId: provider.listeningAudioQuestionResponse!.examId!,
-                    ),
-                  ),
+                      builder: (context) => const IeltsListeningExamScreen()),
                 );
-              } else {
-                // Handle the error (e.g., show a dialog or a snackbar)
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Error: ${response['message']}')),
-                );
-              }*/
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const IeltsListeningExamScreen()),
-              );
-            },
-            child: Container(
-              width: double.infinity,
-              color: AppColors.primaryColor2,
-              padding: EdgeInsets.symmetric(vertical: 10.0),
-              child: Text(
-                "Start Practicing",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
+              },
+              child: Container(
+                width: double.infinity,
+                color: AppColors.primaryColor2,
+                padding: EdgeInsets.symmetric(vertical: 10.0),
+                child: Text(
+                  "Start Practicing",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
+                ),
               ),
             ),
-          ),
-        ],
-      ),
+          ],
+        );
+      }),
     );
   }
 }
