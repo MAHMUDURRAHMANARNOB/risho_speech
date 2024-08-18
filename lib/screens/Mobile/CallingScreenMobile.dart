@@ -1118,7 +1118,7 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
                                 ],
                                 pointers: <GaugePointer>[
                                   NeedlePointer(
-                                    value: prosodyScore,
+                                    value: pronScore / 100,
                                     needleLength: 0.7,
                                     // needleEndWidth: 4,
                                     enableAnimation: true,

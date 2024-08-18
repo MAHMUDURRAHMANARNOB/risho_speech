@@ -42,6 +42,7 @@ dependencies:
   audioplayers: ^6.0.0
   just_audio: ^0.9.39
   record: ^4.4.4
+  siri_wave: ^2.0.0+1
 
   shurjopay: ^2.0.5
   liquid_pull_to_refresh: ^3.0.1

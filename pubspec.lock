@@ -484,10 +484,10 @@ packages:
     dependency: transitive
     description:
       name: js
-      sha256: f2c445dce49627136094980615a031419f7f3eb393237e4ecd97ac15dea343f3
+      sha256: c1b2e9b5ea78c45e1a0788d29606ba27dc5f71f019f32ca5140f61ef071838cf
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.7"
+    version: "0.7.1"
   json_annotation:
     dependency: transitive
     description:
@@ -936,6 +936,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.5"
+  siri_wave:
+    dependency: "direct main"
+    description:
+      name: siri_wave
+      sha256: "3bbd2bb95727a234f059b7947d79654d6e00e3fe1f66040dab99b74aec9279a8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0+1"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -953,10 +961,10 @@ packages:
     dependency: "direct main"
     description:
       name: speech_to_text
-      sha256: "57fef1d41bdebe298e84842c89bb4ac91f31cdbec7830c8cb1fc6b91d03abd42"
+      sha256: "97425fd8cc60424061a0584b6c418c0eedab5201cc5e96ef15a946d7fab7b9b7"
       url: "https://pub.dev"
     source: hosted
-    version: "6.6.0"
+    version: "6.6.2"
   speech_to_text_macos:
     dependency: transitive
     description:

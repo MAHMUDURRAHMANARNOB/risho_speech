@@ -895,9 +895,9 @@ class ApiService {
     required int? examinationId,
     required int examStage,
     required File? audioFile,
-    required String isFemale,
+    required String? isFemale,
   }) async {
-    print("listeningPart: $userId,$examStage, $examinationId, $isFemale");
+    print("Speaking url: $userId,$examStage, $examinationId, $isFemale");
 
     try {
       final uri = Uri.parse('$baseUrl/takeIeltsSpeakingExam/');
@@ -905,17 +905,23 @@ class ApiService {
       // Build the request body dynamically
       var request = http.MultipartRequest('POST', uri)
         ..fields['userid'] = userId.toString()
-        ..fields['examinationID'] = examinationId.toString()
-        ..fields['examStage'] = examStage.toString()
-        ..fields['isfemale'] = isFemale.toString();
+        ..fields['examStage'] = examStage.toString();
+
       /*..files.add(
             await http.MultipartFile.fromPath('audioFile', audioFile!.path));*/
       if (audioFile != null) {
         request.files.add(
             await http.MultipartFile.fromPath('audioFile', audioFile.path));
       }
+      if (examinationId != null) {
+        request.fields['examinationID'] = examinationId.toString();
+      }
+      if (examinationId != null) {
+        request.fields['isfemale'] = isFemale.toString();
+      }
 
       var response = await request.send();
+      print("hello ${response.statusCode}");
       if (response.statusCode == 200) {
         var responseBody = await response.stream.bytesToString();
         // print(json.decode(responseBody));
