@@ -19,6 +19,11 @@ class IeltsSpeakingExamProvider extends ChangeNotifier {
   }) async {
     print(
         "Fetching IELTS Speaking Exam: $userId, $examStage, $examinationId, $isFemale");
+    if (audioFile != null) {
+      print("notnull");
+    } else {
+      print("nullnull");
+    }
 
     try {
       final response = await _apiService.getIeltsSpeakingExam(

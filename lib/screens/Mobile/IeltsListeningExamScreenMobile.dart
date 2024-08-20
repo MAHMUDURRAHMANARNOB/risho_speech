@@ -23,8 +23,8 @@ class IeltsListeningExamScreenMobile extends StatefulWidget {
 class _IeltsListeningExamScreenMobileState
     extends State<IeltsListeningExamScreenMobile>
     with SingleTickerProviderStateMixin {
-  final GlobalKey<_AnswerSheetState> _answerSheetKey =
-      GlobalKey<_AnswerSheetState>();
+  /*final GlobalKey<_AnswerSheetState> _answerSheetKey =
+      GlobalKey<_AnswerSheetState>();*/
   final AudioPlayer _player = AudioPlayer();
   late TabController _tabController;
   Duration _position = Duration.zero;
@@ -32,6 +32,8 @@ class _IeltsListeningExamScreenMobileState
   int _listeningPart = 1;
   bool _isLoading = true;
   bool _isSubmitAnsLoading = false;
+
+  late final List<TextEditingController> _textControllers;
 
   late IeltsListeningProvider _ieltsListeningProvider;
   String? _audioFileListening;
@@ -43,6 +45,7 @@ class _IeltsListeningExamScreenMobileState
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _textControllers = List.generate(10, (index) => TextEditingController());
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _fetchInitialData();
     });
@@ -52,7 +55,67 @@ class _IeltsListeningExamScreenMobileState
   void dispose() {
     _player.dispose();
     _tabController.dispose();
+    for (var controller in _textControllers) {
+      controller.dispose();
+    }
     super.dispose();
+  }
+
+  String? convertAndPrintAnswers(int startingIndex) {
+    final answers = _textControllers.map((c) => c.text.trim()).toList();
+    if (answers.contains('')) return null;
+
+    final answerMap = {
+      for (int i = 0; i < answers.length; i++)
+        '${startingIndex + i + 1}': answers[i]
+    };
+    return json.encode(answerMap);
+  }
+
+  void resetControllers() {
+    for (var controller in _textControllers) {
+      controller.clear();
+    }
+  }
+
+  Widget _buildAnswerSheet() {
+    final int baseIndex = (_listeningPart - 1) * 10;
+    return ListView.builder(
+      padding: const EdgeInsets.all(16.0),
+      itemCount: 10,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Text(
+                  "${(baseIndex + index + 1)}.",
+                  style: const TextStyle(fontSize: 18),
+                ),
+              ),
+              Expanded(
+                flex: 5,
+                child: TextField(
+                  cursorColor: AppColors.primaryColor,
+                  controller: _textControllers[index],
+                  decoration: const InputDecoration(
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          width: 2,
+                          color: AppColors.primaryColor), //<-- SEE HERE
+                    ),
+                    hintText: 'Enter your answer',
+                    border: UnderlineInputBorder(),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Future<void> _fetchInitialData() async {
@@ -123,82 +186,79 @@ class _IeltsListeningExamScreenMobileState
       _isSubmitAnsLoading = true;
     });
 
-    final answerSheetState = _answerSheetKey.currentState;
+    /*final answerSheetState = _answerSheetKey.currentState;
     if (answerSheetState == null) {
       print("AnswerSheetState is null");
       _showErrorDialog("Please fill all answers.");
-    } else {
-      // Get answers and validate
-      String? ansJsonString =
-          answerSheetState.convertAndPrintAnswers((_listeningPart - 1) * 10);
-      if (ansJsonString == null) {
-        await _showErrorDialog('Please fill all answers.');
-        setState(() {
-          _isSubmitAnsLoading = false;
-        });
-        return;
-      }
-      /*if (_listeningPart < 5) {
+    } else {*/
+    // Get answers and validate
+    String? ansJsonString = convertAndPrintAnswers((_listeningPart - 1) * 10);
+    if (ansJsonString == null) {
+      await _showErrorDialog('Please fill all answers.');
+      setState(() {
+        _isSubmitAnsLoading = false;
+      });
+      return;
+    }
+    /*if (_listeningPart < 5) {
         setState(() {
           _listeningPart++;
         });
       }*/
-      // Handle different listening parts
-      if (_listeningPart < 4) {
-        final response = await _ieltsListeningProvider.getIeltsListeningExam(
-          userId:
-              Provider.of<AuthProvider>(context, listen: false).user?.id ?? 1,
-          listeningPart: _listeningPart + 1,
-          tokenUsed: 1,
-          ansJson: ansJsonString,
-          examinationId: _examIdListening,
-        );
+    // Handle different listening parts
+    if (_listeningPart < 4) {
+      final response = await _ieltsListeningProvider.getIeltsListeningExam(
+        userId: Provider.of<AuthProvider>(context, listen: false).user?.id ?? 1,
+        listeningPart: _listeningPart + 1,
+        tokenUsed: 1,
+        ansJson: ansJsonString,
+        examinationId: _examIdListening,
+      );
 
-        if (response['errorcode'] == 200) {
-          setState(() {
-            _audioFileListening = _ieltsListeningProvider
-                .listeningAudioQuestionResponse!.audioFile;
-            _questionListening = _ieltsListeningProvider
-                .listeningAudioQuestionResponse!.question;
-            // _listeningPart++;
-            _listeningPart++;
-            _initialTabIndex = 0;
-          });
-
-          // Reset answer sheet
-          answerSheetState.resetControllers();
-          await _player.setUrl(_audioFileListening!);
-          setState(() {
-            _position = Duration.zero;
-          });
-        } else {
-          Fluttertoast.showToast(
-            msg: "Error: ${response['message']}",
-            backgroundColor: Colors.redAccent,
-            textColor: Colors.white,
-          );
-        }
-      } else {
-        final endProvider =
-            Provider.of<EndIeltsListeningProvider>(context, listen: false);
-        final response = await endProvider.endIeltsListeningExam(
-          userId:
-              Provider.of<AuthProvider>(context, listen: false).user?.id ?? 1,
-          ansJson: ansJsonString,
-          examinationId: _examIdListening,
-        );
+      if (response['errorcode'] == 200) {
         setState(() {
-          _isSubmitAnsLoading = false; // Hide the loader
+          _audioFileListening =
+              _ieltsListeningProvider.listeningAudioQuestionResponse!.audioFile;
+          _questionListening =
+              _ieltsListeningProvider.listeningAudioQuestionResponse!.question;
+          // _listeningPart++;
+          _listeningPart++;
+          _initialTabIndex = 0;
         });
 
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ExamAnalysisScreen(listeningData: response),
-          ),
+        // Reset answer sheet
+        resetControllers();
+        await _player.setUrl(_audioFileListening!);
+        setState(() {
+          _position = Duration.zero;
+        });
+      } else {
+        Fluttertoast.showToast(
+          msg: "Error: ${response['message']}",
+          backgroundColor: Colors.redAccent,
+          textColor: Colors.white,
         );
       }
+    } else {
+      final endProvider =
+          Provider.of<EndIeltsListeningProvider>(context, listen: false);
+      final response = await endProvider.endIeltsListeningExam(
+        userId: Provider.of<AuthProvider>(context, listen: false).user?.id ?? 1,
+        ansJson: ansJsonString,
+        examinationId: _examIdListening,
+      );
+      setState(() {
+        _isSubmitAnsLoading = false; // Hide the loader
+      });
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ExamAnalysisScreen(listeningData: response),
+        ),
+      );
     }
+    /* }*/
 
     setState(() {
       _isSubmitAnsLoading = false;
@@ -335,11 +395,15 @@ class _IeltsListeningExamScreenMobileState
       child: TabBarView(
         controller: _tabController,
         children: [
-          MarkdownWidget(data: _questionListening ?? ''),
-          AnswerSheet(
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: MarkdownWidget(data: _questionListening ?? ''),
+          ),
+          /*AnswerSheet(
             key: _answerSheetKey,
             initialPart: _listeningPart,
-          ),
+          ),*/
+          _buildAnswerSheet(),
         ],
       ),
     );
@@ -364,7 +428,7 @@ class _IeltsListeningExamScreenMobileState
   }
 }
 
-class AnswerSheet extends StatefulWidget {
+/*class AnswerSheet extends StatefulWidget {
   final int initialPart;
 
   const AnswerSheet({Key? key, required this.initialPart}) : super(key: key);
@@ -440,4 +504,4 @@ class _AnswerSheetState extends State<AnswerSheet> {
       },
     );
   }
-}
+}*/

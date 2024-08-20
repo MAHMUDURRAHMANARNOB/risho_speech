@@ -8,7 +8,7 @@ import 'package:markdown_widget/markdown_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:risho_speech/screens/SpeakingTestReportScreen.dart';
 import 'package:risho_speech/ui/colors.dart';
-
+import 'package:record/record.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/speakingExamProvider.dart';
 import '../../utils/audio_related/audio_visualized.dart';
@@ -26,6 +26,8 @@ class _IeltsSpeakingExamScreenMobileState
   // late SiriWaveformController _siriWaveController;
 
   bool _isRecording = false;
+  late Record audioRecord;
+  String? _audioPath;
   File? _recordedFile;
   late AudioPlayer _audioPlayer;
 
@@ -33,7 +35,7 @@ class _IeltsSpeakingExamScreenMobileState
   void initState() {
     super.initState();
     _audioPlayer = AudioPlayer();
-
+    audioRecord = Record();
     /*_siriWaveController = SiriWaveController(
       amplitude: 0,
       speed: 0.1,
@@ -103,84 +105,7 @@ class _IeltsSpeakingExamScreenMobileState
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: /*Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Stage Determiner
-            Text(
-              "Stage - 1",
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 20.0),
-            // Cue Card Topic -- Only visible for stage 2
-            Container(
-              padding: const EdgeInsets.all(20.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(24.0),
-                color: AppColors.vocabularyCatCardColor,
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    "Cue Card Topic",
-                    style: TextStyle(
-                        fontSize: 16.0,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 20.0),
-                  Text(
-                    "Describe a time when you were really proud of yourself.",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: AppColors.primaryColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24.0,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 20.0),
-            // Microphone button for telling
-            IconButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor),
-              onPressed: () {},
-              icon: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Icon(
-                  Iconsax.microphone,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            SizedBox(height: 20.0),
-            //   Cancel Test
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.redAccent,
-                padding: EdgeInsets.symmetric(
-                  horizontal: 50,
-                  vertical: 15,
-                ),
-              ),
-              onPressed: () {},
-              child: Text(
-                "Cancel Test",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
-              ),
-            ),
-          ],
-        ),
-      ),*/
-          Consumer<IeltsSpeakingExamProvider>(
+      body: Consumer<IeltsSpeakingExamProvider>(
         builder: (context, provider, child) {
           if (provider.examResponse == null) {
             return Center(child: CircularProgressIndicator());
@@ -225,7 +150,7 @@ class _IeltsSpeakingExamScreenMobileState
                               Visibility(
                                 visible: cueCardTopic != null,
                                 child: Container(
-                                  height: 40.0,
+                                  height: 80.0,
                                   child: MarkdownWidget(
                                     data: cueCardTopic!,
                                   ),
@@ -234,12 +159,12 @@ class _IeltsSpeakingExamScreenMobileState
                             ],
                           ),
                         ),
-                      SizedBox(height: 20.0),
+                      SizedBox(height: 10.0),
                     ],
                   ),
                 ),
                 Expanded(
-                  flex: 2,
+                  flex: 1,
                   child: Column(
                     children: [
                       AudioVisualizer(
@@ -343,16 +268,25 @@ class _IeltsSpeakingExamScreenMobileState
   }
 
   void _startRecording() {
+    audioRecord.start();
     setState(() {
       _isRecording = true;
+
       // Start recording logic here
     });
   }
 
   void _pauseRecording() async {
+    String? path = await audioRecord.stop();
     setState(() {
       _isRecording = false;
-      // Pause recording logic here
+      _audioPath = path;
+      _recordedFile = File(_audioPath!);
+      print(_audioPath);
+
+      // _isAiListening = false;
+
+      /* playRecording();*/
     });
 
     // Call the API with the recorded file
