@@ -11,6 +11,7 @@ import 'Dashboard.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static const String id = "welcome_screen";
+
   const WelcomeScreen({super.key});
 
   @override
@@ -19,6 +20,7 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   bool _isLoading = true;
+
   @override
   void initState() {
     super.initState();
@@ -101,7 +103,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       height: 30,
                     ),
                     Container(
-                      margin: const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
+                      margin: const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 5.0),
                       child: Column(
                         children: [
                           Image.asset(
@@ -139,30 +141,31 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 fontWeight: FontWeight.bold, fontSize: 18),
                             textAlign: TextAlign.center,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                "Already have an account? ",
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                          Container(
+                            margin: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primaryColor,
                               ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => LoginScreen(),
-                                    ),
-                                  );
-                                },
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => LoginScreen(),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                width: double.infinity,
                                 child: const Text(
+                                  textAlign: TextAlign.center,
                                   "Log-In",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: AppColors.primaryColor),
+                                      color: Colors.white),
                                 ),
                               ),
-                            ],
+                            ),
                           ),
                           Container(
                             margin: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
@@ -176,8 +179,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 );
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.secondaryColor,
-                              ),
+                                  backgroundColor: Colors.transparent,
+                                  side: BorderSide(
+                                    width: 2.0,
+                                    color: AppColors.primaryColor,
+                                  )),
                               child: Container(
                                 width: double.infinity,
                                 child: const Text(
