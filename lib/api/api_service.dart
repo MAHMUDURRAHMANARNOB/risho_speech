@@ -930,35 +930,21 @@ class ApiService {
         // Handle error
         return {'error': 'Failed to make API call'};
       }
-
-      /*final Map<String, String> body = {
-        'userId': userId.toString(),
-        'listeningPart': listeningPart.toString(),
-        'tokenused': tokenUsed.toString(),
-      };
-
-      // Conditionally add parameters
-      if (ansJson != null && ansJson.isNotEmpty) {
-        body['anserJson'] = ansJson;
-      }
-      if (examinationId != null) {
-        body['examinationId'] = examinationId.toString();
-      }
-
-      final response = await http.post(
-        Uri.parse(url),
-        body: body,
-      );
-
-      if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else {
-        print("Response in startIELTSListeningExam else: ${response.body}");
-        throw Exception('Failed to load data in startIELTSListeningExam');
-      }*/
     } catch (e) {
       // Handle exception
       return {'error': e.toString()};
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchIeltsCoursesList() async {
+    final response = await http.post(Uri.parse('$baseUrl/getieltscourses'));
+
+    if (response.statusCode == 200) {
+      var responseBody = await response.body;
+      print("hello boss:${json.decode(responseBody)}");
+      return json.decode(responseBody);
+    } else {
+      throw Exception('Failed to load courses');
     }
   }
 }

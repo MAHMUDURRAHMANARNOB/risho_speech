@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 import 'package:risho_speech/screens/IeltsCoursesScreen.dart';
 import 'package:risho_speech/screens/InstructionIeltsListeningScreen.dart';
 import 'package:risho_speech/ui/colors.dart';
 
+import '../../models/IeltsCoursesDataModel.dart';
 import '../../models/ieltsCourseListDataModel.dart';
+import '../../providers/IeltsCourseListProvider.dart';
 import '../InstructionIeltsSpeakingScreen.dart';
 
 class IELTSHomeScreenMobile extends StatefulWidget {
@@ -14,6 +18,8 @@ class IELTSHomeScreenMobile extends StatefulWidget {
 }
 
 class _IELTSHomeScreenMobileState extends State<IELTSHomeScreenMobile> {
+  IeltsCourseListProvider ieltsCourseListProvider = IeltsCourseListProvider();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -318,158 +324,88 @@ class _IELTSHomeScreenMobileState extends State<IELTSHomeScreenMobile> {
                 ],
               ),
               // const SizedBox(height: 5.0),
-              CardList(),
+              _cardList(),
             ],
           ),
         ),
       ),
     );
   }
-}
 
-final List<IeltsCourseListDataModel> courses = [
-  IeltsCourseListDataModel(
-    imageUrl: 'assets/images/ielts/speaking.png',
-    // Replace with your image URL
-    title: 'IELTS - Speaking',
-    price: '1000',
-  ),
-  IeltsCourseListDataModel(
-    imageUrl: 'assets/images/ielts/ielts_Listening.png',
-    // Replace with your image URL
-    title: 'IELTS - Listening',
-    price: '1200',
-  ),
-  IeltsCourseListDataModel(
-    imageUrl: 'assets/images/ielts/reading.png', // Replace with your image URL
-    title: 'IELTS - Reading',
-    price: '900',
-  ),
-  IeltsCourseListDataModel(
-    imageUrl: 'assets/images/ielts/writing.png', // Replace with your image URL
-    title: 'IELTS - Writing',
-    price: '1100',
-  ),
-];
-
-class CardList extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 300,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: courses.length, // Number of cards
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: CustomCard(
-              cardItem: courses[index],
-            ),
-          );
-        },
-      ),
-    );
-    /*FutureBuilder<List<IeltsCourseListDataModel>>(
-      future: fetchCardItems(),
+  Widget _cardList() {
+    return FutureBuilder<void>(
+      future: ieltsCourseListProvider.fetchIeltsCourseList(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(
+            child: SpinKitThreeInOut(
+              color: AppColors.primaryColor,
+            ),
+          );
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Center(child: Text('No items found'));
         } else {
           return Container(
-            height: 300,
+            height: 150,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: snapshot.data!.length,
+              shrinkWrap: true,
+              physics: BouncingScrollPhysics(),
+              itemCount: 4,
               itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CustomCard(cardItem: snapshot.data![index]),
+                final category = ieltsCourseListProvider
+                    .ieltsCourseListResponse!.videoList[index];
+                return Container(
+                  width: 200, // Adjust width as needed
+                  margin: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    color: AppColors.backgroundColorDark,
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            category.courseTitle,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(10.0),
+                          decoration: const BoxDecoration(
+                              color: AppColors.primaryColor2,
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(12.0),
+                                bottomRight: Radius.circular(12.0),
+                              )),
+                          child: const Text(
+                            "Start Now",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
           );
         }
       },
-    );*/
-  }
-}
-
-class CustomCard extends StatelessWidget {
-  final IeltsCourseListDataModel cardItem;
-
-  CustomCard({required this.cardItem});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 300, // Adjust width as needed
-      decoration: BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(12.0),
-                topRight: Radius.circular(12.0),
-              ),
-              child: Image.asset(
-                /*'assets/images/ielts_Listening.png'*/
-                cardItem.imageUrl, // Image path
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              cardItem.title /*'IELTS - Speaking'*/,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "৳ ${cardItem.price}" /*'৳ 1000'*/,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text(
-                    'Start Now',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(8.0),
-                      ),
-                    ),
-                    backgroundColor: AppColors.primaryColor2,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

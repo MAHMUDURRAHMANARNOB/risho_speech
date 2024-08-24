@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
+import 'package:risho_speech/providers/IeltsCourseListProvider.dart';
 import 'package:risho_speech/providers/VocabularyDialogListProvider.dart';
 import 'package:risho_speech/providers/VocabularySentenceListProvider.dart';
 import 'package:risho_speech/providers/auth_provider.dart';
@@ -65,6 +66,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => CouponDiscountProvider()),
         ChangeNotifierProvider(create: (context) => ResetPasswordProvider()),
         ChangeNotifierProvider(create: (context) => IeltsListeningProvider()),
+        ChangeNotifierProvider(create: (context) => IeltsCourseListProvider()),
         ChangeNotifierProvider(
             create: (context) => IeltsSpeakingExamProvider()),
         ChangeNotifierProvider(

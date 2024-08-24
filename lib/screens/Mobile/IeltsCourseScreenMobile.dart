@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:risho_speech/utils/constants/colors.dart';
 
 import '../../models/ieltsCourseListDataModel.dart';
+import '../../providers/IeltsCourseListProvider.dart';
 import '../../ui/colors.dart';
 
 class IeltsCourseScreenMobile extends StatefulWidget {
@@ -13,70 +17,84 @@ class IeltsCourseScreenMobile extends StatefulWidget {
 }
 
 class _IeltsCourseScreenMobileState extends State<IeltsCourseScreenMobile> {
+  IeltsCourseListProvider ieltsCourseListProvider = IeltsCourseListProvider();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("All Courses"),
-      ),
-      body: /*SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              width: double.infinity,
-              height: 300,
-              color: Colors.green,
-            ),
-            Container(
-              width: double.infinity,
-              height: 300,
-              color: Colors.green,
-            ),
-            Container(
-              width: double.infinity,
-              height: 300,
-              color: Colors.green,
-            ),
-          ],
-        ),
-      ),*/
-          Container(
-        padding: EdgeInsets.all(8.0),
-        child: ListView.builder(
-          itemCount: courses.length,
-          itemBuilder: (context, index) {
-            return CardList(cardModel: courses[index]);
-          },
+        centerTitle: true,
+        title: const Text(
+          "All Courses",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
+      body: _cardList(),
+    );
+  }
+
+  Widget _cardList() {
+    return FutureBuilder<void>(
+      future: ieltsCourseListProvider.fetchIeltsCourseList(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: SpinKitThreeInOut(
+              color: AppColors.primaryColor,
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          return ListView.builder(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            physics: BouncingScrollPhysics(),
+            itemCount: ieltsCourseListProvider
+                .ieltsCourseListResponse!.videoList.length,
+            itemBuilder: (context, index) {
+              final category = ieltsCourseListProvider
+                  .ieltsCourseListResponse!.videoList[index];
+              return Container(
+                margin: EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                  color: AppColors.vocabularyCatCardColor,
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          category.courseTitle,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryColor2),
+                      child: Icon(
+                        Iconsax.arrow_right_4,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        }
+      },
     );
   }
 }
-
-final List<IeltsCourseListDataModel> courses = [
-  IeltsCourseListDataModel(
-    imageUrl: 'assets/images/ielts/speaking.png',
-    // Replace with your image URL
-    title: 'IELTS - Speaking',
-    price: '1000',
-  ),
-  IeltsCourseListDataModel(
-    imageUrl: 'assets/images/ielts/ielts_Listening.png',
-    // Replace with your image URL
-    title: 'IELTS - Listening',
-    price: '1200',
-  ),
-  IeltsCourseListDataModel(
-    imageUrl: 'assets/images/ielts/reading.png', // Replace with your image URL
-    title: 'IELTS - Reading',
-    price: '900',
-  ),
-  IeltsCourseListDataModel(
-    imageUrl: 'assets/images/ielts/writing.png', // Replace with your image URL
-    title: 'IELTS - Writing',
-    price: '1100',
-  ),
-];
 
 class CardList extends StatelessWidget {
   final IeltsCourseListDataModel cardModel;
