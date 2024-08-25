@@ -16,6 +16,7 @@ class AppColors {
   static const Color ExpandedCourseCardColor = Color(0xFF424549);
   static const Color ChapterTitle = Color(0xFFFDEFAE);
   static const Color cardbasic = Color(0xFF1F2937);
+  static const Color orange = Color(0xFFf37431);
 
   static const Color vocabularyCatCardColor = Color(0xFF30332F);
 

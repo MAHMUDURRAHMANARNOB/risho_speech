@@ -212,6 +212,121 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                   ),
 
                   /*Conversation Card*/
+                  /*IMPROVE PRONUNCIATION / Speech Trainer*/
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(8.0, 5.0, 8.0, 5.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        double audioRemains =
+                            Provider.of<SubscriptionStatusProvider>(context,
+                                    listen: false)
+                                .audioRemains;
+                        if (audioRemains > 0.0) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const PracticeGuidedScreen(
+                                      screenName: 'IP',
+                                    )),
+                          );
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Minute expired'),
+                              content: const Text(
+                                  'You have no audio minutes remaining. Please purchase more.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: const Text(
+                                    'OK',
+                                    style: TextStyle(
+                                        color: AppColors.secondaryColor),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const PackagesScreen()),
+                                  ),
+                                  child: const Text(
+                                    'Purchase',
+                                    style: TextStyle(
+                                        color: AppColors.primaryColor),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                      },
+                      child: Card(
+                        color: AppColors.orange,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.circular(8.0), // Adjust as needed
+                            gradient: LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              colors: [
+                                Colors.transparent,
+                                // Start with a transparent color
+                                Colors.lime.withOpacity(0.3),
+                                // Adjust opacity as needed
+                              ],
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "Speech Trainer",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "Learn how to make sentences.",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Image.asset(
+                                  "assets/images/card_images/improve_speaking.png",
+                                  fit: BoxFit.contain,
+                                  height: 120,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  /*Practice Daily lesson*/
                   Container(
                     margin: const EdgeInsets.fromLTRB(8.0, 5.0, 8.0, 5.0),
                     child: GestureDetector(
@@ -294,33 +409,19 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                                       child: Text(
                                         "Practice Daily Lesson",
                                         style: TextStyle(
-                                          fontSize: 20,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
-                                    IconButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const PracticeGuidedScreen(
-                                                    screenName: 'PDL',
-                                                  )),
-                                        );
-                                      },
-                                      /*style: ElevatedButton.styleFrom(
-                                        backgroundColor: AppColors.primaryContainerColor,
-                                        padding: EdgeInsets.all(10.0),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(16.0),
+                                    const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "Practice speaking on real life scenarios with AI ",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.normal,
                                         ),
-                                      ),*/
-                                      icon: const Icon(
-                                        Icons.arrow_circle_right_rounded,
-                                        size: 30,
-                                        color: Colors.white,
                                       ),
                                     ),
                                   ],
@@ -331,6 +432,7 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                                 child: Image.asset(
                                   "assets/images/card_images/practice_guided.png",
                                   fit: BoxFit.contain,
+                                  height: 120,
                                 ),
                               ),
                             ],
@@ -339,132 +441,7 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                       ),
                     ),
                   ),
-                  /*IMPROVE PRONUNCIATION*/
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(8.0, 5.0, 8.0, 5.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        double audioRemains =
-                            Provider.of<SubscriptionStatusProvider>(context,
-                                    listen: false)
-                                .audioRemains;
-                        if (audioRemains > 0.0) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const PracticeGuidedScreen(
-                                      screenName: 'IP',
-                                    )),
-                          );
-                        } else {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('Minute expired'),
-                              content: const Text(
-                                  'You have no audio minutes remaining. Please purchase more.'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(),
-                                  child: const Text(
-                                    'OK',
-                                    style: TextStyle(
-                                        color: AppColors.secondaryColor),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const PackagesScreen()),
-                                  ),
-                                  child: const Text(
-                                    'Purchase',
-                                    style: TextStyle(
-                                        color: AppColors.primaryColor),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                      },
-                      child: Card(
-                        color: Colors.orangeAccent,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(8.0), // Adjust as needed
-                            gradient: LinearGradient(
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                              colors: [
-                                Colors.transparent,
-                                // Start with a transparent color
-                                Colors.amberAccent.withOpacity(0.3),
-                                // Adjust opacity as needed
-                              ],
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Text(
-                                        "Improve Pronunciation",
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    IconButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const PracticeGuidedScreen(
-                                                    screenName: 'IP',
-                                                  )),
-                                        );
-                                      },
-                                      /*style: ElevatedButton.styleFrom(
-                                        backgroundColor: AppColors.primaryContainerColor,
-                                        padding: EdgeInsets.all(10.0),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(16.0),
-                                        ),
-                                      ),*/
-                                      icon: const Icon(
-                                        Icons.arrow_circle_right_rounded,
-                                        size: 30,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Image.asset(
-                                  "assets/images/card_images/improve_speaking.png",
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+
                   /*Vocabulary*/
                   Container(
                     margin: const EdgeInsets.fromLTRB(8.0, 5.0, 8.0, 5.0),
@@ -505,31 +482,19 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                                       child: Text(
                                         "Practice Vocabulary",
                                         style: TextStyle(
-                                          fontSize: 20,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
-                                    IconButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  VocabularyCategoryScreen()),
-                                        );
-                                      },
-                                      /*style: ElevatedButton.styleFrom(
-                                        backgroundColor: AppColors.primaryContainerColor,
-                                        padding: EdgeInsets.all(10.0),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(16.0),
+                                    const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "Interactive Vocabulary Training",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.normal,
                                         ),
-                                      ),*/
-                                      icon: const Icon(
-                                        Icons.arrow_circle_right_rounded,
-                                        size: 30,
-                                        color: Colors.white,
                                       ),
                                     ),
                                   ],
@@ -540,6 +505,7 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                                 child: Image.asset(
                                   "assets/images/card_images/practice_vocabulary.png",
                                   fit: BoxFit.contain,
+                                  height: 120,
                                 ),
                               ),
                             ],
@@ -598,7 +564,7 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                         }
                       },
                       child: Card(
-                        color: Colors.lime,
+                        color: AppColors.primaryColor2,
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius:
@@ -616,41 +582,29 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                           ),
                           child: Row(
                             children: [
-                              Expanded(
+                              const Expanded(
                                 flex: 1,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Padding(
+                                    Padding(
                                       padding: EdgeInsets.all(8.0),
                                       child: Text(
                                         "Conversation Practice",
                                         style: TextStyle(
-                                          fontSize: 20,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
-                                    IconButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CallingAgentScreen()),
-                                        );
-                                      },
-                                      /*style: ElevatedButton.styleFrom(
-                                        backgroundColor: AppColors.primaryContainerColor,
-                                        padding: EdgeInsets.all(10.0),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(16.0),
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "Speak more to improve your fluency",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.normal,
                                         ),
-                                      ),*/
-                                      icon: const Icon(
-                                        Icons.arrow_circle_right_rounded,
-                                        size: 30,
-                                        color: Colors.white,
                                       ),
                                     ),
                                   ],
@@ -661,6 +615,7 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                                 child: Image.asset(
                                   "assets/images/card_images/make_phone_call.png",
                                   fit: BoxFit.contain,
+                                  height: 120,
                                 ),
                               ),
                             ],
@@ -669,55 +624,6 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                       ),
                     ),
                   ),
-                  /*Container(
-                    margin: EdgeInsets.fromLTRB(8.0, 5.0, 8.0, 5.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CallingAgentScreen()),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.cyan[50],
-                        padding: EdgeInsets.all(10.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16.0),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Image.asset(
-                                "assets/images/phone_call.png",
-                                width: 30,
-                                height: 30,
-                              ),
-                              SizedBox(
-                                width: 5.0,
-                              ),
-                              Text(
-                                "Phone Call",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.backgroundColorDark,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Icon(
-                            Icons.arrow_circle_right_rounded,
-                            size: 30,
-                            color: AppColors.primaryColor,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),*/
                 ],
               ),
             ),

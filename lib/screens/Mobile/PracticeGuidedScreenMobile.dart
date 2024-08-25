@@ -259,126 +259,90 @@ class _PracticeGuidedScreenMobileState
         ),
         centerTitle: true,
       ),
-      body: Container(
-        // color: AppColors.primaryColor,
-        child: FutureBuilder<void>(
-          future: spokenLessonListProvider.fetchSpokenLessonListResponse(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: const SpinKitThreeInOut(
-                  color: AppColors.primaryColor,
+      body: FutureBuilder<void>(
+        future: spokenLessonListProvider.fetchSpokenLessonListResponse(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: const SpinKitThreeInOut(
+                color: AppColors.primaryColor,
+              ),
+            );
+          } else if (snapshot.hasError) {
+            // Handle error
+            return Center(
+              child: Text("No Data Found"),
+            );
+          } else {
+            return GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, // Number of items in each row
+                  crossAxisSpacing: 10.0, // Spacing between items horizontally
+                  mainAxisSpacing: 10.0, // Spacing between items vertically
                 ),
-              );
-            } else if (snapshot.hasError) {
-              // Handle error
-              return Center(
-                child: Text("No Data Found"),
-              );
-            } else {
-              return GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // Number of items in each row
-                    crossAxisSpacing:
-                        10.0, // Spacing between items horizontally
-                    mainAxisSpacing: 10.0, // Spacing between items vertically
-                  ),
-                  itemCount: spokenLessonListProvider
-                      .spokenLessonListResponse!.lessons.length,
-                  itemBuilder: (context, index) {
-                    final lesson = spokenLessonListProvider
-                        .spokenLessonListResponse!.lessons[index];
-                    /*final randomColor =
-                          Color((Random().nextDouble() * 0xFFFFFF).toInt())
-                              .withOpacity(1.0);*/
+                itemCount: spokenLessonListProvider
+                    .spokenLessonListResponse!.lessons.length,
+                itemBuilder: (context, index) {
+                  final lesson = spokenLessonListProvider
+                      .spokenLessonListResponse!.lessons[index];
+                  /*final randomColor =
+                        Color((Random().nextDouble() * 0xFFFFFF).toInt())
+                            .withOpacity(1.0);*/
 
-                    final randomColor = Color.fromARGB(
-                      255,
-                      Random().nextInt(128), // Red component
-                      Random().nextInt(128), // Green component
-                      Random().nextInt(128), // Blue component
-                    );
-                    return GestureDetector(
-                      onTap: () async {
-                        if (widget.screenName == "PDL") {
-                          fetchSessionId(userId, lesson.id);
-                        } else if (widget.screenName == "IP") {
-                          fetchDialogId(userId, lesson.id);
-                        } else {
-                          print("screenName erro");
-                        }
-                      },
-                      child: Container(
-                        margin: EdgeInsets.all(10.0),
-                        // width: 150,
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.0),
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              AppColors.primaryColor.withOpacity(0.4),
-                              Colors.cyan,
-                            ],
-                          ),
-                          /*color: */ /*Colors.cyan.withOpacity(0.7)*/ /*
-                              AppColors.vocabularyCatCardColor,*/
+                  final randomColor = Color.fromARGB(
+                    255,
+                    Random().nextInt(128), // Red component
+                    Random().nextInt(128), // Green component
+                    Random().nextInt(128), // Blue component
+                  );
+                  return GestureDetector(
+                    onTap: () async {
+                      if (widget.screenName == "PDL") {
+                        fetchSessionId(userId, lesson.id);
+                      } else if (widget.screenName == "IP") {
+                        fetchDialogId(userId, lesson.id);
+                      } else {
+                        print("screenName erro");
+                      }
+                    },
+                    child: Container(
+                      margin: EdgeInsets.all(8.0),
+                      // width: 150,
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            AppColors.primaryColor.withOpacity(0.4),
+                            Colors.cyan.withOpacity(0.4),
+                          ],
                         ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
                           children: [
                             Expanded(
-                              flex: 1,
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    10.0, 10.0, 10.0, 10.0),
-                                child: Text(
-                                  lesson.conversationName,
-                                  // Display conversationName
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(
-                                    // fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Poppins',
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Container(
-                                padding: EdgeInsets.fromLTRB(5.0, 5.0, 5, 5),
-                                // margin: EdgeInsets.all(value),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(8.0),
-                                        bottomRight: Radius.circular(8.0)),
-                                    color: AppColors.cardbasic),
-                                child: Text(
-                                  lesson.conversationDetails,
-                                  // Display conversationName
-                                  textAlign: TextAlign.start,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 3,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                  ),
+                              child: Text(
+                                lesson.conversationName,
+                                // Display conversationName
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                    );
-                  });
-            }
-          },
-        ),
+                    ),
+                  );
+                });
+          }
+        },
       ),
     );
   }

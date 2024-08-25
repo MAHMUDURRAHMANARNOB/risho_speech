@@ -947,4 +947,45 @@ class ApiService {
       throw Exception('Failed to load courses');
     }
   }
+
+  Future<Map<String, dynamic>> getIeltsCoursesLessonList(
+      int courseId, int userId) async {
+    const uri = "$baseUrl/getieltsCourseLesson";
+    final Map<String, String> body = {
+      'userid': userId.toString(),
+      'courseid': courseId.toString(),
+    };
+    final response = await http.post(
+      Uri.parse(uri),
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+      var responseBody = await response.body;
+      print("hello course lesson list:${json.decode(responseBody)}");
+      return json.decode(responseBody);
+    } else {
+      throw Exception('Failed to load courses');
+    }
+  }
+
+  Future<Map<String, dynamic>> getIeltsCoursesLesson(int lessonId) async {
+    const uri = "$baseUrl/getieltslessoncontents";
+    final Map<String, String> body = {
+      'lessonid': lessonId.toString(),
+    };
+    final response = await http.post(
+      Uri.parse(uri),
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+      var responseBody = await response.body;
+      print("hello course lesson list:${json.decode(responseBody)}");
+      var finalResponse = Utf8Decoder().convert(response.bodyBytes);
+      return json.decode(finalResponse);
+    } else {
+      throw Exception('Failed to load courses');
+    }
+  }
 }

@@ -8,6 +8,7 @@ import 'package:risho_speech/ui/colors.dart';
 import '../../models/IeltsCoursesDataModel.dart';
 import '../../models/ieltsCourseListDataModel.dart';
 import '../../providers/IeltsCourseListProvider.dart';
+import '../IeltsCourseLessonListScreen.dart';
 import '../InstructionIeltsSpeakingScreen.dart';
 
 class IELTSHomeScreenMobile extends StatefulWidget {
@@ -378,7 +379,17 @@ class _IELTSHomeScreenMobileState extends State<IELTSHomeScreenMobile> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => IeltsCourseLessonListScreen(
+                                courseId: category.courseId,
+                                courseTitle: category.courseTitle,
+                              ),
+                            ),
+                          );
+                        },
                         child: Container(
                           width: double.infinity,
                           padding: const EdgeInsets.all(10.0),
