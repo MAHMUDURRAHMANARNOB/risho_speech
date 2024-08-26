@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:markdown_widget/widget/markdown.dart';
+import 'package:risho_speech/screens/Common/Shimmer_Arrow.dart';
+import 'package:risho_speech/screens/VideoPlayerBoard.dart';
 
 import '../../providers/ieltsCourseLessonProvider.dart';
 import '../../ui/colors.dart';
@@ -107,10 +110,22 @@ class _IeltsCourseBoardMobileScreenState
           final videoLessonList =
               ieltsCourseLessonProvider.ieltsCourseLessonResponse?.videoList;
 
-          return Column(
+          return Stack(
             children: [
-              _buildTabBar(),
-              _buildTabBarView(),
+              Positioned(
+                bottom: 50,
+                right: 20,
+                child: ShimmerArrow(),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    _buildTabBar(),
+                    _buildTabBarView(),
+                  ],
+                ),
+              ),
             ],
           );
         }
@@ -140,19 +155,62 @@ class _IeltsCourseBoardMobileScreenState
             .ieltsCourseLessonResponse!.videoList[index];
         return GestureDetector(
           onTap: () {
-            Fluttertoast.showToast(msg: video.lessonId.toString());
+            // Fluttertoast.showToast(msg: video.lessonId.toString());
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => VideoPlayerBoard(
+                      videoUrl: video.videoUrl,
+                      videoTitle: video.videoTitle,
+                      isVideo: "Y",
+                      lessonContentId: video.videoId.toString())),
+            );
           },
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 5.0),
             padding: EdgeInsets.all(10.0),
             decoration: BoxDecoration(
               color: AppColors.vocabularyCatCardColor,
-              borderRadius: BorderRadius.circular(12.0),
+              borderRadius: BorderRadius.circular(6.0),
             ),
-            child: Text(
-              video.videoTitle,
-              textAlign: TextAlign.start,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Image.asset(
+                  "assets/images/youtube_icon.png",
+                  width: 34,
+                  height: 34,
+                ),
+                SizedBox(width: 8.0),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        video.videoTitle,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: 1,
+                          ),
+                          Text(
+                            "Duration: ${video.videoDuration} minutes",
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         );

@@ -37,6 +37,7 @@ class _LoginformState extends State<Loginform> {
   Widget build(BuildContext context) {
     return Scaffold(
       // backgroundColor: AppColors.primaryColor.withOpacity(0.5),
+      backgroundColor: Colors.transparent,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,7 +45,8 @@ class _LoginformState extends State<Loginform> {
             const Text(
               "Welcome",
               style: TextStyle(
-                fontSize: 40,
+                fontSize: 60,
+                height: 1,
                 fontFamily: 'Smooch',
                 fontWeight: FontWeight.bold,
               ),

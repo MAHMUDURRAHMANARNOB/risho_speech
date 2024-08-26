@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:risho_speech/utils/constants/colors.dart';
 
 import '../../models/ieltsCourseListDataModel.dart';
@@ -78,6 +79,18 @@ class _IeltsCourseScreenMobileState extends State<IeltsCourseScreenMobile> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      Container(
+                        padding: EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryColor2.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Icon(
+                          IconsaxPlusLinear.book,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                      SizedBox(width: 5.0),
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -85,27 +98,8 @@ class _IeltsCourseScreenMobileState extends State<IeltsCourseScreenMobile> {
                             category.courseTitle,
                             textAlign: TextAlign.start,
                             style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
+                                fontSize: 18, fontWeight: FontWeight.bold),
                           ),
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => IeltsCourseLessonListScreen(
-                                courseId: category.courseId,
-                                courseTitle: category.courseTitle,
-                              ),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primaryColor2),
-                        child: Icon(
-                          Iconsax.arrow_right_4,
-                          color: Colors.white,
                         ),
                       ),
                     ],

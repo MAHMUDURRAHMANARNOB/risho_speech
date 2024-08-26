@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:risho_speech/providers/ieltsCourseLessonListProvider.dart';
 import 'package:risho_speech/screens/IeltsCourseBoard.dart';
@@ -42,13 +43,45 @@ class _IeltsCourseLessonListMobileScreenState
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "Welcome to our ",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20.0,
+                      ),
+                    ),
+                    TextSpan(
+                      text: widget.courseTitle,
+                      style: TextStyle(
+                        color: AppColors.primaryColor,
+                        // Set your desired color here
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    TextSpan(
+                      text: " Course",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 10),
               Text(
-                "Welcome to our ${widget.courseTitle} Course",
+                "Lessons: ",
                 style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.w500),
+                  color: Colors.white,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               _lessonList(userId!, widget.courseId),
             ],
@@ -83,7 +116,7 @@ class _IeltsCourseLessonListMobileScreenState
                   .ieltsCourseLessonListResponse!.videoList[index];
               return GestureDetector(
                 onTap: () {
-                  Fluttertoast.showToast(msg: category.lessonId.toString());
+                  // Fluttertoast.showToast(msg: category.lessonId.toString());
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -99,12 +132,27 @@ class _IeltsCourseLessonListMobileScreenState
                   padding: EdgeInsets.all(10.0),
                   decoration: BoxDecoration(
                     color: AppColors.vocabularyCatCardColor,
-                    borderRadius: BorderRadius.circular(12.0),
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
-                  child: Text(
-                    category.lessonTitle,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          category.lessonTitle,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                      ),
+                      SizedBox(width: 5.0),
+                      Icon(
+                        IconsaxPlusBold.arrow_circle_right,
+                        color: AppColors.primaryColor,
+                        size: 34,
+                      ),
+                    ],
                   ),
                 ),
               );

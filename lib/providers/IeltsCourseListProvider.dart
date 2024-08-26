@@ -29,7 +29,7 @@ class IeltsCourseListProvider with ChangeNotifier {
     try {
       final response = await _apiService.fetchIeltsCoursesList();
       _ieltsCoursesListDataModel = Ieltscoursesdatamodel.fromJson(response);
-      print("Response from fetchIeltsCoursesList: ${response}");
+      // print("Response from fetchIeltsCoursesList: ${response}");
       notifyListeners();
     } catch (e) {
       _errorMessage = e.toString();

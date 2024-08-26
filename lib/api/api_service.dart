@@ -941,7 +941,7 @@ class ApiService {
 
     if (response.statusCode == 200) {
       var responseBody = await response.body;
-      print("hello boss:${json.decode(responseBody)}");
+      // print("hello boss:${json.decode(responseBody)}");
       return json.decode(responseBody);
     } else {
       throw Exception('Failed to load courses');
@@ -962,7 +962,7 @@ class ApiService {
 
     if (response.statusCode == 200) {
       var responseBody = await response.body;
-      print("hello course lesson list:${json.decode(responseBody)}");
+      // print("hello course lesson list:${json.decode(responseBody)}");
       return json.decode(responseBody);
     } else {
       throw Exception('Failed to load courses');
@@ -981,7 +981,7 @@ class ApiService {
 
     if (response.statusCode == 200) {
       var responseBody = await response.body;
-      print("hello course lesson list:${json.decode(responseBody)}");
+      // print("hello course lesson list:${json.decode(responseBody)}");
       var finalResponse = Utf8Decoder().convert(response.bodyBytes);
       return json.decode(finalResponse);
     } else {

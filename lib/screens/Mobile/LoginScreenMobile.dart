@@ -1,9 +1,12 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:risho_speech/ui/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:rive/rive.dart' as rive;
 import '../../providers/auth_provider.dart';
 import '../Common/loginForm.dart';
 import '../Dashboard.dart';
@@ -81,21 +84,36 @@ class _LoginScreenMobileState extends State<LoginScreenMobile> {
         ),
         automaticallyImplyLeading: false,
         centerTitle: true,
+        backgroundColor: Colors.transparent,
       ),
-      body: _isLoading
-          ? const Center(
-              child: SpinKitThreeInOut(
-                color: AppColors.primaryColor,
-              ), // Show loading indicator
-            )
-          : // Show login form when not loading
-          Container(
-              padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-              margin: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-              child: Loginform(
-                onLoginSuccess: _saveCredentials,
+      body: Stack(
+        children: [
+          rive.RiveAnimation.asset("assets/RiveAssets/shapes.riv"),
+          Positioned.fill(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 100,
+                sigmaY: 100,
               ),
+              child: SizedBox(),
             ),
+          ),
+          _isLoading
+              ? const Center(
+                  child: SpinKitThreeInOut(
+                    color: AppColors.primaryColor,
+                  ), // Show loading indicator
+                )
+              : // Show login form when not loading
+              Container(
+                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                  margin: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+                  child: Loginform(
+                    onLoginSuccess: _saveCredentials,
+                  ),
+                ),
+        ],
+      ),
     );
   }
 
