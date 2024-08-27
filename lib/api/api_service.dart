@@ -988,4 +988,49 @@ class ApiService {
       throw Exception('Failed to load courses');
     }
   }
+
+  /*IELTS Vocabulary Category List*/
+  Future<Map<String, dynamic>> getIeltsVocabularyCategoryList(
+      int topicCategory) async {
+    const uri = "$baseUrl/getIELTSVocabularyCategoryList/";
+    final Map<String, String> body = {
+      'topicCategory': topicCategory.toString(),
+    };
+    final response = await http.post(
+      Uri.parse(uri),
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+      var responseBody = await response.body;
+      // print("hello course lesson list:${json.decode(responseBody)}");
+      var finalResponse = Utf8Decoder().convert(response.bodyBytes);
+      return json.decode(finalResponse);
+    } else {
+      throw Exception('Failed to load courses');
+    }
+  }
+
+  /*IELTS Vocabulary List*/
+  Future<Map<String, dynamic>> getIeltsVocabularyList(
+      int vocaCatId, String isIdioms) async {
+    const uri = "$baseUrl/getIELTSVocabularyList/";
+    final Map<String, String> body = {
+      'vocaCatId': vocaCatId.toString(),
+      'isIdioms': isIdioms.toString(),
+    };
+    final response = await http.post(
+      Uri.parse(uri),
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+      var responseBody = await response.body;
+      // print("hello course lesson list:${json.decode(responseBody)}");
+      var finalResponse = Utf8Decoder().convert(response.bodyBytes);
+      return json.decode(finalResponse);
+    } else {
+      throw Exception('Failed to load courses');
+    }
+  }
 }

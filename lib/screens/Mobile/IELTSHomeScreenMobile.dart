@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:risho_speech/screens/IeltsCoursesScreen.dart';
+import 'package:risho_speech/screens/IeltsVocabularyCategoryListScreen.dart';
 import 'package:risho_speech/screens/InstructionIeltsListeningScreen.dart';
 import 'package:risho_speech/ui/colors.dart';
 
@@ -263,21 +265,31 @@ class _IELTSHomeScreenMobileState extends State<IELTSHomeScreenMobile> {
                   child: Row(
                     children: [
                       /*IELTS Vocabulary*/
-                      vocabularyContainers(
-                        title: "IELTS&Vocabulary",
-                        gradientColors: [
-                          Color.fromRGBO(254, 83, 83, 1),
-                          Color.fromRGBO(168, 2, 0, 1),
-                        ],
+                      GestureDetector(
+                        onTap: () {
+                          _dialogBoxForCategory("N");
+                        },
+                        child: vocabularyContainers(
+                          title: "IELTS&Vocabulary",
+                          gradientColors: [
+                            Color.fromRGBO(254, 83, 83, 1),
+                            Color.fromRGBO(168, 2, 0, 1),
+                          ],
+                        ),
                       ),
                       SizedBox(width: 10.0),
                       /*Phrase And Idioms*/
-                      vocabularyContainers(
-                        title: "Phrase&Idioms",
-                        gradientColors: [
-                          Color.fromRGBO(160, 214, 120, 1),
-                          Color.fromRGBO(50, 144, 88, 1),
-                        ],
+                      GestureDetector(
+                        onTap: () {
+                          _dialogBoxForCategory("Y");
+                        },
+                        child: vocabularyContainers(
+                          title: "Phrase&Idioms",
+                          gradientColors: [
+                            Color.fromRGBO(160, 214, 120, 1),
+                            Color.fromRGBO(50, 144, 88, 1),
+                          ],
+                        ),
                       ),
                       SizedBox(width: 10.0),
                       /*Custom Practice*/
@@ -416,6 +428,125 @@ class _IELTSHomeScreenMobileState extends State<IELTSHomeScreenMobile> {
             ),
           );
         }
+      },
+    );
+  }
+
+  Future<Future<Object?>> _dialogBoxForCategory(isIdioms) async {
+    final title = ["Listening", "Speaking", "Reading", "Writing"];
+    final color = [
+      Colors.teal,
+      Colors.redAccent,
+      Colors.lightBlueAccent,
+      Colors.orangeAccent
+    ];
+    final icons = [
+      IconsaxPlusBold.headphone,
+      IconsaxPlusBold.microphone,
+      IconsaxPlusBold.book,
+      IconsaxPlusBold.pen_tool
+    ];
+    return showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      transitionBuilder: (context, a1, a2, widget) {
+        return Transform.scale(
+          scale: a1.value,
+          child: Opacity(
+            opacity: a1.value,
+            child: AlertDialog(
+              title: const Text(
+                'Choose a Category',
+                style: TextStyle(color: Colors.white),
+              ),
+              content: Container(
+                width: double.maxFinite,
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 1.0,
+                  ),
+                  itemCount: 4,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                IeltsVocabularyCategoryListScreen(
+                              topicCategory: index + 1,
+                              isIdioms: isIdioms,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: EdgeInsets.all(10.0),
+                        padding: EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: /*color[index]*/ AppColors.backgroundColorDark,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(10.0),
+                              decoration: BoxDecoration(
+                                color: /*AppColors.primaryColor2*/
+                                    color[index].withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Icon(
+                                icons[index],
+                                color: /*AppColors.primaryColor*/ color[index],
+                                size: 24.0,
+                              ),
+                            ),
+                            Text(
+                              '${title[index]}',
+                              style: TextStyle(
+                                color: /*color[index]*/ Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  style: TextButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor.withOpacity(0.2)),
+                  child: const Text(
+                    'Close',
+                    style: TextStyle(
+                        color: AppColors.primaryColor,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return SizedBox(
+          child: BackButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        );
       },
     );
   }

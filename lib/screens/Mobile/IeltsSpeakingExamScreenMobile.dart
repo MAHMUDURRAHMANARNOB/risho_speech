@@ -23,8 +23,6 @@ class IeltsSpeakingExamScreenMobile extends StatefulWidget {
 
 class _IeltsSpeakingExamScreenMobileState
     extends State<IeltsSpeakingExamScreenMobile> {
-  // late SiriWaveformController _siriWaveController;
-
   bool _isRecording = false;
   late Record audioRecord;
   String? _audioPath;
@@ -36,10 +34,6 @@ class _IeltsSpeakingExamScreenMobileState
     super.initState();
     _audioPlayer = AudioPlayer();
     audioRecord = Record();
-    /*_siriWaveController = SiriWaveController(
-      amplitude: 0,
-      speed: 0.1,
-    );*/
     _fetchExamData();
   }
 
@@ -127,7 +121,7 @@ class _IeltsSpeakingExamScreenMobileState
                         style: TextStyle(
                             color: Colors.white, fontWeight: FontWeight.bold),
                       ),
-                      SizedBox(height: 20.0),
+                      const SizedBox(height: 20.0),
 
                       // Cue Card Topic -- Only visible for stage 2
                       if (provider.examResponse!.examStage == 2)
@@ -139,14 +133,14 @@ class _IeltsSpeakingExamScreenMobileState
                           ),
                           child: Column(
                             children: [
-                              Text(
+                              const Text(
                                 "Cue Card Topic",
                                 style: TextStyle(
                                     fontSize: 16.0,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(height: 20.0),
+                              const SizedBox(height: 20.0),
                               Visibility(
                                 visible: cueCardTopic != null,
                                 child: Container(
