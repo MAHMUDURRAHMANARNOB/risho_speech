@@ -8,9 +8,9 @@ class OtpProvider extends ChangeNotifier {
 
   OtpResponse? get otpResponseModel => _otpResponseModel;
 
-  Future<void> fetchOtp(String emailAddress) async {
+  Future<void> fetchOtp(String emailAddress, String? phoneNo) async {
     try {
-      final response = await ApiService.getOTP(emailAddress);
+      final response = await ApiService.getOTP(emailAddress, phoneNo!);
       _otpResponseModel = OtpResponse.fromJson(response);
       print("Response from TranslationProvider: $response");
       notifyListeners();

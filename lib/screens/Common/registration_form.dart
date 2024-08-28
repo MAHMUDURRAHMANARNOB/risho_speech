@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -66,7 +67,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
         // Update the username field
         setState(() {
           userNameController.text = username;
-          print(username);
+          // print(username);
         });
       } else {
         // Clear the username field if the full name is empty
@@ -120,7 +121,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 },
                 decoration: InputDecoration(
                   prefixIcon: Icon(
-                    Icons.person_outline_rounded,
+                    Iconsax.user,
                     color: Colors.grey[900], // Change the color of the icon
                   ),
                   hintStyle: TextStyle(
@@ -166,7 +167,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 ),
                 decoration: InputDecoration(
                   prefixIcon: Icon(
-                    Icons.verified_user_outlined,
+                    Iconsax.verify,
                     color: Colors.grey[900], // Change the color of the icon
                   ),
                   suffixIcon: IconButton(
@@ -217,7 +218,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 ),
                 decoration: InputDecoration(
                   prefixIcon: Icon(
-                    Icons.email_outlined,
+                    Iconsax.direct,
                     color: Colors.grey[900], // Change the color of the icon
                   ),
                   hintStyle: TextStyle(
@@ -240,21 +241,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   contentPadding: EdgeInsets.symmetric(vertical: 15.0),
                 ),
               ),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    "OTP will be sent here",
-                    style: TextStyle(color: AppColors.secondaryColor),
-                  ),
-                ],
-              )
             ],
           ),
-          // const SizedBox(height: 10), // Add vertical space
+          const SizedBox(height: 10), // Add vertical space
           /*Phone INPUT BOX*/
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -279,7 +268,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 ),
                 decoration: InputDecoration(
                   prefixIcon: Icon(
-                    Icons.call_outlined,
+                    Iconsax.call,
                     color: Colors.grey[900], // Change the color of the icon
                   ),
                   hintStyle: TextStyle(
@@ -304,7 +293,21 @@ class _RegistrationFormState extends State<RegistrationForm> {
               ),
             ],
           ),
-          const SizedBox(height: 10), // Add vertical space
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                "OTP will be sent to your Phone and Email",
+                style: TextStyle(
+                    color: AppColors.secondaryColor,
+                    fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+          // const SizedBox(height: 10), // Add vertical space
           /*Password input box*/
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -326,7 +329,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 cursorColor: AppColors.primaryColor,
                 decoration: InputDecoration(
                   prefixIcon: Icon(
-                    Icons.lock_outline_rounded,
+                    Iconsax.lock,
                     color: Colors.grey[900], // Change the color of the icon
                   ),
                   suffixIcon: IconButton(
@@ -375,20 +378,37 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 ),
                 Expanded(
                   child: GestureDetector(
-                    onTap: () {
-                      /*_showTermsAndConditionsDialog(context);*/
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        backgroundColor: Colors.transparent,
-                        context: context,
-                        builder: (context) => TermsAndConditionsDialog(),
-                      );
-                    },
-                    child: Text(
+                      onTap: () {
+                        /*_showTermsAndConditionsDialog(context);*/
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          context: context,
+                          builder: (context) => TermsAndConditionsDialog(),
+                        );
+                      },
+                      child: RichText(
+                        text: TextSpan(
+                          text: 'By checking this, you will agree to our ',
+                          style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              color: Colors.white),
+                          children: const <TextSpan>[
+                            TextSpan(
+                              text: 'terms and conditions',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.secondaryColor),
+                            ),
+                            // TextSpan(text: ' world!'),
+                          ],
+                        ),
+                      )
+                      /*Text(
                       "By checking this, you will agree to our terms and conditions",
                       softWrap: true,
-                    ),
-                  ),
+                    ),*/
+                      ),
                 ),
               ],
             ),
@@ -450,7 +470,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                         fullName.isNotEmpty &&
                         userName.isNotEmpty) {
                       // Call getOtp with the retrieved email
-                      await otpProvider.fetchOtp(emailAddress);
+                      await otpProvider.fetchOtp(emailAddress, mobileNo);
 
                       print("OTP IS: ${otpProvider.otpResponseModel!.otp}");
 
@@ -599,7 +619,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
             children: [
               Text(
                 'Already have an Account? ',
-                style: TextStyle(fontSize: 14.0),
+                style: TextStyle(fontSize: 14.0, color: Colors.white),
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(

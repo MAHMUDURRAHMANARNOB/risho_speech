@@ -106,14 +106,18 @@ class ApiService {
   }
 
   /*GET OTP*/
-  static Future<Map<String, dynamic>> getOTP(String emailAddress) async {
+  static Future<Map<String, dynamic>> getOTP(
+      String emailAddress, String? phoneNo) async {
     const apiUrl = '$baseUrl/getOTP/';
     final Uri uri = Uri.parse(apiUrl);
 
     try {
       final response = await http.post(
         uri,
-        body: {'emailAddress': emailAddress.toString()},
+        body: {
+          'emailAddress': emailAddress.toString(),
+          'phoneNo': phoneNo.toString(),
+        },
       );
       final responseCheck = json.decode(response.body);
       if (response.statusCode == 200) {

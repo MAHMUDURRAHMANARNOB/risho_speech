@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
@@ -37,6 +38,7 @@ class OtpScreenMobile extends StatefulWidget {
 
 class _OtpScreenMobileState extends State<OtpScreenMobile> {
   late String? otpCode;
+
   @override
   Widget build(BuildContext context) {
     if (widget.otp == null) {
@@ -57,18 +59,26 @@ class _OtpScreenMobileState extends State<OtpScreenMobile> {
           },
           icon: const Icon(Icons.chevron_left),
         ),
-        title: const Text("Authentication"),
+        title: const Text(
+          "Authentication",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Text(
+            /*Text(
               "CO\nDE",
               style: TextStyle(
                   fontSize: 80.0,
                   fontWeight: FontWeight.bold,
-                  fontFamily: "assets/fonts/SmoochSans.ttf"),
+                  fontFamily: "Mina"),
+            ),*/
+            Image.asset(
+              "assets/images/otp_avatar.png",
+              width: double.infinity,
+              height: 200,
             ),
             Text(
               "Verification",

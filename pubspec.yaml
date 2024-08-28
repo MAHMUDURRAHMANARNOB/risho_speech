@@ -114,6 +114,7 @@ flutter:
     - assets/fonts/
     - assets/audio/
     - assets/RiveAssets/
+    - assets/images/background_contents/
 #    - assets/images/icons/
 #    - assets/images/new_icons/
 

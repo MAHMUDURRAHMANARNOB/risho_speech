@@ -10,12 +10,14 @@ import '../password_reset_screen.dart';
 class EmailVerificationOTPScreenMobile extends StatefulWidget {
   final int? otp;
   final String? email;
+  final String? mobile;
 
   /*EmailVerificationOTPScreenMobile({super.key});*/
   EmailVerificationOTPScreenMobile({
     Key? key,
     this.otp,
     this.email,
+    this.mobile,
   }) : super(key: key);
 
   @override
@@ -53,24 +55,51 @@ class _EmailVarificationOTPScreenMobileState
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Text(
+            /*Text(
               "CO\nDE",
               style: TextStyle(
                   fontSize: 80.0,
                   fontWeight: FontWeight.bold,
                   fontFamily: "assets/fonts/SmoochSans.ttf"),
+            ),*/
+            Image.asset(
+              "assets/images/otp_avatar.png",
+              width: double.infinity,
+              height: 200,
             ),
+            SizedBox(height: 10.0),
             Text(
               "Verification",
               style: TextStyle(
-                fontSize: 16.0,
+                fontSize: 18.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
             SizedBox(height: 10),
-            Text("We have sent you the verification code to - "),
+            Text(
+              "We have sent you the verification code to - ",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+            ),
             SizedBox(height: 10),
-            Text(widget.email!),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "> " + widget.email!,
+                  style: TextStyle(
+                      color: AppColors.secondaryColor,
+                      fontWeight: FontWeight.w600),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  "> " + widget.mobile!,
+                  style: TextStyle(
+                      color: AppColors.secondaryColor,
+                      fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
             SizedBox(height: 10),
             OtpTextField(
               numberOfFields: 4,

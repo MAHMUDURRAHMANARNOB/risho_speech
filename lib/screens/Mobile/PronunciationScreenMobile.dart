@@ -5,6 +5,8 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
+import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:risho_speech/models/doGuidedConverationDataModel.dart';
 import 'package:risho_speech/providers/doGuidedConversationProvider.dart';
@@ -100,6 +102,7 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
   void dispose() {
     audioRecord.dispose();
     audioPlayer.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
@@ -117,6 +120,8 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
   }
 
   Future<void> stopRecording() async {
+    List<Widget> _tempConversationComponents = [];
+
     try {
       if (await audioRecord.hasPermission()) {
         String? path = await audioRecord.stop();
@@ -125,9 +130,13 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
           _audioPath = path;
           audioFile = File(_audioPath!);
           print(_audioPath);
-          _conversationComponents.add(
+          _tempConversationComponents
+              .add(AIResponseBox(audioFile!, _dialogId, userName));
+          _tempConversationComponents.addAll(_conversationComponents);
+          /*_conversationComponents.add(
             AIResponseBox(audioFile!, _dialogId, userName),
-          );
+          );*/
+          _conversationComponents = _tempConversationComponents;
         });
         // _isSuggestAnsActive = false;
         // suggestedAnswer = null;
@@ -167,87 +176,94 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
       padding: EdgeInsets.all(5.0),
       child: Column(
         children: [
-          /*AiName*/
-          Row(
-            children: [
-              Expanded(
-                flex: 7,
-                child: Container(
-                  padding: EdgeInsets.all(5.0),
-                  // color: Colors.white,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          // padding: EdgeInsets.all(5.0),
-                          margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 5.0),
-                          child: Image.asset(
-                            "assets/images/risho_guru_icon.png",
-                            height: 30,
-                            width: 30,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 7,
-                        child: Text(
-                          widget.actorName,
-                          // style: TextStyle(fontFamily: "Mina"),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 5.0),
           /*Ai Row*/
-          Row(
+          Stack(
             children: [
-              Expanded(
-                flex: 6,
-                child: Container(
-                  padding: EdgeInsets.all(5.0),
-                  // color: Colors.white,
-                  child: Container(
+              Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(10.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12.0),
-                      color: AppColors.primaryColor.withOpacity(0.3),
+                      color: AppColors.backgroundColorDark.withOpacity(0.3),
+                      border: Border.all(width: 1.0, color: Colors.white),
                     ),
                     padding: EdgeInsets.all(10.0),
-                    child: Text(
-                      "${widget.conversationEn} ( ${widget.conversationBn} )",
-                      // style: TextStyle(fontFamily: "Mina"),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "${widget.conversationEn}",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 20.0),
+                        ),
+                        SizedBox(height: 20.0),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Bangla: ",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Expanded(
+                              child: Text(
+                                "${widget.conversationBn}",
+                                style: TextStyle(
+                                    color: Colors.white70, fontSize: 16),
+                                // style: TextStyle(fontFamily: "Mina"),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      Colors.white.withOpacity(0.2)),
+                              onPressed: () {
+                                Source urlSource =
+                                    UrlSource(widget.conversationAudioFile);
+                                audioPlayer.play(urlSource);
+                              },
+                              icon: Icon(
+                                IconsaxPlusBold.play_circle,
+                                color: AppColors.primaryColor,
+                              ),
+                            ),
+                            SizedBox(),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                ),
+                ],
               ),
-              Expanded(
-                flex: 1,
+              Positioned(
+                left: 15,
+                top: 0,
                 child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  color: AppColors.backgroundColorDark,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              Source urlSource =
-                                  UrlSource(widget.conversationAudioFile);
-                              audioPlayer.play(urlSource);
-                            },
-                            icon: Icon(
-                              Icons.volume_down_rounded,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        width: 1,
+                      Icon(Iconsax.book, size: 18),
+                      SizedBox(width: 5.0),
+                      Text(
+                        'Tap on Mic & Read',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
@@ -260,6 +276,8 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
     );
   }
 
+  PageController _pageController = PageController();
+
   @override
   Widget build(BuildContext context) {
     final username =
@@ -268,124 +286,126 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: AppColors.backgroundColorDark,
         appBar: AppBar(
-          backgroundColor: AppColors.primaryCardColor,
+          // backgroundColor: AppColors.primaryCardColor,
           title: Text(
             widget.discusTitle,
             style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-            ),
+                fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
           ),
           centerTitle: true,
         ),
-        body: Column(
-          children: [
-            /*Top*/
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: _conversationComponents,
+        body: Container(
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            children: [
+              /*Top*/
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: _conversationComponents /*.reversed.toList()*/,
+                  ),
                 ),
               ),
-            ),
 
-            /*BottomControl*/
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: AppColors.primaryCardColor,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(80),
-                  topLeft: Radius.circular(80),
+              /*BottomControl*/
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: AppColors.primaryCardColor,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(80),
+                    topLeft: Radius.circular(80),
+                  ),
                 ),
-              ),
-              padding: const EdgeInsets.all(5.0),
-              child: Column(
-                children: [
-                  /* SEND / VOICE */
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      /*Expanded(
-                        flex: 1,
-                        child: SizedBox(
-                          width: 20,
-                        ),
-                      ),*/
-                      Flexible(
-                        flex: 2,
-                        child: AvatarGlow(
-                          animate: _isRecording,
-                          curve: Curves.fastOutSlowIn,
-                          glowColor: AppColors.primaryColor,
-                          duration: const Duration(milliseconds: 1000),
-                          repeat: true,
-                          glowRadiusFactor: 1,
-                          child: Container(
-                            margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-                            child: IconButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: _isRecording == false
-                                    ? Colors.white
-                                    : AppColors.primaryColor,
-                                elevation: 4,
-                              ),
-                              onPressed: () async {
-                                // Add your logic to send the message
-                                if (!_isRecording) {
-                                  await startRecording();
-                                } else {
-                                  await stopRecording();
-                                }
-                                setState(() {});
-                              },
-                              icon: Container(
-                                padding: EdgeInsets.all(20),
-                                child: Icon(
-                                  _isRecording == false
-                                      ? Icons.keyboard_voice_rounded
-                                      : Icons.stop_rounded,
-                                  color: _isRecording == false
-                                      ? AppColors.primaryColor
-                                      : Colors.white,
-                                  size: 30,
+                padding: const EdgeInsets.all(5.0),
+                child: Column(
+                  children: [
+                    /* SEND / VOICE */
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        /*Expanded(
+                          flex: 1,
+                          child: SizedBox(
+                            width: 20,
+                          ),
+                        ),*/
+                        Flexible(
+                          flex: 2,
+                          child: AvatarGlow(
+                            animate: _isRecording,
+                            curve: Curves.fastOutSlowIn,
+                            glowColor: AppColors.primaryColor,
+                            duration: const Duration(milliseconds: 1000),
+                            repeat: true,
+                            glowRadiusFactor: 1,
+                            child: Container(
+                              margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                              child: IconButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: _isRecording == false
+                                      ? Colors.white
+                                      : AppColors.primaryColor,
+                                  elevation: 4,
+                                ),
+                                onPressed: () async {
+                                  // Add your logic to send the message
+                                  if (!_isRecording) {
+                                    await startRecording();
+                                  } else {
+                                    await stopRecording();
+                                  }
+                                  setState(() {});
+                                },
+                                icon: Container(
+                                  padding: EdgeInsets.all(20),
+                                  child: Icon(
+                                    _isRecording == false
+                                        ? Icons.keyboard_voice_rounded
+                                        : Icons.stop_rounded,
+                                    color: _isRecording == false
+                                        ? AppColors.primaryColor
+                                        : Colors.white,
+                                    size: 30,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      /*Expanded(
-                        flex: 1,
-                        child: Container(
-                          margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primaryColor,
-                            ),
-                            onPressed: () {},
-                            child: const Text(
-                              "Next",
-                              style: TextStyle(color: Colors.white),
+                        /*Expanded(
+                          flex: 1,
+                          child: Container(
+                            margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primaryColor,
+                              ),
+                              onPressed: () {},
+                              child: const Text(
+                                "Next",
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ),
-                        ),
-                      ),*/
-                    ],
-                  ),
-                  Text(
-                    "You have to say the Text ${widget.actorName} is saying",
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
+                        ),*/
+                      ],
                     ),
-                  ),
-                ],
+                    Text(
+                      "You have to say the Text ${widget.actorName} is saying",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         // bottomSheet: BottomSection(),
       ),
@@ -487,7 +507,8 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
         String aiDialogText = doGuidedConversationProvider
                 .guidedConversationResponse!.conversationEn ??
             "";
-        // String userAudio = doGuidedConversationProvider.guidedConversationResponse!.userAudio!;
+        String userAudio =
+            doGuidedConversationProvider.guidedConversationResponse!.fileLoc!;
         double accuracyScore = doGuidedConversationProvider
                 .guidedConversationResponse!.accuracyScore ??
             0.0;
@@ -539,141 +560,225 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
         _discussionTopic = discussionTopic.toString();
         _discusTitle = discusTitle.toString();
 
-        Source urlSource = UrlSource(aiDialogAudio);
-        audioPlayer.play(urlSource);
+        /*Source urlSource = UrlSource(aiDialogAudio);
+        audioPlayer.play(urlSource);*/
         return Container(
           width: MediaQuery.of(context).size.width,
           padding: EdgeInsets.all(5.0),
           child: Column(
             children: [
-              /*UserRow*/
-              userText != ""
-                  ? Column(
+              /*Ai Row*/
+              aiDialogText != ""
+                  ? Stack(
                       children: [
-                        /*USERNAME*/
-                        Row(
+                        Column(
                           children: [
-                            Expanded(
-                              flex: 8,
-                              child: Container(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: Container(
-                                        margin: EdgeInsets.fromLTRB(
-                                            5.0, 0.0, 5.0, 5.0),
-                                        child: Image.asset(
-                                          "assets/images/profile_chat.png",
-                                          height: 30,
-                                          width: 30,
+                            /*Content*/
+                            Container(
+                              margin: const EdgeInsets.all(10.0),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12.0),
+                                color: AppColors.backgroundColorDark
+                                    .withOpacity(0.3),
+                                border:
+                                    Border.all(width: 1.0, color: Colors.white),
+                              ),
+                              padding: EdgeInsets.all(10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${aiDialogText}",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        fontSize: 20.0),
+                                  ),
+                                  SizedBox(height: 20.0),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Bangla: ",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Expanded(
+                                        child: Text(
+                                          "${aiTranslation}",
+                                          style: TextStyle(
+                                              color: Colors.white70,
+                                              fontSize: 16),
+                                          // style: TextStyle(fontFamily: "Mina"),
                                         ),
                                       ),
-                                    ),
-                                    Expanded(
-                                      flex: 7,
-                                      child: Text(
-                                        userName,
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      IconButton(
+                                        style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                Colors.white.withOpacity(0.2)),
+                                        onPressed: () {
+                                          Source urlSource =
+                                              UrlSource(aiDialogAudio);
+                                          audioPlayer.play(urlSource);
+                                        },
+                                        icon: Icon(
+                                          IconsaxPlusBold.play_circle,
+                                          color: Colors.white,
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        /*content*/
-                        Row(
-                          children: [
-                            Flexible(
-                              flex: 6,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                  color:
-                                      AppColors.secondaryColor.withOpacity(0.3),
-                                ),
-                                padding: EdgeInsets.all(10.0),
-                                child: Text(
-                                  "$userText ( $userTranslation )",
-                                ),
-                              ),
-                            ),
-                            Flexible(
-                              flex: 1,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      /*Source urlSource =
-                                        UrlSource(aiDialogAudio);
-                                    audioPlayer.play(urlSource);*/
-                                    },
-                                    icon: Icon(
-                                      Icons.volume_down_rounded,
-                                      color: Colors.white,
-                                    ),
+                                      SizedBox(),
+                                    ],
                                   ),
                                 ],
                               ),
                             ),
                           ],
                         ),
-                        /*FEEDBACK*/
-                        Container(
-                          padding:
-                              const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 5.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _isFeedbackLoading = true;
-                                  });
-                                  fetchDataAndShowBottomSheet(userText, "F")
-                                      .whenComplete(() {
-                                    setState(() {
-                                      _isFeedbackLoading = false;
-                                    });
-                                  });
-                                },
-                                child: Text(
-                                  "Feedback",
+                        Positioned(
+                          left: 15,
+                          top: 0,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10.0),
+                            color: AppColors.backgroundColorDark,
+                            child: Row(
+                              children: [
+                                Icon(Iconsax.book, size: 18),
+                                SizedBox(width: 5.0),
+                                Text(
+                                  'Tap on Mic & Read',
                                   style: TextStyle(
-                                    color: AppColors.primaryColor,
+                                    color: Colors.white,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : SizedBox(
+                      width: 2,
+                    ),
+              /*UserRow*/
+              userText != ""
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        /*USERNAME*/
+                        const Padding(
+                          padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 10.0),
+                          child: Text(
+                            "Your Response: ",
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
+                        /*content*/
+                        Container(
+                          width: double.infinity,
+                          margin: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.0),
+                            color: AppColors.primaryColor2.withOpacity(0.3),
+                          ),
+                          padding: EdgeInsets.all(10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "$userText \n( $userTranslation )",
                               ),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _isFeedbackLoading = true;
-                                  });
-                                  ShowInfoDialog(
-                                      userText,
-                                      accuracyScore,
-                                      fluencyScore,
-                                      completenessScore,
-                                      prosodyScore,
-                                      words);
-                                  /*fetchDataAndShowBottomSheet(userText, "F")
-                                  .whenComplete(() {
-                                setState(() {
-                                  _isFeedbackLoading = false;
-                                });
-                              });*/
-                                },
-                                child: Text(
-                                  "Check Accuracy",
-                                  style: TextStyle(
-                                    color: AppColors.secondaryColor,
-                                    fontWeight: FontWeight.bold,
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  IconButton(
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            Colors.white.withOpacity(0.2)),
+                                    onPressed: () {
+                                      Source urlSource = UrlSource(userAudio);
+                                      audioPlayer.play(urlSource);
+                                    },
+                                    icon: Icon(
+                                      IconsaxPlusBold.play_circle,
+                                      color: AppColors.primaryColor,
+                                    ),
                                   ),
+                                  SizedBox(),
+                                ],
+                              ),
+                              /*FEEDBACK & Accuracy*/
+                              Container(
+                                padding: const EdgeInsets.fromLTRB(
+                                    10.0, 10.0, 10.0, 0.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            Colors.white.withOpacity(0.3),
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _isFeedbackLoading = true;
+                                        });
+                                        fetchDataAndShowBottomSheet(
+                                                userText, "F")
+                                            .whenComplete(() {
+                                          setState(() {
+                                            _isFeedbackLoading = false;
+                                          });
+                                        });
+                                      },
+                                      child: const Text(
+                                        "Check Grammar",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                            Colors.white.withOpacity(0.3),
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _isFeedbackLoading = true;
+                                        });
+                                        ShowInfoDialog(
+                                            userText,
+                                            accuracyScore,
+                                            fluencyScore,
+                                            completenessScore,
+                                            prosodyScore,
+                                            words);
+                                      },
+                                      child: Text(
+                                        "Check Pronunciation",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
@@ -690,100 +795,6 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
                       child: Text("Couldn\'t capture your voice"),
                     ),
               SizedBox(height: 10.0),
-              /*Ai Row*/
-              aiDialogText != ""
-                  ? Column(
-                      children: [
-                        /*AI_NAME*/
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 7,
-                              child: Container(
-                                padding: EdgeInsets.all(5.0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: Container(
-                                        margin: EdgeInsets.fromLTRB(
-                                            5.0, 0.0, 5.0, 5.0),
-                                        child: Image.asset(
-                                          "assets/images/risho_guru_icon.png",
-                                          height: 30,
-                                          width: 30,
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 7,
-                                      child: Text(
-                                        widget.actorName,
-                                        // style: TextStyle(fontFamily: "Mina"),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        /*Content*/
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 6,
-                              child: Container(
-                                padding: EdgeInsets.all(5.0),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                        color: AppColors.primaryColor
-                                            .withOpacity(0.3),
-                                      ),
-                                      padding: EdgeInsets.all(10.0),
-                                      child: Text(
-                                        "$aiDialogText ( $aiTranslation )",
-                                        // style: TextStyle(fontFamily: "Mina"),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Container(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {
-                                        Source urlSource =
-                                            UrlSource(aiDialogAudio);
-                                        audioPlayer.play(urlSource);
-                                      },
-                                      icon: const Icon(
-                                        Icons.volume_down_rounded,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    )
-                  : SizedBox(
-                      width: 2,
-                    ),
             ],
           ),
         );

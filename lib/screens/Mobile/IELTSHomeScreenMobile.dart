@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
@@ -375,51 +377,73 @@ class _IELTSHomeScreenMobileState extends State<IELTSHomeScreenMobile> {
                     color: AppColors.backgroundColorDark,
                     borderRadius: BorderRadius.circular(12.0),
                   ),
-                  child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Stack(
                     children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            category.courseTitle,
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
-                          ),
+                      Positioned(
+                        top: 0,
+                        child: Image.asset(
+                          "assets/images/background_contents/colorful-abstract-sculpture.png",
+                          fit: BoxFit.fill,
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => IeltsCourseLessonListScreen(
-                                courseId: category.courseId,
-                                courseTitle: category.courseTitle,
+                      Positioned(
+                        child: BackdropFilter(
+                          // blendMode: BlendMode.exclusion,
+                          filter: ImageFilter.blur(
+                            sigmaX: 20,
+                            sigmaY: 20,
+                          ),
+                          child: SizedBox(),
+                        ),
+                      ),
+                      Column(
+                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                category.courseTitle,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
-                          );
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(10.0),
-                          decoration: const BoxDecoration(
-                              color: AppColors.primaryColor2,
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(12.0),
-                                bottomRight: Radius.circular(12.0),
-                              )),
-                          child: const Text(
-                            "Start Now",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0),
-                            textAlign: TextAlign.center,
                           ),
-                        ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      IeltsCourseLessonListScreen(
+                                    courseId: category.courseId,
+                                    courseTitle: category.courseTitle,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(10.0),
+                              decoration: const BoxDecoration(
+                                  color: AppColors.primaryColor2,
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(12.0),
+                                    bottomRight: Radius.circular(12.0),
+                                  )),
+                              child: const Text(
+                                "Start Now",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.0),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

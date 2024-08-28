@@ -214,6 +214,123 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                   ),
 
                   /*Conversation Card*/
+
+                  /*Practice Daily lesson*/
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(8.0, 5.0, 8.0, 5.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        // double audioRemains = subscriptionStatusProvider.audioRemains;
+                        double audioRemains =
+                            Provider.of<SubscriptionStatusProvider>(context,
+                                    listen: false)
+                                .audioRemains;
+                        // debugPrint(audioRemains.toString());
+                        if (audioRemains > 0.0) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const PracticeGuidedScreen(
+                                      screenName: 'PDL',
+                                    )),
+                          );
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Minute expired'),
+                              content: const Text(
+                                  'You have no audio minutes remaining. Please purchase more.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: const Text(
+                                    'OK',
+                                    style: TextStyle(
+                                        color: AppColors.secondaryColor),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const PackagesScreen()),
+                                  ),
+                                  child: const Text(
+                                    'Purchase',
+                                    style: TextStyle(
+                                        color: AppColors.primaryColor),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                      },
+                      child: Card(
+                        color: Colors.redAccent,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                BorderRadius.circular(8.0), // Adjust as needed
+                            gradient: LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              colors: [
+                                Colors.transparent,
+                                // Start with a transparent color
+                                Colors.white.withOpacity(0.3),
+                                // Adjust opacity as needed
+                              ],
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "Start Speaking",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "Practice speaking on real life scenarios with AI ",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Image.asset(
+                                  "assets/images/card_images/practice_guided.png",
+                                  fit: BoxFit.contain,
+                                  height: 120,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
                   /*IMPROVE PRONUNCIATION / Speech Trainer*/
                   Container(
                     margin: const EdgeInsets.fromLTRB(8.0, 5.0, 8.0, 5.0),
@@ -317,122 +434,6 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                                 flex: 1,
                                 child: Image.asset(
                                   "assets/images/card_images/improve_speaking.png",
-                                  fit: BoxFit.contain,
-                                  height: 120,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  /*Practice Daily lesson*/
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(8.0, 5.0, 8.0, 5.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        // double audioRemains = subscriptionStatusProvider.audioRemains;
-                        double audioRemains =
-                            Provider.of<SubscriptionStatusProvider>(context,
-                                    listen: false)
-                                .audioRemains;
-                        // debugPrint(audioRemains.toString());
-                        if (audioRemains > 0.0) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const PracticeGuidedScreen(
-                                      screenName: 'PDL',
-                                    )),
-                          );
-                        } else {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('Minute expired'),
-                              content: const Text(
-                                  'You have no audio minutes remaining. Please purchase more.'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(),
-                                  child: const Text(
-                                    'OK',
-                                    style: TextStyle(
-                                        color: AppColors.secondaryColor),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const PackagesScreen()),
-                                  ),
-                                  child: const Text(
-                                    'Purchase',
-                                    style: TextStyle(
-                                        color: AppColors.primaryColor),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                      },
-                      child: Card(
-                        color: Colors.redAccent,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(8.0), // Adjust as needed
-                            gradient: LinearGradient(
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                              colors: [
-                                Colors.transparent,
-                                // Start with a transparent color
-                                Colors.white.withOpacity(0.3),
-                                // Adjust opacity as needed
-                              ],
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Text(
-                                        "Practice Daily Lesson",
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    const Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Text(
-                                        "Practice speaking on real life scenarios with AI ",
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Image.asset(
-                                  "assets/images/card_images/practice_guided.png",
                                   fit: BoxFit.contain,
                                   height: 120,
                                 ),
