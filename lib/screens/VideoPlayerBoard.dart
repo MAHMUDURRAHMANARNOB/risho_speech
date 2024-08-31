@@ -8,7 +8,7 @@ class VideoPlayerBoard extends StatefulWidget {
   final String videoUrl;
   final String videoTitle;
   final String isVideo;
-  final String lessonContentId;
+  final int lessonContentId;
 
   const VideoPlayerBoard(
       {super.key,
@@ -42,7 +42,7 @@ class _VideoPlayerBoardState extends State<VideoPlayerBoard> {
           videoUrl: widget.videoUrl,
           videoTitle: widget.videoTitle,
           isVideo: widget.isVideo,
-          lessonContentId: widget.lessonContentId,
+          lessonContentId: widget.lessonContentId.toString(),
         ),
       ),
     );

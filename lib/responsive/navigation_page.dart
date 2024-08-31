@@ -192,12 +192,13 @@ class _NavigationPageState extends State<NavigationPage> {
           ),
         ),
         bottomNavigationBar: NavigationBar(
-          height: 60,
+          // height: 60,
+          indicatorColor: AppColors.primaryColor.withOpacity(0.2),
           backgroundColor: AppColors.backgroundColorDark,
           destinations: destinationsMobile,
           onDestinationSelected: _onItemTapped,
           selectedIndex: _selectedMobileIndex,
-          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         ),
       ),
     );
@@ -267,7 +268,7 @@ class _NavigationPageState extends State<NavigationPage> {
         return HomeScreen();
         break;
       case 1:
-        return IELTSHoneScreen();
+        return IELTSHomeScreen();
         break;
       case 2:
         return ProfileScreen();
@@ -285,7 +286,7 @@ class _NavigationPageState extends State<NavigationPage> {
         return HomeScreen();
         break;
       case 1:
-        return IELTSHoneScreen();
+        return IELTSHomeScreen();
         break;
       case 2:
         return ProfileScreen();

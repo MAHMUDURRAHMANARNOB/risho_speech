@@ -1037,4 +1037,35 @@ class ApiService {
       throw Exception('Failed to load courses');
     }
   }
+
+  /*IELTS Video Answer Provider*/
+  Future<Map<String, dynamic>> getIeltsLessonReply(
+    int lessoncontentID,
+    String Question,
+    String userid,
+    String isVideo,
+    String? sessionID,
+  ) async {
+    const uri = "$baseUrl/getieltslessonreply";
+    final Map<String, String> body = {
+      'lessoncontentID': lessoncontentID.toString(),
+      'Question': Question.toString(),
+      'userid': userid.toString(),
+      'isVideo': isVideo.toString(),
+      'sessionID': sessionID.toString(),
+    };
+    final response = await http.post(
+      Uri.parse(uri),
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+      var responseBody = await response.body;
+      // print("hello course lesson list:${json.decode(responseBody)}");
+      var finalResponse = Utf8Decoder().convert(response.bodyBytes);
+      return json.decode(finalResponse);
+    } else {
+      throw Exception('Failed to load courses');
+    }
+  }
 }

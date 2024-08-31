@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 import 'package:risho_speech/providers/IeltsCourseListProvider.dart';
+import 'package:risho_speech/providers/IeltsCourseVideoAnsProvider.dart';
 import 'package:risho_speech/providers/IeltsVocabularyCategoryListProvider.dart';
 import 'package:risho_speech/providers/IeltsVocabularyListProvider.dart';
 import 'package:risho_speech/providers/VocabularyDialogListProvider.dart';
@@ -72,6 +73,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => IeltsCourseListProvider()),
         ChangeNotifierProvider(
             create: (context) => IeltsVocabularyCategoryListProvider()),
+        ChangeNotifierProvider(create: (context) => IeltsLessonReplyProvider()),
         ChangeNotifierProvider(
             create: (context) => IeltsVocabularyListProvider()),
         ChangeNotifierProvider(

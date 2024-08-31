@@ -4,14 +4,14 @@ import 'package:risho_speech/screens/tablet/IELTSHomeScreenTablet.dart';
 
 import '../responsive/responsive_layout.dart';
 
-class IELTSHoneScreen extends StatefulWidget {
-  const IELTSHoneScreen({super.key});
+class IELTSHomeScreen extends StatefulWidget {
+  const IELTSHomeScreen({super.key});
 
   @override
-  State<IELTSHoneScreen> createState() => _IELTSHoneScreenState();
+  State<IELTSHomeScreen> createState() => _IELTSHomeScreenState();
 }
 
-class _IELTSHoneScreenState extends State<IELTSHoneScreen> {
+class _IELTSHomeScreenState extends State<IELTSHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

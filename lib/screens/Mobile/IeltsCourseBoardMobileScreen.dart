@@ -163,7 +163,7 @@ class _IeltsCourseBoardMobileScreenState
                       videoUrl: video.videoUrl,
                       videoTitle: video.videoTitle,
                       isVideo: "Y",
-                      lessonContentId: video.videoId.toString())),
+                      lessonContentId: video.videoId)),
             );
           },
           child: Container(
