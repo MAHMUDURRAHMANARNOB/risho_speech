@@ -9,9 +9,11 @@ import 'package:provider/provider.dart';
 import 'package:risho_speech/screens/SpeakingTestReportScreen.dart';
 import 'package:risho_speech/ui/colors.dart';
 import 'package:record/record.dart';
+import '../../models/speakingExamDataModel.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/speakingExamProvider.dart';
 import '../../utils/audio_related/audio_visualized.dart';
+import '../Common/AiEmotionWidget.dart';
 
 class IeltsSpeakingExamScreenMobile extends StatefulWidget {
   const IeltsSpeakingExamScreenMobile({super.key});
@@ -34,7 +36,10 @@ class _IeltsSpeakingExamScreenMobileState
     super.initState();
     _audioPlayer = AudioPlayer();
     audioRecord = Record();
-    _fetchExamData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchExamData();
+    });
+    // _fetchExamData();
   }
 
   late int examID;
@@ -42,8 +47,10 @@ class _IeltsSpeakingExamScreenMobileState
   late String? examAudio;
   late String? cueCardTopic;
   late int examStage = 1;
-  late String isFemale;
+  late String isFemale = "F";
   double _amplitude = 0.0;
+
+  bool _isAiListening = false;
 
   Future<void> _fetchExamData() async {
     userId = Provider.of<AuthProvider>(context, listen: false).user?.id ?? 1;
@@ -66,16 +73,20 @@ class _IeltsSpeakingExamScreenMobileState
     // Play audio once data is fetched and audio URL is available
     if (response['errorcode'] == 200 &&
         speakingExamProvider.examResponse != null &&
-        speakingExamProvider.examResponse!.aiDialogAudio.isNotEmpty) {
+        speakingExamProvider.examResponse!.aiDialogAudio!.isNotEmpty) {
       examID = speakingExamProvider.examResponse!.examId;
       examAudio = speakingExamProvider.examResponse!.aiDialogAudio;
       cueCardTopic = speakingExamProvider.examResponse!.cueCardTopics;
       examStage = speakingExamProvider.examResponse!.examStage;
       isFemale = speakingExamProvider.examResponse!.isFemale;
 
-      _audioPlayer.setUrl(examAudio!);
+      /*_audioPlayer.setUrl(examAudio!);
       _audioPlayer.play();
-      _startListeningToAudio();
+      _startListeningToAudio();*/
+      if (speakingExamProvider.examResponse!.aiDialogAudio != null) {
+        speakingExamProvider.playAudioFromURL(
+            speakingExamProvider.examResponse!.aiDialogAudio!);
+      }
     }
   }
 
@@ -91,6 +102,8 @@ class _IeltsSpeakingExamScreenMobileState
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -102,7 +115,11 @@ class _IeltsSpeakingExamScreenMobileState
       body: Consumer<IeltsSpeakingExamProvider>(
         builder: (context, provider, child) {
           if (provider.examResponse == null) {
-            return Center(child: CircularProgressIndicator());
+            return Center(
+              child: CircularProgressIndicator(
+                color: AppColors.primaryColor,
+              ),
+            );
           }
 
           return Container(
@@ -111,18 +128,20 @@ class _IeltsSpeakingExamScreenMobileState
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
+                // Stage Determiner
+                Text(
+                  "Part - ${examStage}",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: screenHeight * 0.04,
+                  ),
+                ),
+                SizedBox(height: screenHeight * 0.02),
                 Expanded(
                   flex: 1,
                   child: Column(
                     children: [
-                      // Stage Determiner
-                      Text(
-                        "Stage - ${examStage}",
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 20.0),
-
                       // Cue Card Topic -- Only visible for stage 2
                       if (provider.examResponse!.examStage == 2)
                         Container(
@@ -132,19 +151,20 @@ class _IeltsSpeakingExamScreenMobileState
                             color: AppColors.vocabularyCatCardColor,
                           ),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
+                              Text(
                                 "Cue Card Topic",
                                 style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Colors.white,
+                                    fontSize: screenHeight * 0.016,
+                                    color: AppColors.primaryColor,
                                     fontWeight: FontWeight.bold),
                               ),
-                              const SizedBox(height: 20.0),
+                              SizedBox(height: screenHeight * 0.02),
                               Visibility(
                                 visible: cueCardTopic != null,
                                 child: Container(
-                                  height: 80.0,
+                                  height: screenHeight * 0.10,
                                   child: MarkdownWidget(
                                     data: cueCardTopic!,
                                   ),
@@ -153,11 +173,10 @@ class _IeltsSpeakingExamScreenMobileState
                             ],
                           ),
                         ),
-                      SizedBox(height: 10.0),
                     ],
                   ),
                 ),
-                Expanded(
+                /*Expanded(
                   flex: 1,
                   child: Column(
                     children: [
@@ -170,6 +189,27 @@ class _IeltsSpeakingExamScreenMobileState
                       ),
                     ],
                   ),
+                ),*/
+                SizedBox(height: screenHeight * 0.04),
+                Consumer<IeltsSpeakingExamProvider>(
+                  builder: (context, provider, _) {
+                    return Column(
+                      children: [
+                        AiEmotionWidget(
+                          // Use the AiEmotionWidget
+                          isAiSaying: provider.isAiSaying,
+                          isAiAnalyzing: provider.isAiAnalyging,
+                          isAiListening: _isAiListening,
+                          isAiWaiting: provider.isAiWaiting,
+                          AIName: "Trainer",
+                          AIGander: isFemale,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+                SizedBox(
+                  height: screenHeight * 0.01,
                 ),
                 Expanded(
                   flex: 1,
@@ -184,8 +224,8 @@ class _IeltsSpeakingExamScreenMobileState
                             elevation: 4,
                           ),
                           onPressed: _startRecording,
-                          icon: Padding(
-                            padding: const EdgeInsets.all(20.0),
+                          icon: const Padding(
+                            padding: EdgeInsets.all(20.0),
                             child: Icon(
                               Iconsax.microphone,
                               color: Colors.white,
@@ -207,8 +247,8 @@ class _IeltsSpeakingExamScreenMobileState
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: AppColors.primaryColor),
                                 onPressed: _pauseRecording,
-                                icon: Padding(
-                                  padding: const EdgeInsets.all(20.0),
+                                icon: const Padding(
+                                  padding: EdgeInsets.all(20.0),
                                   child: Icon(
                                     Iconsax.stop,
                                     color: Colors.white,
@@ -231,26 +271,26 @@ class _IeltsSpeakingExamScreenMobileState
                             ),
                           ],
                         ),
-                      SizedBox(height: 20.0),
-                      //   Cancel Test
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.redAccent,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 50,
-                            vertical: 15,
-                          ),
-                        ),
-                        onPressed: _cancelTest,
-                        child: Text(
-                          "Cancel Test",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20),
-                        ),
-                      ),
+                      SizedBox(height: screenHeight * 0.02),
                     ],
+                  ),
+                ),
+                //   Cancel Test
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.redAccent,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 50,
+                      vertical: 15,
+                    ),
+                  ),
+                  onPressed: _cancelTest,
+                  child: Text(
+                    "Cancel Test",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20),
                   ),
                 ),
               ],
@@ -265,7 +305,7 @@ class _IeltsSpeakingExamScreenMobileState
     audioRecord.start();
     setState(() {
       _isRecording = true;
-
+      _isAiListening = true;
       // Start recording logic here
     });
   }
@@ -277,6 +317,7 @@ class _IeltsSpeakingExamScreenMobileState
       _audioPath = path;
       _recordedFile = File(_audioPath!);
       print(_audioPath);
+      _isAiListening = false;
 
       // _isAiListening = false;
 
@@ -298,15 +339,15 @@ class _IeltsSpeakingExamScreenMobileState
     );
 
     if (response['errorcode'] == 200 &&
-        speakingExamProvider.examResponse != null &&
-        speakingExamProvider.examResponse!.aiDialogAudio.isNotEmpty) {
+        speakingExamProvider.examResponse != null) {
       if (response['report'] != null) {
         // Navigate to the ReportScreen to show the full report
+        final report = Report.fromJson(response['report']);
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => SpeakingTestReportScreen(
-              report: response['report'],
+              report: report,
             ),
           ),
         );
@@ -317,9 +358,13 @@ class _IeltsSpeakingExamScreenMobileState
         examStage = speakingExamProvider.examResponse!.examStage;
         isFemale = speakingExamProvider.examResponse!.isFemale;
 
-        _audioPlayer.setUrl(examAudio!);
+        /*_audioPlayer.setUrl(examAudio!);
         _audioPlayer.play();
-        _startListeningToAudio();
+        _startListeningToAudio();*/
+        if (speakingExamProvider.examResponse!.aiDialogAudio != null) {
+          speakingExamProvider.playAudioFromURL(
+              speakingExamProvider.examResponse!.aiDialogAudio!);
+        }
       }
     }
   }
