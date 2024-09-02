@@ -310,12 +310,12 @@ class _IELTSHomeScreenMobileState extends State<IELTSHomeScreenMobile> {
                 ),
                 SizedBox(height: 10),
                 Container(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        /*IELTS Vocabulary*/
-                        GestureDetector(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      /*IELTS Vocabulary*/
+                      Expanded(
+                        child: GestureDetector(
                           onTap: () {
                             _dialogBoxForCategory("N");
                           },
@@ -327,9 +327,10 @@ class _IELTSHomeScreenMobileState extends State<IELTSHomeScreenMobile> {
                             ],
                           ),
                         ),
-                        SizedBox(width: 10.0),
-                        /*Phrase And Idioms*/
-                        GestureDetector(
+                      ),
+                      /*Phrase And Idioms*/
+                      Expanded(
+                        child: GestureDetector(
                           onTap: () {
                             _dialogBoxForCategory("Y");
                           },
@@ -341,17 +342,8 @@ class _IELTSHomeScreenMobileState extends State<IELTSHomeScreenMobile> {
                             ],
                           ),
                         ),
-                        SizedBox(width: 10.0),
-                        /*Custom Practice*/
-                        vocabularyContainers(
-                          title: "Custom&Practice",
-                          gradientColors: [
-                            Color.fromRGBO(26, 136, 204, 1),
-                            Color.fromRGBO(43, 50, 178, 1)
-                          ],
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
 
@@ -367,22 +359,37 @@ class _IELTSHomeScreenMobileState extends State<IELTSHomeScreenMobile> {
                           fontWeight: FontWeight.bold,
                           fontSize: 20),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const IeltsCourseScreen()),
-                        );
-                      },
-                      child: const Text(
-                        "View all",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          decoration: TextDecoration.underline,
+                    Column(
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const IeltsCourseScreen()),
+                            );
+                          },
+                          child: Row(
+                            children: [
+                              const Text(
+                                "View all",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  // decoration: TextDecoration.underline,
+                                ),
+                              ),
+                              Image.asset(
+                                "assets/images/right_arrow.gif",
+                                width: 30,
+                                height: 50,
+                                color: AppColors.primaryColor,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ],
                 ),
@@ -637,16 +644,15 @@ class vocabularyContainers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 150,
-      height: 100,
-      padding: EdgeInsets.all(10),
+      margin: EdgeInsets.symmetric(horizontal: 8.0),
+      padding: EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: gradientColors,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(20)),
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

@@ -7,6 +7,7 @@ import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 import 'package:risho_speech/screens/CallingAgentScreen.dart';
+import 'package:risho_speech/screens/IeltsAssistantScreen.dart';
 import 'package:risho_speech/screens/Mobile/IELTSHomeScreenMobile.dart';
 import 'package:risho_speech/screens/PracticeGuidedScreen.dart';
 import 'package:risho_speech/screens/VocabularyCategoryScreen.dart';
@@ -198,31 +199,35 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                             }
                           },
                         ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primaryColor,
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const PackagesScreen()),
-                            );
-                          },
-                          child: const Text(
-                            "Add Minutes",
-                            style: TextStyle(color: Colors.white),
+                        Container(
+                          margin: EdgeInsets.only(right: 5.0),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryColor,
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const PackagesScreen()),
+                              );
+                            },
+                            child: const Text(
+                              "Add Minutes",
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
 
-                  /*Conversation Card*/
+                  const SizedBox(height: 3.0),
 
                   /*Practice Daily lesson*/
                   Container(
-                    margin: const EdgeInsets.fromLTRB(8.0, 5.0, 8.0, 5.0),
+                    margin: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: GestureDetector(
                       onTap: () {
                         // double audioRemains = subscriptionStatusProvider.audioRemains;
@@ -335,10 +340,11 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 3.0),
 
                   /*IMPROVE PRONUNCIATION / Speech Trainer*/
                   Container(
-                    margin: const EdgeInsets.fromLTRB(8.0, 5.0, 8.0, 5.0),
+                    margin: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: GestureDetector(
                       onTap: () {
                         double audioRemains =
@@ -449,10 +455,10 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                       ),
                     ),
                   ),
-
+                  const SizedBox(height: 3.0),
                   /*IELTS*/
                   Container(
-                    margin: const EdgeInsets.fromLTRB(8.0, 5.0, 8.0, 5.0),
+                    margin: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: GestureDetector(
                       onTap: () {
                         double audioRemains =
@@ -561,201 +567,230 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                     ),
                   ),
 
-                  /*Vocabulary*/
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.all(2.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        VocabularyCategoryScreen()),
-                              );
-                            },
-                            child: Card(
-                              color: AppColors.backgroundColorDark,
-                              child: Container(
-                                padding: EdgeInsets.all(10.0),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomLeft,
-                                    colors: [
-                                      Colors.transparent,
-                                      // Start with a transparent color
-                                      Colors.cyan.withOpacity(0.5),
-                                      // Adjust opacity as needed
-                                    ],
-                                  ),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          child: const Text(
-                                            "Practice \nVocabulary",
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          padding: EdgeInsets.all(10.0),
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.cyan.withOpacity(0.3),
-                                          ),
-                                          child: const Icon(
-                                            IconsaxPlusBold.book,
-                                            color: Colors.lightBlueAccent,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10.0),
-                                    const Text(
-                                      "Interactive Vocabulary Training",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      /*Call*/
-                      Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.all(2.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              double audioRemains =
-                                  Provider.of<SubscriptionStatusProvider>(
-                                          context,
-                                          listen: false)
-                                      .audioRemains;
-                              if (audioRemains > 0.0) {
+                  const SizedBox(height: 3.0),
+                  /*Vocabulary + Calling Section*/
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            margin: const EdgeInsets.all(0),
+                            child: GestureDetector(
+                              onTap: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          CallingAgentScreen()),
+                                          VocabularyCategoryScreen()),
                                 );
-                              } else {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: const Text('Minute expired'),
-                                    content: const Text(
-                                        'You have no audio minutes remaining. Please purchase more.'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.of(context).pop(),
-                                        child: const Text(
-                                          'OK',
-                                          style: TextStyle(
-                                              color: AppColors.secondaryColor),
-                                        ),
-                                      ),
-                                      TextButton(
-                                        onPressed: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const PackagesScreen()),
-                                        ),
-                                        child: const Text(
-                                          'Purchase',
-                                          style: TextStyle(
-                                              color: AppColors.primaryColor),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }
-                            },
-                            child: Card(
-                              color: AppColors.backgroundColorDark,
-                              child: Container(
-                                padding: EdgeInsets.all(10.0),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomLeft,
-                                    colors: [
-                                      Colors.transparent,
-                                      // Start with a transparent color
-                                      Colors.purple.withOpacity(1),
-                                      // Adjust opacity as needed
-                                    ],
-                                  ),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        const Expanded(
-                                          child: Text(
-                                            "Practice\nConversation",
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.all(10.0),
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.purpleAccent
-                                                .withOpacity(0.3),
-                                          ),
-                                          child: const Icon(
-                                            IconsaxPlusBold.call,
-                                            color: Colors.purpleAccent,
-                                          ),
-                                        ),
+                              },
+                              child: Card(
+                                color: AppColors.backgroundColorDark,
+                                child: Container(
+                                  padding: EdgeInsets.all(10.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomLeft,
+                                      colors: [
+                                        Colors.transparent,
+                                        // Start with a transparent color
+                                        Colors.cyan.withOpacity(0.5),
+                                        // Adjust opacity as needed
                                       ],
                                     ),
-                                    const SizedBox(height: 10.0),
-                                    const Text(
-                                      "Speak more to improve your fluency",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.normal,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: const Text(
+                                              "Practice \nVocabulary",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: EdgeInsets.all(10.0),
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color:
+                                                  Colors.cyan.withOpacity(0.3),
+                                            ),
+                                            child: const Icon(
+                                              IconsaxPlusBold.book,
+                                              color: Colors.lightBlueAccent,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                  ],
+                                      const SizedBox(height: 10.0),
+                                      const Text(
+                                        "Interactive Vocabulary Training",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                        /*Call*/
+                        Expanded(
+                          child: Container(
+                            margin: const EdgeInsets.all(0),
+                            child: GestureDetector(
+                              onTap: () {
+                                double audioRemains =
+                                    Provider.of<SubscriptionStatusProvider>(
+                                            context,
+                                            listen: false)
+                                        .audioRemains;
+                                if (audioRemains > 0.0) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            CallingAgentScreen()),
+                                  );
+                                } else {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: const Text('Minute expired'),
+                                      content: const Text(
+                                          'You have no audio minutes remaining. Please purchase more.'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(),
+                                          child: const Text(
+                                            'OK',
+                                            style: TextStyle(
+                                                color:
+                                                    AppColors.secondaryColor),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const PackagesScreen()),
+                                          ),
+                                          child: const Text(
+                                            'Purchase',
+                                            style: TextStyle(
+                                                color: AppColors.primaryColor),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                              },
+                              child: Card(
+                                color: AppColors.backgroundColorDark,
+                                child: Container(
+                                  padding: EdgeInsets.all(10.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomLeft,
+                                      colors: [
+                                        Colors.transparent,
+                                        // Start with a transparent color
+                                        Colors.purple.withOpacity(1),
+                                        // Adjust opacity as needed
+                                      ],
+                                    ),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const Expanded(
+                                            child: Text(
+                                              "Practice\nConversation",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                              padding:
+                                                  const EdgeInsets.all(10.0),
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.purpleAccent
+                                                    .withOpacity(0.3),
+                                              ),
+                                              child: /*Icon(
+                                              IconsaxPlusBold.call,
+                                              color: Colors.purpleAccent,
+                                            ),*/
+                                                  Image.asset(
+                                                "assets/images/card_images/practice_conv.gif",
+                                                width: 24,
+                                                height: 24,
+                                                color: Colors.purpleAccent,
+                                              )),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 10.0),
+                                      const Text(
+                                        "Speak more to improve your fluency",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => IeltsAssistantScreen(),
+              ),
+            );
+          },
+          /*foregroundColor: customizations[index].$1,
+          backgroundColor: customizations[index].$2,
+          shape: customizations[index].$3,*/
+          // mini: true,
+
+          backgroundColor: AppColors.secondaryCardColor,
+          child: Image.asset("assets/images/bot.gif", width: 30, height: 30),
         ),
       ),
     );
