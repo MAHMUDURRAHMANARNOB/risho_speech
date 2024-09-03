@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:http/http.dart' as http;
 
@@ -1066,6 +1067,61 @@ class ApiService {
       return json.decode(finalResponse);
     } else {
       throw Exception('Failed to load courses');
+    }
+  }
+
+  /*Shonod AI*/
+  Future<Map<String, dynamic>> getShonodAI(
+    String professiontitle,
+    String QuestionText,
+    String isBangla,
+    String contextArea,
+    int userid,
+    String? sessionID,
+  ) async {
+    print(
+        "$professiontitle , $QuestionText , $isBangla, $contextArea, $userid, $sessionID");
+    try {
+      final uri = Uri.parse("$baseUrl/shonodAI");
+      /*var request = http.MultipartRequest('POST', uri)
+        ..fields['professiontitle'] = professiontitle.toString()
+        ..fields['QuestionText'] = QuestionText.toString()
+        ..fields['isBangla'] = isBangla.toString()
+        ..fields['contextArea'] = contextArea.toString()
+        ..fields['userid'] = userid.toString();
+
+      if (sessionID != "") {
+        request.fields['sessionID'] = sessionID.toString();
+      }*/
+
+      final Map<String, dynamic> body = {
+        'professiontitle': professiontitle.toString(),
+        'QuestionText': QuestionText.toString(),
+        'isBangla': isBangla.toString(),
+        'contextArea': contextArea.toString(),
+        'userid': userid.toString(),
+        // 'sessionID': sessionID.toString(),
+      };
+      if (sessionID != null && sessionID.isNotEmpty) {
+        body['sessionID'] = sessionID;
+      }
+      final response = await http.post(
+        uri,
+        body: body,
+      );
+      // print(response.body.toString());
+
+      // var response = await request.send();
+      if (response.statusCode == 200) {
+        var responseBody = await response.body;
+        // print("hello course lesson list:${json.decode(responseBody)}");
+        var finalResponse = Utf8Decoder().convert(response.bodyBytes);
+        return json.decode(finalResponse);
+      } else {
+        throw Exception('Failed to load Data');
+      }
+    } catch (e) {
+      throw Exception(e.toString());
     }
   }
 }
