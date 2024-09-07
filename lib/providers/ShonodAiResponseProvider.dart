@@ -25,7 +25,19 @@ class ShonodAiResponseProvider extends ChangeNotifier {
     try {
       final response = await _apiService.getShonodAI(professiontitle,
           QuestionText, isBangla, contextArea, userid, sessionID);
-      _shonodAiResonseDataModel = ShonodAiResponseDataModel.fromJson(response);
+      if (response['errorcode'] == 200) {
+        _shonodAiResonseDataModel =
+            ShonodAiResponseDataModel.fromJson(response);
+        notifyListeners();
+      } else {
+        _shonodAiResonseDataModel = ShonodAiResponseDataModel(
+          errorCode: response['errorcode'],
+          message: response['message'],
+          answer: "",
+          sessionID: "",
+        );
+        notifyListeners();
+      }
       // print("Response from fetchSpokenLessonListResponse: $response}");
       notifyListeners();
     } catch (error) {

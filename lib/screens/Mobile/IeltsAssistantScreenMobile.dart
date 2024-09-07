@@ -312,6 +312,46 @@ class _IeltsAssistantScreenMobileState
 
             // final ticketId = response.ticketId!;
             return _buildResponseWidget(QuestionText, lessonAnswer);
+          } else if (response.errorCode == 201) {
+            return Container(
+              margin: const EdgeInsets.all(5.0),
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                color: AppColors.primaryCardColor,
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Text(
+                      "Sorry: ${shonodAiResponseProvider.spokenLessonListResponse!.message}",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryCardColor),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const PackagesScreen()),
+                        );
+                      },
+                      child: const Text(
+                        "Purchase Minutes",
+                        style: TextStyle(
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+            // return Text("${response.message}");
           } else {
             return _buildErrorWidget(message: response!.message);
           }
