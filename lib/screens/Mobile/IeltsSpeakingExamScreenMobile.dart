@@ -49,6 +49,7 @@ class _IeltsSpeakingExamScreenMobileState
   late int examStage = 1;
   late String isFemale = "F";
   double _amplitude = 0.0;
+  late String examAudioTextByAI;
 
   bool _isAiListening = false;
 

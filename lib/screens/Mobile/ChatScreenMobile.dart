@@ -622,7 +622,8 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                 child: Column(
                   children: [
                     Text(
-                      "Sorry: Server error",
+                      "Sorry: There might be some issues with your Internet connection.Please try again after sometime.",
+                      /*Server error*/
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -688,9 +689,9 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                   color: AppColors.secondaryColor.withOpacity(0.1),
                 ),
                 padding: EdgeInsets.all(10.0),
-                child: Text(
-                    doConversationProvider.conversationResponse!.message ??
-                        "404: Server Issue"),
+                child: Text(doConversationProvider
+                        .conversationResponse!.message ??
+                    "404: There might be some issues with your Internet connection.Please try again after sometime."),
               );
             }
           }
