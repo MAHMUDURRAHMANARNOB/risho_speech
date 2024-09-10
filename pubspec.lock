@@ -230,6 +230,7 @@ packages:
     description:
       name: dio
       sha256: "5598aa796bbf4699afd5c67c0f5f6e2ed542afc956884b9cd58c306966efc260"
+<<<<<<< HEAD
       url: "https://pub.dev"
     source: hosted
     version: "5.7.0"
@@ -240,6 +241,18 @@ packages:
       sha256: "33259a9276d6cea88774a0000cfae0d861003497755969c92faa223108620dc8"
       url: "https://pub.dev"
     source: hosted
+=======
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.7.0"
+  dio_web_adapter:
+    dependency: transitive
+    description:
+      name: dio_web_adapter
+      sha256: "33259a9276d6cea88774a0000cfae0d861003497755969c92faa223108620dc8"
+      url: "https://pub.dev"
+    source: hosted
+>>>>>>> 6d46355a7d6fba0fc3d16b87ef5be750b5ccfc2d
     version: "2.0.0"
   fake_async:
     dependency: transitive
@@ -1153,10 +1166,17 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_android
+<<<<<<< HEAD
       sha256: e35a698ac302dd68e41f73250bd9517fe3ab5fa4f18fe4647a0872db61bacbab
       url: "https://pub.dev"
     source: hosted
     version: "6.3.10"
+=======
+      sha256: f0c73347dfcfa5b3db8bc06e1502668265d39c08f310c29bff4e28eea9699f79
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.3.9"
+>>>>>>> 6d46355a7d6fba0fc3d16b87ef5be750b5ccfc2d
   url_launcher_ios:
     dependency: transitive
     description:
@@ -1281,10 +1301,17 @@ packages:
     dependency: transitive
     description:
       name: webview_flutter
+<<<<<<< HEAD
       sha256: ec81f57aa1611f8ebecf1d2259da4ef052281cb5ad624131c93546c79ccc7736
       url: "https://pub.dev"
     source: hosted
     version: "4.9.0"
+=======
+      sha256: "6869c8786d179f929144b4a1f86e09ac0eddfe475984951ea6c634774c16b522"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.8.0"
+>>>>>>> 6d46355a7d6fba0fc3d16b87ef5be750b5ccfc2d
   webview_flutter_android:
     dependency: transitive
     description:
@@ -1305,10 +1332,17 @@ packages:
     dependency: transitive
     description:
       name: webview_flutter_wkwebview
+<<<<<<< HEAD
       sha256: "1942a12224ab31e9508cf00c0c6347b931b023b8a4f0811e5dec3b06f94f117d"
       url: "https://pub.dev"
     source: hosted
     version: "3.15.0"
+=======
+      sha256: "9c62cc46fa4f2d41e10ab81014c1de470a6c6f26051a2de32111b2ee55287feb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.14.0"
+>>>>>>> 6d46355a7d6fba0fc3d16b87ef5be750b5ccfc2d
   win32:
     dependency: "direct main"
     description:
@@ -1358,5 +1392,10 @@ packages:
     source: hosted
     version: "9.0.3"
 sdks:
+<<<<<<< HEAD
   dart: ">=3.5.0 <4.0.0"
   flutter: ">=3.24.0"
+=======
+  dart: ">=3.4.0 <4.0.0"
+  flutter: ">=3.22.0"
+>>>>>>> 6d46355a7d6fba0fc3d16b87ef5be750b5ccfc2d

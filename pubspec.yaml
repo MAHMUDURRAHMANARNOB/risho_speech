@@ -2,7 +2,8 @@ name: risho_speech
 description: "The Risho Speech app is an innovative platform designed to enhance English language learning through advanced AI technology."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.1.0+9
+#version: 1.1.0+9 #IELTS update
+version: 1.1.1+10 #Bug Fix
 
 environment:
   sdk: '>=3.0.6 <4.0.0'

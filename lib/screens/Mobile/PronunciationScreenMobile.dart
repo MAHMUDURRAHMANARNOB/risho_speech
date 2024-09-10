@@ -11,6 +11,8 @@ import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:risho_speech/models/doGuidedConverationDataModel.dart';
 import 'package:risho_speech/providers/doGuidedConversationProvider.dart';
+import 'package:risho_speech/screens/Dashboard.dart';
+import 'package:risho_speech/screens/HomeScreen.dart';
 import 'package:risho_speech/ui/colors.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -126,21 +128,40 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
     try {
       if (await audioRecord.hasPermission()) {
         String? path = await audioRecord.stop();
-        setState(() {
-          _isRecording = false;
-          _audioPath = path;
-          audioFile = File(_audioPath!);
-          print(_audioPath);
-          _tempConversationComponents
-              .add(AIResponseBox(audioFile!, _dialogId, userName));
-          _tempConversationComponents.addAll(_conversationComponents);
-          /*_conversationComponents.add(
+        if (path != null) {
+          path = path.replaceFirst('file://', ''); // Clean the path
+          File file = File(path);
+          if (await file.exists()) {
+            audioFile = file;
+            print("Recorded file path: $path");
+          } else {
+            print("File not found at path: $path");
+          }
+        }
+        if (path != null && File(path).existsSync()) {
+          setState(() {
+            _isRecording = false;
+            _audioPath = path;
+            audioFile = File(_audioPath!);
+            print("Recorded file path: $_audioPath");
+            _tempConversationComponents
+                .add(AIResponseBox(audioFile!, _dialogId, userName));
+            _tempConversationComponents.addAll(_conversationComponents);
+            /*_conversationComponents.add(
             AIResponseBox(audioFile!, _dialogId, userName),
           );*/
-          _conversationComponents = _tempConversationComponents;
-        });
-        // _isSuggestAnsActive = false;
-        // suggestedAnswer = null;
+            _conversationComponents = _tempConversationComponents;
+          });
+          // _isSuggestAnsActive = false;
+          // suggestedAnswer = null;
+        } else {
+          setState(() {
+            _isRecording = false;
+          });
+          print("File not found at path: $path");
+        }
+      } else {
+        print("Permission denied for microphone");
       }
     } catch (e) {
       print("Error stop recording: $e");
@@ -889,6 +910,9 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
             ),
           ),
         );
+      } else if (errorCode == 410) {
+        _showSessionExpiredDialog();
+        return SizedBox();
       } else {
         return Container(
           decoration: BoxDecoration(
@@ -905,6 +929,62 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
       // While the future is still loading, return a loading indicator or placeholder
       return CircularProgressIndicator();
     }
+  }
+
+  void _showSessionExpiredDialog() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        // Prevents dialog from closing when tapping outside
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Image.asset(
+              "assets/images/target.gif",
+              width: 200,
+              height: 200,
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Congrets',
+                  style: TextStyle(
+                    color: AppColors.primaryColor,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  'You have successfully completed the lesson',
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Dismiss the dialog
+                  Navigator.pushReplacement<void, void>(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) => const Dashboard(),
+                    ),
+                  );
+                },
+                child: Text(
+                  'OK',
+                  style: TextStyle(
+                      color: AppColors.primaryColor,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    });
   }
 
   Future ShowInfoDialog(
