@@ -166,6 +166,16 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
     try {
       if (await audioRecord.hasPermission()) {
         String? path = await audioRecord.stop();
+        if (path != null) {
+          path = path.replaceFirst('file://', ''); // Clean the path
+          File file = File(path);
+          if (await file.exists()) {
+            audioFile = file;
+            print("Recorded file path: $path");
+          } else {
+            print("File not found at path: $path");
+          }
+        }
         setState(() {
           _isRecording = false;
           _audioPath = path;

@@ -14,6 +14,7 @@ import '../../providers/auth_provider.dart';
 import '../../providers/speakingExamProvider.dart';
 import '../../utils/audio_related/audio_visualized.dart';
 import '../Common/AiEmotionWidget.dart';
+import '../packages_screen.dart';
 
 class IeltsSpeakingExamScreenMobile extends StatefulWidget {
   const IeltsSpeakingExamScreenMobile({super.key});
@@ -313,6 +314,16 @@ class _IeltsSpeakingExamScreenMobileState
 
   void _pauseRecording() async {
     String? path = await audioRecord.stop();
+    if (path != null) {
+      path = path.replaceFirst('file://', ''); // Clean the path
+      File file = File(path);
+      if (await file.exists()) {
+        _recordedFile = file;
+        print("Recorded file path: $path");
+      } else {
+        print("File not found at path: $path");
+      }
+    }
     setState(() {
       _isRecording = false;
       _audioPath = path;
@@ -359,15 +370,91 @@ class _IeltsSpeakingExamScreenMobileState
         examStage = speakingExamProvider.examResponse!.examStage;
         isFemale = speakingExamProvider.examResponse!.isFemale;
 
-        /*_audioPlayer.setUrl(examAudio!);
-        _audioPlayer.play();
-        _startListeningToAudio();*/
         if (speakingExamProvider.examResponse!.aiDialogAudio != null) {
           speakingExamProvider.playAudioFromURL(
               speakingExamProvider.examResponse!.aiDialogAudio!);
         }
       }
+    } else if (response['errorcode'] == 208) {
+      _showErrorDialog("There was an error. Please say your answer again.");
+    } else if (response['errorcode'] == 201) {
+      _showPurchaseDialog(speakingExamProvider.examResponse!.message);
     }
+  }
+
+  Future<void> _showErrorDialog(String message) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            'OOPS!',
+            textAlign: TextAlign.center,
+            style:
+                TextStyle(fontWeight: FontWeight.bold, color: Colors.redAccent),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryColor2),
+              child: const Text(
+                'Ok',
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showPurchaseDialog(String? message) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Minutes Expired"),
+          content: Text(message ??
+              "You Audio minutes finished. To continue you have to buy minutes"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("OK"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const PackagesScreen()),
+                );
+              },
+              child: const Text("Purchase"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _clearRecording() {

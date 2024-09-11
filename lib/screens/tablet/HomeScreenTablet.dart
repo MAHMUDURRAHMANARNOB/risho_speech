@@ -22,11 +22,7 @@ class _HomeScreenTabletState extends State<HomeScreenTablet> {
   @override
   void initState() {
     super.initState();
-    /*final userId = Provider.of<AuthProvider>(context, listen: false).user?.id;
-    if (userId != null) {
-      Provider.of<SubscriptionStatusProvider>(context, listen: false)
-          .fetchSubscriptionData(userId);
-    }*/
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final userId = Provider.of<AuthProvider>(context, listen: false).user?.id;
       if (userId != null) {
@@ -49,11 +45,6 @@ class _HomeScreenTabletState extends State<HomeScreenTablet> {
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
-                  /*Image.asset(
-                    "assets/images/risho_guru_icon.png",
-                    width: 50,
-                    height: 40,
-                  ),*/
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

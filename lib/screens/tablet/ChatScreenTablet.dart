@@ -1370,185 +1370,25 @@ class _ChatScreenTabletState extends State<ChatScreenTablet> {
                       style:
                           TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          "assets/images/accuracy.png",
-                          width: 20,
-                          height: 20,
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Accuracy Score:"),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 8,
-                                      child: LinearProgressIndicator(
-                                        value: accuracyScore / 100,
-                                        // value should be between 0 and 1
-                                        backgroundColor: Colors.grey[300],
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                                AppColors.primaryColor),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 2,
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child:
-                                          Text("${accuracyScore.toString()}%"),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+                    info_bar(
+                      title: 'Accuracy Score',
+                      number: accuracyScore,
+                      imagePath: "assets/images/accuracy.png",
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          "assets/images/fluency.png",
-                          width: 20,
-                          height: 20,
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Fluency Score:"),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 8,
-                                      child: LinearProgressIndicator(
-                                        value: fluencyScore / 100,
-                                        // value should be between 0 and 1
-                                        backgroundColor: Colors.grey[300],
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                                AppColors.primaryColor),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 2,
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child:
-                                          Text("${fluencyScore.toString()}%"),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+                    info_bar(
+                      title: 'Fluency Score',
+                      number: fluencyScore,
+                      imagePath: "assets/images/fluency.png",
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          "assets/images/solution.png",
-                          width: 20,
-                          height: 20,
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Completeness Score:"),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 8,
-                                      child: LinearProgressIndicator(
-                                        value: completenessScore / 100,
-                                        // value should be between 0 and 1
-                                        backgroundColor: Colors.grey[300],
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                                AppColors.primaryColor),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 2,
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Text(
-                                          "${completenessScore.toString()}%"),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+                    info_bar(
+                      title: 'Completeness Score:',
+                      number: completenessScore,
+                      imagePath: "assets/images/solution.png",
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          "assets/images/prosody.png",
-                          width: 20,
-                          height: 20,
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Prosody Score:"),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      flex: 8,
-                                      child: LinearProgressIndicator(
-                                        value: prosodyScore / 100,
-                                        // value should be between 0 and 1
-                                        backgroundColor: Colors.grey[300],
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                                AppColors.primaryColor),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 2,
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child:
-                                          Text("${prosodyScore.toString()}%"),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+                    info_bar(
+                      title: 'Prosody Score:',
+                      number: prosodyScore,
+                      imagePath: "assets/images/prosody.png",
                     ),
                   ],
                 ),
@@ -1789,31 +1629,10 @@ class _ChatScreenTabletState extends State<ChatScreenTablet> {
       },
     );
     try {
-      // var response =
-      //     await suggestAnswerProvider.fetchSuggestAnswerResponse(text);
-
       Navigator.pop(context);
       setState(() {
         suggestedAnswer = responseData!.replyText!;
       });
-      /*showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Try to Say this"),
-            content: Text(responseData!.replyText!),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("OK"),
-              ),
-            ],
-          );
-        },
-      );*/
-      // print("$sessionId, $aiDialogue");
     } catch (e) {
       showDialog(
         context: context,
@@ -1834,55 +1653,66 @@ class _ChatScreenTabletState extends State<ChatScreenTablet> {
       );
       // Handle error
     }
-    /*return FutureBuilder<void>(
-        future: suggestAnswerProvider.fetchSuggestAnswerResponse(text),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const SpinKitThreeInOut(
-              color: AppColors.primaryColor,
-            ); // Loading state
-          } else if (snapshot.hasError) {
-            return Container(
-              margin: const EdgeInsets.all(5.0),
-              padding: const EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                color: AppColors.primaryCardColor,
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Column(
+  }
+}
+
+class info_bar extends StatelessWidget {
+  const info_bar({
+    super.key,
+    required this.title,
+    required this.number,
+    required this.imagePath,
+  });
+
+  final String title;
+  final double number;
+  final String imagePath;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset(
+          /*"assets/images/accuracy.png"*/
+          imagePath,
+          width: 20,
+          height: 20,
+        ),
+        Expanded(
+          flex: 1,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(/*"Accuracy Score:"*/ title),
+                Row(
                   children: [
-                    Text(
-                      "Sorry: Server error",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
+                    Expanded(
+                      flex: 8,
+                      child: LinearProgressIndicator(
+                        value: /*accuracyScore*/
+                            number / 100, // value should be between 0 and 1
+                        backgroundColor: Colors.grey[300],
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.primaryColor),
                       ),
+                    ),
+                    SizedBox(
+                      width: 2,
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Text("${number.toString()}%"),
                     ),
                   ],
                 ),
-              ),
-            );
-          } else {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text("Try to say it"),
-                  content: Text(
-                      suggestAnswerProvider.suggestAnswerResponse!.replyText!),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text("OK"),
-                    ),
-                  ],
-                );
-              },
-            );
-          }
-        });*/
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

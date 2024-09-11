@@ -500,33 +500,6 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
               ),
             ],
           ),
-          /*Padding(
-            padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _isSuggestAnsActive = true;
-                    });
-
-                    fetchDataAndShowBottomSheet(widget.aiDialogue, "S")
-                        .whenComplete(() {});
-                  },
-                  child: _isFeedbackLoading
-                      ? CircularProgressIndicator() // Show a loader while loading
-                      : Text(
-                          "Suggest Answer",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                ),
-                SizedBox(
-                  width: 2,
-                ),
-              ],
-            ),
-          ),*/
           Padding(
             padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
             child: Row(
@@ -570,16 +543,6 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
             widget.id, sessionId, audio, '', '', widget.isFemale, username),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            /*return Container(
-              child: const Row(
-                children: [
-                  Text("Risho is Analyzing"),
-                  SpinKitThreeInOut(
-                    color: AppColors.primaryColor,
-                  ),
-                ],
-              ),
-            ); */ // Loading state
             return Container(
               padding: EdgeInsets.all(10.0),
               child: Row(
@@ -1523,70 +1486,6 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
   }
 
   // Modified FeedbackBottomDialog function to accept data
-  /*Future<void> FeedbackBottomDialog(
-    String userText,
-    ValidateSentenceDataModel? responseData,
-  ) async {
-    return showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        if (responseData == null) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else {
-          return DraggableScrollableSheet(
-              initialChildSize: 0.5,
-              // Initial height 50% of the screen
-              minChildSize: 0.5,
-              // Minimum height 50% of the screen
-              maxChildSize: 0.9,
-              // Maximum height 100% of the screen
-              expand: false,
-              builder:
-                  (BuildContext context, ScrollController scrollController) {
-                return SingleChildScrollView(
-                  controller: _scrollController,
-                  // physics: AlwaysScrollableScrollPhysics(),
-                  child: Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Feedback",
-                          style: TextStyle(
-                              // color: AppColors.primaryColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24),
-                        ),
-                        buildFeedbackContentColumn(
-                          'Correct Sentence:',
-                          responseData.correctSentence,
-                        ),
-                        buildFeedbackContentColumn(
-                          'Explanation:',
-                          responseData.explanation,
-                        ),
-                        buildFeedbackContentColumn(
-                          'Alternate Sentence:',
-                          responseData.alternate,
-                        ),
-                        buildFeedbackContentColumn(
-                          'Bangla Explanation:',
-                          responseData.banglaExplanation,
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              });
-        }
-      },
-    );
-  }*/
   Future<void> FeedbackBottomDialog(
     String userText,
     ValidateSentenceDataModel? responseData,
@@ -1789,31 +1688,10 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
       },
     );
     try {
-      // var response =
-      //     await suggestAnswerProvider.fetchSuggestAnswerResponse(text);
-
       Navigator.pop(context);
       setState(() {
         suggestedAnswer = responseData!.replyText!;
       });
-      /*showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Try to Say this"),
-            content: Text(responseData!.replyText!),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("OK"),
-              ),
-            ],
-          );
-        },
-      );*/
-      // print("$sessionId, $aiDialogue");
     } catch (e) {
       showDialog(
         context: context,
@@ -1834,56 +1712,6 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
       );
       // Handle error
     }
-    /*return FutureBuilder<void>(
-        future: suggestAnswerProvider.fetchSuggestAnswerResponse(text),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const SpinKitThreeInOut(
-              color: AppColors.primaryColor,
-            ); // Loading state
-          } else if (snapshot.hasError) {
-            return Container(
-              margin: const EdgeInsets.all(5.0),
-              padding: const EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                color: AppColors.primaryCardColor,
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Text(
-                      "Sorry: Server error",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          } else {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text("Try to say it"),
-                  content: Text(
-                      suggestAnswerProvider.suggestAnswerResponse!.replyText!),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text("OK"),
-                    ),
-                  ],
-                );
-              },
-            );
-          }
-        });*/
   }
 }
 

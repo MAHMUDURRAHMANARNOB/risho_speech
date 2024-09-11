@@ -50,7 +50,7 @@ class _NavigationPageState extends State<NavigationPage> {
     CustomDestination(
         title: 'Home', imagePath: 'assets/images/risho_guru_icon.png'),
     CustomDestination(
-        title: 'Courses', imagePath: 'assets/images/risho_guru_icon.png'),
+        title: 'IELTS', imagePath: 'assets/images/ielts_logo.png'),
     CustomDestination(
         title: 'Profile', imagePath: 'assets/images/man_chat.png'),
   ];
