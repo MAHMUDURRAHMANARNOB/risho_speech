@@ -1,5 +1,5 @@
 import 'dart:ui';
-
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:iconsax/iconsax.dart';
@@ -225,239 +225,12 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
 
                   const SizedBox(height: 3.0),
 
-                  /*Practice Daily lesson*/
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        // double audioRemains = subscriptionStatusProvider.audioRemains;
-                        double audioRemains =
-                            Provider.of<SubscriptionStatusProvider>(context,
-                                    listen: false)
-                                .audioRemains;
-                        // debugPrint(audioRemains.toString());
-                        if (audioRemains > 0.0) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const PracticeGuidedScreen(
-                                      screenName: 'PDL',
-                                    )),
-                          );
-                        } else {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('Minute expired'),
-                              content: const Text(
-                                  'You have no audio minutes remaining. Please purchase more.'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(),
-                                  child: const Text(
-                                    'OK',
-                                    style: TextStyle(
-                                        color: AppColors.secondaryColor),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const PackagesScreen()),
-                                  ),
-                                  child: const Text(
-                                    'Purchase',
-                                    style: TextStyle(
-                                        color: AppColors.primaryColor),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                      },
-                      child: Card(
-                        color: AppColors.primaryColor,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(8.0), // Adjust as needed
-                            gradient: LinearGradient(
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                              colors: [
-                                Colors.transparent,
-                                // Start with a transparent color
-                                Colors.white.withOpacity(0.3),
-                                // Adjust opacity as needed
-                              ],
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Text(
-                                        "Start Speaking",
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    const Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Text(
-                                        "Practice speaking on real life scenarios with AI ",
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Image.asset(
-                                  "assets/images/card_images/practice_guided.png",
-                                  fit: BoxFit.contain,
-                                  height: 120,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 3.0),
-
-                  /*IMPROVE PRONUNCIATION / Speech Trainer*/
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        double audioRemains =
-                            Provider.of<SubscriptionStatusProvider>(context,
-                                    listen: false)
-                                .audioRemains;
-                        if (audioRemains > 0.0) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const PracticeGuidedScreen(
-                                      screenName: 'IP',
-                                    )),
-                          );
-                        } else {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('Minute expired'),
-                              content: const Text(
-                                  'You have no audio minutes remaining. Please purchase more.'),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(),
-                                  child: const Text(
-                                    'OK',
-                                    style: TextStyle(
-                                        color: AppColors.secondaryColor),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const PackagesScreen()),
-                                  ),
-                                  child: const Text(
-                                    'Purchase',
-                                    style: TextStyle(
-                                        color: AppColors.primaryColor),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                      },
-                      child: Card(
-                        color: AppColors.orange,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(8.0), // Adjust as needed
-                            gradient: LinearGradient(
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                              colors: [
-                                Colors.transparent,
-                                // Start with a transparent color
-                                Colors.lime.withOpacity(0.3),
-                                // Adjust opacity as needed
-                              ],
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Text(
-                                        "Speech Trainer",
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    const Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Text(
-                                        "Learn how to pronounce sentences.",
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Image.asset(
-                                  "assets/images/card_images/improve_speaking.png",
-                                  fit: BoxFit.contain,
-                                  height: 120,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 3.0),
+                  /*Tutor*/
+                  ThreeDCard(),
+                  const SizedBox(height: 5.0),
                   /*IELTS*/
                   Container(
+                    width: double.infinity,
                     margin: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: GestureDetector(
                       onTap: () {
@@ -509,15 +282,15 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                         color: Colors.red,
                         child: Container(
                           decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(8.0), // Adjust as needed
+                            borderRadius: BorderRadius.circular(8.0),
+                            // Adjust as needed
                             gradient: LinearGradient(
-                              begin: Alignment.centerRight,
-                              end: Alignment.centerLeft,
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
                               colors: [
                                 Colors.transparent,
                                 // Start with a transparent color
-                                Colors.red.withOpacity(0.3),
+                                Colors.redAccent.withOpacity(0.3),
                                 // Adjust opacity as needed
                               ],
                             ),
@@ -525,14 +298,13 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                           child: Row(
                             children: [
                               const Expanded(
-                                flex: 1,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Padding(
                                       padding: EdgeInsets.all(8.0),
                                       child: Text(
-                                        "IELTS Preparation",
+                                        "IELTS Preparation" /*"Start Speaking"*/,
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
@@ -542,7 +314,7 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                                     Padding(
                                       padding: EdgeInsets.all(8.0),
                                       child: Text(
-                                        "Get ready for your IELTS exam with Risho",
+                                        "Get ready for your IELTS exam with RISHO" /*"Practice speaking on real life scenarios with AI "*/,
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.normal,
@@ -553,9 +325,8 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                                 ),
                               ),
                               Expanded(
-                                flex: 1,
                                 child: Image.asset(
-                                  "assets/images/ielts/ielts_icon.png",
+                                  "assets/images/ielts/ielts_icon.png" /*"assets/images/card_images/practice_guided.png"*/,
                                   fit: BoxFit.contain,
                                   height: 120,
                                 ),
@@ -566,8 +337,146 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 3.0),
+
+                  /*PRACTICE DAILY LESSON & SPEECH TRAINER*/
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Row(
+                      children: [
+                        /*Practice Daily lesson*/
+                        Expanded(
+                          child: OptionCards(
+                            title: "Advance Speaking",
+                            subTitle:
+                                "Practice speaking on real life scenarios ",
+                            imageUrl:
+                                "assets/images/card_images/practice_guided.png",
+                            bgColor: AppColors.primaryColor,
+                            opacityColor: Colors.lightGreenAccent,
+                            onPressed: () {
+                              // double audioRemains = subscriptionStatusProvider.audioRemains;
+                              double audioRemains =
+                                  Provider.of<SubscriptionStatusProvider>(
+                                          context,
+                                          listen: false)
+                                      .audioRemains;
+                              // debugPrint(audioRemains.toString());
+                              if (audioRemains > 0.0) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          PracticeGuidedScreen(
+                                            screenName: 'PDL',
+                                          )),
+                                );
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: const Text('Minute expired'),
+                                    content: const Text(
+                                        'You have no audio minutes remaining. Please purchase more.'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                        child: const Text(
+                                          'OK',
+                                          style: TextStyle(
+                                              color: AppColors.secondaryColor),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const PackagesScreen()),
+                                        ),
+                                        child: const Text(
+                                          'Purchase',
+                                          style: TextStyle(
+                                              color: AppColors.primaryColor),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                        // const SizedBox(height: 3.0),
+
+                        /*IMPROVE PRONUNCIATION / Speech Trainer*/
+                        Expanded(
+                          child: OptionCards(
+                            title: "Speech \nTrainer",
+                            subTitle: "Learn how to pronounce sentences.",
+                            imageUrl:
+                                "assets/images/card_images/improve_speaking.png",
+                            bgColor: AppColors.orange,
+                            opacityColor: Colors.yellowAccent,
+                            onPressed: () {
+                              double audioRemains =
+                                  Provider.of<SubscriptionStatusProvider>(
+                                          context,
+                                          listen: false)
+                                      .audioRemains;
+                              if (audioRemains > 0.0) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const PracticeGuidedScreen(
+                                            screenName: 'IP',
+                                          )),
+                                );
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: const Text('Minute expired'),
+                                    content: const Text(
+                                        'You have no audio minutes remaining. Please purchase more.'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                        child: const Text(
+                                          'OK',
+                                          style: TextStyle(
+                                              color: AppColors.secondaryColor),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const PackagesScreen()),
+                                        ),
+                                        child: const Text(
+                                          'Purchase',
+                                          style: TextStyle(
+                                              color: AppColors.primaryColor),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
 
                   const SizedBox(height: 3.0),
+
                   /*Vocabulary + Calling Section*/
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -775,23 +684,184 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => IeltsAssistantScreen(),
-              ),
-            );
-          },
-          /*foregroundColor: customizations[index].$1,
-          backgroundColor: customizations[index].$2,
-          shape: customizations[index].$3,*/
-          // mini: true,
+      ),
+    );
+  }
+}
 
-          backgroundColor: AppColors.secondaryCardColor,
-          child: Image.asset("assets/images/bot.gif", width: 30, height: 30),
+class OptionCards extends StatelessWidget {
+  final String? screenName;
+  final String title;
+  final String subTitle;
+  final String imageUrl;
+  final Color bgColor;
+  final Color opacityColor;
+  final VoidCallback onPressed;
+
+  const OptionCards({
+    super.key,
+    this.screenName,
+    required this.title,
+    required this.subTitle,
+    required this.imageUrl,
+    required this.bgColor,
+    required this.opacityColor,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        onPressed();
+      },
+      child: Card(
+        color: bgColor,
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8.0), // Adjust as needed
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [
+                Colors.transparent,
+                // Start with a transparent color
+                opacityColor.withOpacity(0.3),
+                // Adjust opacity as needed
+              ],
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3.0),
+                child: Image.asset(
+                  imageUrl /*"assets/images/card_images/practice_guided.png"*/,
+                  fit: BoxFit.cover,
+                  height: 80,
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      title,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  /*Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      subTitle,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ),*/
+                ],
+              ),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+}
+
+class ThreeDCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 130,
+      decoration: BoxDecoration(
+        // color: Color(0xFF1E6751), // dark green color
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(12.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            bottom: 0,
+            left: 10,
+            right: 10,
+            child: Container(
+              decoration: BoxDecoration(
+                // color: Color(0xFF1E6751), // dark green color
+                // color: Colors.blueAccent,
+                gradient: LinearGradient(
+                  begin: Alignment.bottomRight,
+                  end: Alignment.centerLeft,
+                  colors: [
+                    Colors.cyan,
+                    // Start with a transparent color
+                    Colors.blueAccent,
+                    // Adjust opacity as needed
+                  ],
+                ),
+                // color: Colors.blue,
+                borderRadius: BorderRadius.circular(12.0),
+                /*boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                    offset: Offset(0, 3),
+                  ),
+                ],*/
+              ),
+              padding: EdgeInsets.all(16),
+              child: const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Hi, I\'m your Tutor',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Start practicing english with me',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Positioned(
+            right: 20,
+            bottom: -10,
+            child: Image.asset(
+              'assets/images/card_images/tutor.png',
+              // Replace with your character image
+              height: 140,
+            ),
+          ),
+        ],
       ),
     );
   }

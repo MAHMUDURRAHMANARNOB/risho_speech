@@ -13,6 +13,7 @@ import 'package:risho_speech/ui/colors.dart';
 import '../../models/IeltsCoursesDataModel.dart';
 import '../../models/ieltsCourseListDataModel.dart';
 import '../../providers/IeltsCourseListProvider.dart';
+import '../IeltsAssistantScreen.dart';
 import '../IeltsCourseLessonListScreen.dart';
 import '../InstructionIeltsSpeakingScreen.dart';
 
@@ -398,6 +399,33 @@ class _IELTSHomeScreenMobileState extends State<IELTSHomeScreenMobile> {
               ],
             ),
           ),
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => IeltsAssistantScreen(),
+              ),
+            );
+          },
+          /*foregroundColor: customizations[index].$1,
+          backgroundColor: customizations[index].$2,
+          shape: customizations[index].$3,*/
+          // mini: true,
+
+          backgroundColor: AppColors.secondaryCardColor,
+          label: Row(
+            children: [
+              Text(
+                "Ask me",
+                style: TextStyle(color: Colors.white),
+              ),
+              SizedBox(width: 5),
+              Image.asset("assets/images/bot.gif", width: 30, height: 30),
+            ],
+          ),
+          // child: Image.asset("assets/images/bot.gif", width: 30, height: 30),
         ),
       ),
     );
