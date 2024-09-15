@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
@@ -6,14 +7,17 @@ import 'package:iconsax/iconsax.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
+import 'package:risho_speech/models/TutorResponseDataModel.dart';
 import 'package:risho_speech/screens/CallingAgentScreen.dart';
 import 'package:risho_speech/screens/IeltsAssistantScreen.dart';
 import 'package:risho_speech/screens/Mobile/IELTSHomeScreenMobile.dart';
 import 'package:risho_speech/screens/PracticeGuidedScreen.dart';
+import 'package:risho_speech/screens/TutorScreen.dart';
 import 'package:risho_speech/screens/VocabularyCategoryScreen.dart';
 import 'package:risho_speech/ui/colors.dart';
 import 'package:risho_speech/utils/constants/colors.dart';
 
+import '../../providers/TutorResponseProvider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/subscriptionStatus_provider.dart';
 import '../IELTSHomeScreen.dart';
@@ -85,7 +89,7 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
   final SubscriptionStatusProvider subscriptionStatusProvider =
       SubscriptionStatusProvider();
   late int userId = Provider.of<AuthProvider>(context).user!.id;
-  late String userName;
+  late String userName = Provider.of<AuthProvider>(context).user!.name;
 
   // late final userId;
   Future<void> _refresh() async {
@@ -226,7 +230,73 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                   const SizedBox(height: 3.0),
 
                   /*Tutor*/
-                  ThreeDCard(),
+                  GestureDetector(
+                    onTap: () async {
+                      var courseProvider = Provider.of<TutorResponseProvider>(
+                          context,
+                          listen: false);
+                      String? courseId; // Initially null
+                      File? audioFile;
+                      // Show the loading dialog
+                      showDialog(
+                        context: context,
+                        barrierDismissible:
+                            false, // Prevent dismissing by tapping outside
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            content: Container(
+                              // width: double.maxFinite,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Image.asset(
+                                    "assets/images/risho_guru_icon.png",
+                                    width: 80,
+                                    height: 80,
+                                  ),
+                                  SizedBox(height: 5),
+                                  const SpinKitChasingDots(
+                                    color: AppColors.primaryColor,
+                                  ),
+                                ],
+                              ),
+                            ), // Loading spinner
+                          );
+                        },
+                      );
+
+                      //Call the api
+                      await courseProvider.fetchEnglishTutorResponse(
+                          userId, userName, courseId, audioFile);
+
+                      // Dismiss the dialog once loading is done
+                      if (!courseProvider.isLoading) {
+                        Navigator.pop(context); // Close the dialog
+                      }
+
+                      //Handling the api response
+                      if (courseProvider.successResponse != null) {
+                        // Navigate to next page if success
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TutorScreen(
+                              tutorResponse: courseProvider.successResponse!,
+                            ), // Your new page screen
+                          ),
+                        );
+                      } else if (courseProvider
+                              .tutorNotSelectedResponse!.errorCode ==
+                          210) {
+                        // Show category dialog if response code is 210
+                        _dialogBoxForCategory(courseProvider
+                            .tutorNotSelectedResponse!.courseList);
+                      } else {
+                        print("error");
+                      }
+                    },
+                    child: ThreeDCard(),
+                  ),
                   const SizedBox(height: 5.0),
                   /*IELTS*/
                   Container(
@@ -685,6 +755,148 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<Future<Object?>> _dialogBoxForCategory(List<Course> courseList) async {
+    /*final title = [
+      "Beginner (Kids)",
+      "Elementary",
+      "Intermediate",
+      "Upper Intermediate",
+      "Professional",
+      "Customer Service",
+    ];*/
+    final color = [
+      Colors.teal,
+      Colors.redAccent,
+      Colors.lightBlueAccent,
+      Colors.orangeAccent,
+      Colors.purpleAccent,
+      Colors.greenAccent
+    ];
+    final icons = [
+      IconsaxPlusBold.bezier,
+      IconsaxPlusBold.microphone,
+      IconsaxPlusBold.book,
+      IconsaxPlusBold.pen_tool,
+      IconsaxPlusBold.pen_tool,
+      IconsaxPlusBold.pen_tool,
+    ];
+    final imageIcons = [
+      "assets/images/level_icons/chicken.png",
+      "assets/images/level_icons/elementary1.png",
+      "assets/images/level_icons/intermediate-level.png",
+      "assets/images/level_icons/upper intermediate-level.png",
+      "assets/images/level_icons/professional.png",
+      "assets/images/level_icons/support.png",
+    ];
+    return showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      transitionBuilder: (context, a1, a2, widget) {
+        return Transform.scale(
+          scale: a1.value,
+          child: Opacity(
+            opacity: a1.value,
+            child: AlertDialog(
+              title: const Text(
+                'Choose your level',
+                style: TextStyle(color: Colors.white),
+              ),
+              content: Container(
+                width: double.maxFinite,
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 1.0,
+                  ),
+                  itemCount: 6,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                        /*Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                IeltsVocabularyCategoryListScreen(
+                                  topicCategory: index + 1,
+                                  isIdioms: isIdioms,
+                                ),
+                          ),
+                        );*/
+                      },
+                      child: Container(
+                        margin: EdgeInsets.all(10.0),
+                        padding: EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: /*color[index]*/ AppColors.backgroundColorDark,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(10.0),
+                              decoration: BoxDecoration(
+                                color: /*AppColors.primaryColor2*/
+                                    /*color[index].withOpacity(0.2)*/
+                                    Colors.white,
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Image.asset(
+                                imageIcons[index],
+                                // color: /*AppColors.primaryColor*/ color[index],
+                                width: 34.0,
+                                height: 34.0,
+                                // size: 24.0,
+                              ),
+                            ),
+                            Text(
+                              textAlign: TextAlign.center,
+                              '${courseList[index].courseName}',
+                              style: TextStyle(
+                                color: /*color[index]*/ Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  style: TextButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor.withOpacity(0.2)),
+                  child: const Text(
+                    'Close',
+                    style: TextStyle(
+                        color: AppColors.primaryColor,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return SizedBox(
+          child: BackButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        );
+      },
     );
   }
 }

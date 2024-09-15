@@ -1124,4 +1124,58 @@ class ApiService {
       throw Exception(e.toString());
     }
   }
+
+  /*English Tutor*/
+  Future<Map<String, dynamic>> getEnglishTutorResponse(
+    int userid,
+    String userName,
+    String? courseId,
+    File? audioFile,
+  ) async {
+    print("$userid , $userName , $courseId, $userid");
+    try {
+      final uri = Uri.parse("$baseUrl/EnglishTutor/");
+
+      // Build the request body dynamically
+      var request = http.MultipartRequest('POST', uri)
+        ..fields['userid'] = userid.toString()
+        ..fields['userName'] = userName.toString();
+
+      if (audioFile != null) {
+        request.files.add(
+            await http.MultipartFile.fromPath('audioFile', audioFile.path));
+      }
+      if (courseId != null && courseId.isNotEmpty) {
+        request.fields['courseid'] = courseId.toString();
+      }
+
+      var response = await request.send();
+      print("hello ${response.statusCode}");
+      if (response.statusCode == 200) {
+        var responseBody = await response.stream.bytesToString();
+        // print(json.decode(responseBody));
+        return json.decode(responseBody);
+      } else {
+        // Handle error
+        return {'error': 'Failed to make API call'};
+      }
+      /*final response = await http.post(
+        uri,
+        body: body,
+      );
+      // print(response.body.toString());
+
+      // var response = await request.send();
+      if (response.statusCode == 200) {
+        var responseBody = await response.body;
+        // print("hello course lesson list:${json.decode(responseBody)}");
+        var finalResponse = Utf8Decoder().convert(response.bodyBytes);
+        return json.decode(finalResponse);
+      } else {
+        throw Exception('Failed to load Data');
+      }*/
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 }
