@@ -948,7 +948,7 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Congrets',
+                  'Congratulations',
                   style: TextStyle(
                     color: AppColors.primaryColor,
                     fontSize: 20.0,

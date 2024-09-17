@@ -89,7 +89,8 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
   final SubscriptionStatusProvider subscriptionStatusProvider =
       SubscriptionStatusProvider();
   late int userId = Provider.of<AuthProvider>(context).user!.id;
-  late String userName = Provider.of<AuthProvider>(context).user!.name;
+  late String userName = Provider.of<AuthProvider>(context).user!.username;
+  late String fullName = Provider.of<AuthProvider>(context).user!.name;
 
   // late final userId;
   Future<void> _refresh() async {
@@ -104,6 +105,7 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
     final authProvider = Provider.of<AuthProvider>(context);
     userId = Provider.of<AuthProvider>(context).user!.id;
     userName = Provider.of<AuthProvider>(context).user!.username;
+    fullName = Provider.of<AuthProvider>(context).user!.name;
     subscriptionStatusProvider.fetchSubscriptionData(userId);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -144,8 +146,7 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                             ),
                           ),
                           Text(
-                            Provider.of<AuthProvider>(context).user?.name ??
-                                'UserName',
+                            fullName ?? 'UserName',
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
@@ -267,32 +268,34 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
 
                       //Call the api
                       await courseProvider.fetchEnglishTutorResponse(
-                          userId, userName, courseId, audioFile);
+                          userId, fullName, courseId, audioFile);
 
                       // Dismiss the dialog once loading is done
-                      if (!courseProvider.isLoading) {
+                      if (mounted && !courseProvider.isLoading) {
                         Navigator.pop(context); // Close the dialog
                       }
 
                       //Handling the api response
-                      if (courseProvider.successResponse != null) {
-                        // Navigate to next page if success
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TutorScreen(
-                              tutorResponse: courseProvider.successResponse!,
-                            ), // Your new page screen
-                          ),
-                        );
-                      } else if (courseProvider
-                              .tutorNotSelectedResponse!.errorCode ==
-                          210) {
-                        // Show category dialog if response code is 210
-                        _dialogBoxForCategory(courseProvider
-                            .tutorNotSelectedResponse!.courseList);
-                      } else {
-                        print("error");
+                      if (mounted) {
+                        if (courseProvider.successResponse != null) {
+                          // Navigate to next page if success
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TutorScreen(
+                                tutorResponse: courseProvider.successResponse!,
+                              ), // Your new page screen
+                            ),
+                          );
+                        } else if (courseProvider
+                                .tutorNotSelectedResponse!.errorCode ==
+                            210) {
+                          // Show category dialog if response code is 210
+                          _dialogBoxForCategory(courseProvider
+                              .tutorNotSelectedResponse!.courseList);
+                        } else {
+                          print("error");
+                        }
                       }
                     },
                     child: ThreeDCard(),
@@ -759,14 +762,6 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
   }
 
   Future<Future<Object?>> _dialogBoxForCategory(List<Course> courseList) async {
-    /*final title = [
-      "Beginner (Kids)",
-      "Elementary",
-      "Intermediate",
-      "Upper Intermediate",
-      "Professional",
-      "Customer Service",
-    ];*/
     final color = [
       Colors.teal,
       Colors.redAccent,
@@ -815,18 +810,9 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                   itemCount: 6,
                   itemBuilder: (context, index) {
                     return GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                        /*Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                IeltsVocabularyCategoryListScreen(
-                                  topicCategory: index + 1,
-                                  isIdioms: isIdioms,
-                                ),
-                          ),
-                        );*/
+                      onTap: () async {
+                        await _handleCourseSelection(
+                            context, index, courseList);
                       },
                       child: Container(
                         margin: EdgeInsets.all(10.0),
@@ -854,12 +840,14 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                                 // size: 24.0,
                               ),
                             ),
-                            Text(
-                              textAlign: TextAlign.center,
-                              '${courseList[index].courseName}',
-                              style: TextStyle(
-                                color: /*color[index]*/ Colors.white,
-                                fontWeight: FontWeight.bold,
+                            Expanded(
+                              child: Text(
+                                textAlign: TextAlign.center,
+                                '${courseList[index].courseName}',
+                                style: TextStyle(
+                                  color: /*color[index]*/ Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ],
@@ -898,6 +886,52 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
         );
       },
     );
+  }
+
+  Future<void> _handleCourseSelection(
+      BuildContext context, int index, List<Course> courseList) async {
+    var courseProvider =
+        Provider.of<TutorResponseProvider>(context, listen: false);
+    int? courseId = courseList[index].courseId;
+    File? audioFile;
+
+    // Optionally, show a loading spinner (commented out to avoid showing multiple dialogs)
+    // showDialog(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (BuildContext context) {
+    //     return AlertDialog(
+    //       content: CircularProgressIndicator(
+    //         color: AppColors.primaryColor,
+    //       ),
+    //     );
+    //   },
+    // );
+
+    // Call the API
+    await courseProvider.fetchEnglishTutorResponse(
+        userId, fullName, courseId.toString(), audioFile);
+
+    print("tutor response: ${courseProvider.successResponse?.aiDialogue}");
+    Navigator.pop(context);
+    // Handle the API response
+    if (courseProvider.successResponse != null) {
+      // Navigate to TutorScreen on success
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TutorScreen(
+            tutorResponse: courseProvider.successResponse!,
+          ),
+        ),
+      );
+    } else if (courseProvider.tutorNotSelectedResponse?.errorCode == 210) {
+      // Show category dialog if error code is 210
+      _dialogBoxForCategory(
+          courseProvider.tutorNotSelectedResponse!.courseList);
+    } else {
+      print("Error occurred during API call");
+    }
   }
 }
 
