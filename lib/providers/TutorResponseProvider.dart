@@ -12,17 +12,19 @@ class TutorResponseProvider with ChangeNotifier {
   bool _isLoading = false;
 
   TutorSuccessResponse? get successResponse => _successResponse;
+
   TutorNotSelectedResponse? get tutorNotSelectedResponse =>
       _tutorNotSelectedResponse;
+
   bool get isLoading => _isLoading;
 
-  Future<void> fetchEnglishTutorResponse(
-      int userid, String userName, String? courseId, File? audioFile) async {
+  Future<void> fetchEnglishTutorResponse(int userid, String userName,
+      String? courseId, File? audioFile, String nextLesson) async {
     _setLoading(true);
 
     try {
       Map<String, dynamic> response = await _apiService.getEnglishTutorResponse(
-          userid, userName, courseId, audioFile);
+          userid, userName, courseId, audioFile, nextLesson);
 
       // final data = json.decode(response.body);
       if (response['errorcode'] == 200) {

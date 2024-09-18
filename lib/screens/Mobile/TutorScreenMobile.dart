@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
 import 'package:markdown_widget/markdown_widget.dart';
@@ -12,13 +13,16 @@ import 'package:markdown_widget/markdown_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:record/record.dart';
+import 'package:risho_speech/models/tutorSpokenCourseDataModel.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../models/TutorResponseDataModel.dart';
 import '../../providers/TutorResponseProvider.dart';
+import '../../providers/TutorSpokenCourseProvider.dart';
 import '../../providers/auth_provider.dart';
 import '../../ui/colors.dart';
 import '../Dashboard.dart';
+import '../TutorScreen.dart';
 import '../packages_screen.dart';
 
 class TutorScreenMobile extends StatefulWidget {
@@ -32,6 +36,7 @@ class TutorScreenMobile extends StatefulWidget {
 
 late String chapterTitle;
 late String lessonTitle;
+late int lessonCount;
 late String courseId;
 late String aiDialog;
 late String aiDialogAudio;
@@ -57,6 +62,7 @@ class _TutorScreenMobileState extends State<TutorScreenMobile> {
       Provider.of<AuthProvider>(context, listen: false);
 
   late String userName = authController.user!.username ?? "username";
+  late String fullName = authController.user!.name ?? "username";
   late int userId = authController.user!.id ?? 123;
 
   @override
@@ -68,6 +74,7 @@ class _TutorScreenMobileState extends State<TutorScreenMobile> {
     setState(() {
       chapterTitle = widget.tutorResponse.chapterTitle;
       lessonTitle = widget.tutorResponse.lessonTitle;
+      lessonCount = widget.tutorResponse.lessonCount;
       aiDialog = widget.tutorResponse.aiDialogue;
       aiDialogAudio = widget.tutorResponse.aiDialogueAudio;
       /*_dialogId = widget.dialogId.toString();
@@ -90,6 +97,7 @@ class _TutorScreenMobileState extends State<TutorScreenMobile> {
   Future<void> startRecording() async {
     try {
       if (await audioRecord.hasPermission()) {
+        audioPlayer.stop();
         await audioRecord.start();
         setState(() {
           _isRecording = true;
@@ -129,7 +137,7 @@ class _TutorScreenMobileState extends State<TutorScreenMobile> {
             AIResponseBox(audioFile!, _dialogId, userName),
           );*/
             _conversationComponents
-                .add(AIResponseBox(audioFile!, userId, userName));
+                .add(AIResponseBox(audioFile!, userId, fullName, "N"));
           });
         } else {
           setState(() {
@@ -196,7 +204,7 @@ class _TutorScreenMobileState extends State<TutorScreenMobile> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Image.asset(
-                              "assets/images/tutor_speaking.png",
+                              "assets/images/risho_guru_icon.png",
                               width: 50,
                               height: 50,
                             ),
@@ -262,12 +270,97 @@ class _TutorScreenMobileState extends State<TutorScreenMobile> {
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
+        actions: [
+          TextButton(
+            onPressed: () async {
+              var spokenCourseListProvider =
+                  Provider.of<TutorSpokenCourseProvider>(context,
+                      listen: false);
+              String? courseId; // Initially null
+              File? audioFile;
+              showDialog(
+                context: context,
+                barrierDismissible:
+                    false, // Prevent dismissing by tapping outside
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    content: Container(
+                      // width: double.maxFinite,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset(
+                            "assets/images/risho_guru_icon.png",
+                            width: 80,
+                            height: 80,
+                          ),
+                          SizedBox(height: 5),
+                          const SpinKitChasingDots(
+                            color: AppColors.primaryColor,
+                          ),
+                        ],
+                      ),
+                    ), // Loading spinner
+                  );
+                },
+              );
+              //Call the api
+              await spokenCourseListProvider.fetchSpokenCourses();
+              if (mounted && !spokenCourseListProvider.isLoading) {
+                Navigator.pop(context); // Close the dialog
+              }
+              //Handling the api response
+              if (mounted) {
+                if (spokenCourseListProvider.courseResponse != null) {
+                  // Navigate to next page if success
+                  _dialogBoxForCategory(
+                      spokenCourseListProvider.courseResponse!.courseList);
+                } else {
+                  print("error");
+                }
+              }
+            },
+            child: const Text(
+              "Level",
+              style: TextStyle(color: AppColors.primaryColor),
+            ),
+          ),
+        ],
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
         child: Column(
           children: [
             /*Top*/
+            Container(
+              padding: EdgeInsets.all(5.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Text("Chapter: $chapterTitle"),
+                  RichText(
+                    text: TextSpan(
+                      text: 'Lesson: ',
+                      style: TextStyle(
+                          color: AppColors.secondaryColor,
+                          fontWeight: FontWeight.bold),
+                      children: <TextSpan>[
+                        TextSpan(
+                            text: lessonTitle,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600)),
+                      ],
+                    ),
+                  )
+                  /*Text(
+                    "Lesson: $lessonTitle",
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),*/
+                ],
+              ),
+            ),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -277,103 +370,17 @@ class _TutorScreenMobileState extends State<TutorScreenMobile> {
             ),
 
             /*BottomControl*/
-            /*Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color: AppColors.primaryCardColor,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(80),
-                  topLeft: Radius.circular(80),
-                ),
-              ),
-              padding: const EdgeInsets.all(5.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Flexible(
-                    flex: 2,
-                    child: AvatarGlow(
-                      animate: _isRecording,
-                      curve: Curves.fastOutSlowIn,
-                      glowColor: AppColors.primaryColor,
-                      duration: const Duration(milliseconds: 1000),
-                      repeat: true,
-                      glowRadiusFactor: 1,
-                      child: Container(
-                        margin: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-                        child: IconButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: _isRecording == false
-                                ? Colors.white
-                                : AppColors.primaryColor,
-                            elevation: 4,
-                          ),
-                          onPressed: () async {
-                            // Add your logic to send the message
-                            if (!_isRecording) {
-                              await startRecording();
-                            } else {
-                              await stopRecording();
-                            }
-                            setState(() {});
-                          },
-                          icon: Container(
-                            padding: const EdgeInsets.all(20),
-                            child: Icon(
-                              _isRecording == false
-                                  ? Icons.keyboard_voice_rounded
-                                  : Icons.stop_rounded,
-                              color: _isRecording == false
-                                  ? AppColors.primaryColor
-                                  : Colors.white,
-                              size: 30,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),*/
-            if (!_isRecording)
-              IconButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor,
-                  elevation: 4,
-                ),
-                onPressed: () async {
-                  // Add your logic to send the message
-                  if (!_isRecording) {
-                    await startRecording();
-                  } else {
-                    await stopRecording();
-                  }
-                  setState(() {});
-                },
-                icon: const Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Icon(
-                    Iconsax.microphone,
-                    color: Colors.white,
-                  ),
-                ),
-              )
-            else
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  AvatarGlow(
-                    animate: _isRecording,
-                    curve: Curves.fastOutSlowIn,
-                    glowColor: AppColors.primaryColor,
-                    duration: const Duration(milliseconds: 1000),
-                    repeat: true,
-                    glowRadiusFactor: 1,
+
+            Stack(
+              children: [
+                if (!_isRecording)
+                  Align(
+                    alignment: Alignment.center,
                     child: IconButton(
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryColor),
+                        backgroundColor: AppColors.primaryColor,
+                        elevation: 4,
+                      ),
                       onPressed: () async {
                         // Add your logic to send the message
                         if (!_isRecording) {
@@ -386,41 +393,282 @@ class _TutorScreenMobileState extends State<TutorScreenMobile> {
                       icon: const Padding(
                         padding: EdgeInsets.all(20.0),
                         child: Icon(
-                          Iconsax.stop,
+                          Iconsax.microphone,
                           color: Colors.white,
                         ),
                       ),
                     ),
+                  )
+                else
+                  Align(
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AvatarGlow(
+                          animate: _isRecording,
+                          curve: Curves.fastOutSlowIn,
+                          glowColor: AppColors.primaryColor,
+                          duration: const Duration(milliseconds: 1000),
+                          repeat: true,
+                          glowRadiusFactor: 1,
+                          child: IconButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primaryColor),
+                            onPressed: () async {
+                              // Add your logic to send the message
+                              if (!_isRecording) {
+                                await startRecording();
+                              } else {
+                                await stopRecording();
+                              }
+                              setState(() {});
+                            },
+                            icon: const Padding(
+                              padding: EdgeInsets.all(20.0),
+                              child: Icon(
+                                Iconsax.stop,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10.0),
+                        IconButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.redAccent),
+                          onPressed: () async {
+                            _clearRecording();
+                          },
+                          icon: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Icon(
+                              Iconsax.trash,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  SizedBox(width: 20.0),
-                  IconButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.redAccent),
-                    onPressed: () async {
-                      _clearRecording();
-                    },
-                    icon: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Icon(
-                        Iconsax.trash,
-                        color: Colors.white,
+                Positioned(
+                  right: 2,
+                  bottom: 10,
+                  child: Visibility(
+                    visible: lessonCount > 19,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryCardColor,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _conversationComponents.add(
+                                    AIResponseBox(null, userId, fullName, "Y"));
+                              });
+                            },
+                            child: const Row(
+                              children: [
+                                Text(
+                                  "Next",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                SizedBox(width: 5),
+                                Icon(
+                                  IconsaxPlusBold.direct_right,
+                                  color: AppColors.primaryColor,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget AIResponseBox(File? audio, int userId, String username) {
+  Future<Future<Object?>> _dialogBoxForCategory(
+      List<SpokenCourse> courseList) async {
+    final imageIcons = [
+      "assets/images/level_icons/chicken.png",
+      "assets/images/level_icons/elementary1.png",
+      "assets/images/level_icons/intermediate-level.png",
+      "assets/images/level_icons/upper intermediate-level.png",
+      "assets/images/level_icons/professional.png",
+      "assets/images/level_icons/support.png",
+    ];
+    return showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      transitionBuilder: (context, a1, a2, widget) {
+        return Transform.scale(
+          scale: a1.value,
+          child: Opacity(
+            opacity: a1.value,
+            child: AlertDialog(
+              title: const Text(
+                'Choose your level',
+                style: TextStyle(color: Colors.white),
+              ),
+              content: Container(
+                width: double.maxFinite,
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 1.0,
+                  ),
+                  itemCount: 6,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () async {
+                        await _handleCourseSelection(
+                            context, index, courseList);
+                      },
+                      child: Container(
+                        margin: EdgeInsets.all(10.0),
+                        padding: EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: /*color[index]*/ AppColors.backgroundColorDark,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(10.0),
+                              decoration: BoxDecoration(
+                                color: /*AppColors.primaryColor2*/
+                                    /*color[index].withOpacity(0.2)*/
+                                    Colors.white,
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Image.asset(
+                                imageIcons[index],
+                                // color: /*AppColors.primaryColor*/ color[index],
+                                width: 34.0,
+                                height: 34.0,
+                                // size: 24.0,
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                textAlign: TextAlign.center,
+                                '${courseList[index].courseName}',
+                                style: TextStyle(
+                                  color: /*color[index]*/ Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  style: TextButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor.withOpacity(0.2)),
+                  child: const Text(
+                    'Close',
+                    style: TextStyle(
+                        color: AppColors.primaryColor,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return SizedBox(
+          child: BackButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _handleCourseSelection(
+      BuildContext context, int index, List<SpokenCourse> courseList) async {
+    var courseProvider =
+        Provider.of<TutorResponseProvider>(context, listen: false);
+    int? courseId = courseList[index].courseId;
+    File? audioFile;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                "assets/images/risho_guru_icon.png",
+                width: 50,
+                height: 50,
+              ),
+              SpinKitChasingDots(
+                color: AppColors.primaryColor,
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    // Call the API
+    await courseProvider.fetchEnglishTutorResponse(
+        userId, fullName, courseId.toString(), audioFile, "N");
+
+    print("tutor response: ${courseProvider.successResponse?.aiDialogue}");
+    Navigator.pop(context);
+    // Handle the API response
+    if (courseProvider.successResponse != null) {
+      // Navigate to TutorScreen on success
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TutorScreen(
+            tutorResponse: courseProvider.successResponse!,
+          ),
+        ),
+      );
+    } else {
+      print("Error occurred during API call");
+    }
+  }
+
+  Widget AIResponseBox(
+      File? audio, int userId, String username, String nextLesson) {
     // print(sessionId);
 
     return FutureBuilder<void>(
         future: tutorResponseProvider.fetchEnglishTutorResponse(
-            userId, username, null, audio),
+            userId, username, null, audio, nextLesson),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             /*return const SpinKitThreeInOut(
@@ -506,10 +754,9 @@ class _TutorScreenMobileState extends State<TutorScreenMobile> {
             tutorResponseProvider.successResponse!.userAudioFile!;
 
         String userText = tutorResponseProvider.successResponse!.userText;
-        String lessonTitle = tutorResponseProvider.successResponse!.lessonTitle;
-        String chapterTitle =
-            tutorResponseProvider.successResponse!.chapterTitle;
-        int lessonCount = tutorResponseProvider.successResponse!.lessonCount;
+        lessonTitle = tutorResponseProvider.successResponse!.lessonTitle;
+        chapterTitle = tutorResponseProvider.successResponse!.chapterTitle;
+        lessonCount = tutorResponseProvider.successResponse!.lessonCount;
 
         _audioPath = aiDialogAudio;
 
@@ -531,7 +778,7 @@ class _TutorScreenMobileState extends State<TutorScreenMobile> {
           child: Column(
             children: [
               /*UserRow*/
-              userText != ""
+              /*userText != ""
                   ? Stack(
                       children: [
                         Column(
@@ -544,8 +791,8 @@ class _TutorScreenMobileState extends State<TutorScreenMobile> {
                                 borderRadius: BorderRadius.circular(12.0),
                                 border: Border.all(
                                     width: 1.0, color: AppColors.primaryColor),
-                                color: /*AppColors.primaryColor2.withOpacity(
-                                    0.3) */
+                                color: */ /*AppColors.primaryColor2.withOpacity(
+                                    0.3) */ /*
                                     AppColors.backgroundColorDark,
                               ),
                               padding: EdgeInsets.all(10.0),
@@ -618,7 +865,7 @@ class _TutorScreenMobileState extends State<TutorScreenMobile> {
                       ),
                       padding: EdgeInsets.all(10.0),
                       child: Text("Couldn\'t capture your voice"),
-                    ),
+                    ),*/
               /*SizedBox(height: 10.0),*/
               /*Ai Row*/
               aiDialogText != ""
@@ -646,7 +893,7 @@ class _TutorScreenMobileState extends State<TutorScreenMobile> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Image.asset(
-                                        "assets/images/tutor_speaking.png",
+                                        "assets/images/risho_guru_icon.png",
                                         width: 50,
                                         height: 50,
                                       ),

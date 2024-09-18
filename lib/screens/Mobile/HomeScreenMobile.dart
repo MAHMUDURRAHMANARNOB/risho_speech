@@ -268,7 +268,7 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
 
                       //Call the api
                       await courseProvider.fetchEnglishTutorResponse(
-                          userId, fullName, courseId, audioFile);
+                          userId, fullName, courseId, audioFile, "N");
 
                       // Dismiss the dialog once loading is done
                       if (mounted && !courseProvider.isLoading) {
@@ -910,7 +910,7 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
 
     // Call the API
     await courseProvider.fetchEnglishTutorResponse(
-        userId, fullName, courseId.toString(), audioFile);
+        userId, fullName, courseId.toString(), audioFile, "N");
 
     print("tutor response: ${courseProvider.successResponse?.aiDialogue}");
     Navigator.pop(context);
@@ -1079,7 +1079,8 @@ class ThreeDCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Hi, I\'m your Tutor',
+                    // 'Hi, I\'m your Tutor',
+                    "Spoken English",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 24,
@@ -1088,10 +1089,12 @@ class ThreeDCard extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Start practicing english with me',
+                    // 'Start learning with me',
+                    "Hi, I\'m your Tutor, Lets Start",
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
+                      color: Colors.yellow,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],

@@ -7,6 +7,7 @@ import 'package:risho_speech/providers/IeltsVocabularyCategoryListProvider.dart'
 import 'package:risho_speech/providers/IeltsVocabularyListProvider.dart';
 import 'package:risho_speech/providers/ShonodAiResponseProvider.dart';
 import 'package:risho_speech/providers/TutorResponseProvider.dart';
+import 'package:risho_speech/providers/TutorSpokenCourseProvider.dart';
 import 'package:risho_speech/providers/VocabularyDialogListProvider.dart';
 import 'package:risho_speech/providers/VocabularySentenceListProvider.dart';
 import 'package:risho_speech/providers/auth_provider.dart';
@@ -86,6 +87,8 @@ Future<void> main() async {
             create: (context) => EndIeltsListeningProvider()),
         ChangeNotifierProvider(create: (context) => ShonodAiResponseProvider()),
         ChangeNotifierProvider(create: (context) => TutorResponseProvider()),
+        ChangeNotifierProvider(
+            create: (context) => TutorSpokenCourseProvider()),
       ],
       child: UpgradeAlert(
         child: RishoSpeech(),

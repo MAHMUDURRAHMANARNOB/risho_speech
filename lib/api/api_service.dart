@@ -1127,19 +1127,20 @@ class ApiService {
 
   /*English Tutor*/
   Future<Map<String, dynamic>> getEnglishTutorResponse(
-    int userid,
-    String userName,
-    String? courseId,
-    File? audioFile,
-  ) async {
-    print("$userid , $userName , $courseId, $userid");
+      int userid,
+      String userName,
+      String? courseId,
+      File? audioFile,
+      String nextLesson) async {
+    print("$userid , $userName , $courseId, $userid, $nextLesson");
     try {
       final uri = Uri.parse("$baseUrl/EnglishTutor/");
 
       // Build the request body dynamically
       var request = http.MultipartRequest('POST', uri)
         ..fields['userid'] = userid.toString()
-        ..fields['userName'] = userName.toString();
+        ..fields['userName'] = userName.toString()
+        ..fields['nextlesson'] = nextLesson.toString();
 
       if (audioFile != null) {
         request.files.add(
@@ -1176,6 +1177,27 @@ class ApiService {
       }*/
     } catch (e) {
       throw Exception(e.toString());
+    }
+  }
+
+  /*tutor Category*/
+  Future<Map<String, dynamic>> getSpokenCourse() async {
+    final url = '$baseUrl/spokencourses/';
+    print("Posting in api service $url");
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+      );
+      print("Response:   ${response.body}");
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        print("Response in getPackagesList else" + response.body);
+        throw Exception('Failed to load data in getPackagesList');
+      }
+    } catch (e) {
+      print("Response in getPackagesList Catch" + e.toString());
+      throw Exception("Failed getPackagesList $e");
     }
   }
 }
