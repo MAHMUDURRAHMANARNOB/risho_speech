@@ -895,18 +895,29 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
     int? courseId = courseList[index].courseId;
     File? audioFile;
 
+    // Navigator.pop(context);
     // Optionally, show a loading spinner (commented out to avoid showing multiple dialogs)
-    // showDialog(
-    //   context: context,
-    //   barrierDismissible: false,
-    //   builder: (BuildContext context) {
-    //     return AlertDialog(
-    //       content: CircularProgressIndicator(
-    //         color: AppColors.primaryColor,
-    //       ),
-    //     );
-    //   },
-    // );
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                "assets/images/risho_guru_icon.png",
+                width: 50,
+                height: 50,
+              ),
+              SpinKitChasingDots(
+                color: AppColors.primaryColor,
+              ),
+            ],
+          ),
+        );
+      },
+    );
 
     // Call the API
     await courseProvider.fetchEnglishTutorResponse(
