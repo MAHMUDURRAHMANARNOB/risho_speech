@@ -13,6 +13,7 @@ import 'package:risho_speech/providers/nextQuestionProvider.dart';
 import 'package:risho_speech/providers/suggestAnswerProvider.dart';
 import 'package:risho_speech/ui/colors.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 import '../../providers/auth_provider.dart';
 import '../../providers/doConversationProvider.dart';
@@ -115,22 +116,42 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
     try {
       if (await audioRecord.hasPermission()) {
         String? path = await audioRecord.stop();
-        setState(() {
-          _isRecording = false;
-          _audioPath = path;
-          audioFile = File(_audioPath!);
-          print(_audioPath);
-          _scrollController.animateTo(
-              _scrollController.position.maxScrollExtent,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeOut);
-          _conversationComponents.add(
-            AIResponseBox(audioFile!, sessionId, userName),
-          );
-        });
-        _isSuggestAnsActive = false;
-        suggestedAnswer = null;
+        if (path != null) {
+          path = path.replaceFirst('file://', ''); // Clean the path
+          File file = File(path);
+          if (await file.exists()) {
+            audioFile = file;
+            print("Recorded file path: $path");
+          } else {
+            print("File not found at path: $path");
+          }
+        }
+
+        if (path != null && File(path).existsSync()) {
+          setState(() {
+            _isRecording = false;
+            _audioPath = path;
+            audioFile = File(_audioPath!);
+            print(_audioPath);
+            _scrollController.animateTo(
+                _scrollController.position.maxScrollExtent,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOut);
+            _conversationComponents.add(
+              AIResponseBox(audioFile!, sessionId, userName),
+            );
+          });
+          _isSuggestAnsActive = false;
+          suggestedAnswer = null;
+        }
+
         // await _convertToWav(_audioPath!);
+        else {
+          setState(() {
+            _isRecording = false;
+          });
+          print("File not found at path: $path");
+        }
       }
     } catch (e) {
       print("Error stop recording: $e");
@@ -667,6 +688,8 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
     String aiDialogText =
         doConversationProvider.conversationResponse!.aiDialogue ?? "";
     String userAudio = doConversationProvider.conversationResponse!.userAudio!;
+    double pronScore =
+        doConversationProvider.conversationResponse!.pronScore ?? 0.0;
     double accuracyScore =
         doConversationProvider.conversationResponse!.accuracyScore ?? 0.0;
     double fluencyScore =
@@ -706,6 +729,7 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                                     onPressed: () {
                                       ShowInfoDialog(
                                           userText,
+                                          pronScore,
                                           accuracyScore,
                                           fluencyScore,
                                           completenessScore,
@@ -991,6 +1015,7 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
       String aiDialogAudio = response!.aiDialogAudio!;
       String aiDialogText = response!.aiDialog ?? "";
       String userAudio = response!.userAudio!;
+      double pronScore = response!.pronScore!;
       double accuracyScore = response!.accuracyScore!;
       double fluencyScore = response!.fluencyScore!;
       double completenessScore = response!.completenessScore!;
@@ -1025,6 +1050,7 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                                       onPressed: () {
                                         ShowInfoDialog(
                                             userText,
+                                            pronScore,
                                             accuracyScore,
                                             fluencyScore,
                                             completenessScore,
@@ -1347,8 +1373,18 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
     }
   }
 
-  Future ShowInfoDialog(String userText, double accuracyScore,
+  Future ShowInfoDialog(String userText, double pronScore, double accuracyScore,
       double fluencyScore, double completenessScore, double prosodyScore) {
+    Color getColorForScore(double pronScore) {
+      if (pronScore <= 33.3) {
+        return Colors.red;
+      } else if (pronScore <= 66.6) {
+        return Colors.orangeAccent;
+      } else {
+        return Colors.green;
+      }
+    }
+
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -1370,10 +1406,143 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
+                      /*Text(
                         userText,
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.bold),
+                      ),*/
+                      /*CustomPaint(
+                        // size: width: 200, height: 100
+                        painter: CustomPainter,
+                      ),*/
+                      SizedBox(height: 10),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.secondaryCardColorGreenish
+                              .withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: SfRadialGauge(
+                          animationDuration: 500,
+                          title: GaugeTitle(
+                            text: 'Pronunciation Score',
+                            textStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          axes: <RadialAxis>[
+                            RadialAxis(
+                              /*startAngle: 180,
+                                endAngle: 0,*/
+                              interval: 10,
+                              // canScaleToFit: true,
+                              radiusFactor: 0.85,
+                              minimum: 0,
+                              maximum: 100,
+                              showLabels: false,
+                              // centerX: 0.8,
+                              // centerY: 0.6,
+
+                              // showTicks: false,
+                              ranges: <GaugeRange>[
+                                GaugeRange(
+                                  startValue: 0,
+                                  endValue: 100,
+                                  color: AppColors.backgroundColorDark,
+                                  // label: "Poor",
+                                  labelStyle: GaugeTextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  startWidth: 30.0,
+                                  endWidth: 30.0,
+                                ),
+                                /*GaugeRange(
+                                    startValue: 0,
+                                    endValue: 33.3,
+                                    color: Colors.redAccent,
+                                    label: "Poor",
+                                    labelStyle: GaugeTextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    startWidth: 50.0,
+                                    endWidth: 50.0,
+                                  ),
+                                  GaugeRange(
+                                    startValue: 33.3,
+                                    endValue: 66.6,
+                                    color: Colors.orangeAccent,
+                                    label: "Good",
+                                    labelStyle: GaugeTextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    startWidth: 50.0,
+                                    endWidth: 50.0,
+                                  ),
+                                  GaugeRange(
+                                    startValue: 66.6,
+                                    endValue: 100,
+                                    color: Colors.green,
+                                    label: "Perfect",
+                                    labelStyle: GaugeTextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    startWidth: 50.0,
+                                    endWidth: 50.0,
+                                  ),*/
+                              ],
+                              pointers: <GaugePointer>[
+                                RangePointer(
+                                    value: pronScore,
+                                    dashArray: <double>[8, 2],
+                                    width: 30,
+                                    // pointerOffset: 20,
+                                    // cornerStyle: CornerStyle.bothCurve,
+                                    color: getColorForScore(pronScore),
+                                    sizeUnit: GaugeSizeUnit.logicalPixel),
+                              ],
+
+                              /*pointers: <GaugePointer>[
+                                  MarkerPointer(
+                                    value: pronScore,
+                                    // needleLength: 0.7,
+                                    // needleEndWidth: 4,
+                                    enableAnimation: true,
+                                    markerType: MarkerType.invertedTriangle,
+                                    // needleColor: AppColors.primaryColor,
+                                    animationType: AnimationType.slowMiddle,
+                                    animationDuration: 500,
+                                  ),
+                                ],*/
+                              annotations: <GaugeAnnotation>[
+                                GaugeAnnotation(
+                                  widget: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10.0, vertical: 5.0),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primaryColor2,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    child: Text(
+                                      "${pronScore.toString()}%",
+                                      style: const TextStyle(
+                                        fontSize: 32,
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  positionFactor: 0,
+                                  angle: 90,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                       info_bar(
                         title: 'Accuracy Score',

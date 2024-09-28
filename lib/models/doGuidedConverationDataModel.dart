@@ -12,6 +12,7 @@ class DoGuidedConversationDataModel {
   final String? conversationDetails;
   final String? discussionTopic;
   final String? discusTitle;
+  final double? pronScore;
   final double? accuracyScore;
   final double? fluencyScore;
   final double? completenessScore;
@@ -36,6 +37,7 @@ class DoGuidedConversationDataModel {
     required this.conversationDetails,
     required this.discussionTopic,
     required this.discusTitle,
+    required this.pronScore,
     required this.accuracyScore,
     required this.fluencyScore,
     required this.completenessScore,
@@ -62,6 +64,9 @@ class DoGuidedConversationDataModel {
       conversationDetails: json['conversationDetails'],
       discussionTopic: json['discussionTopic'],
       discusTitle: json['discusTitle'],
+      pronScore: json['pronScore'] != null
+          ? json['pronScore'].toDouble()
+          : json['pronScore'],
       accuracyScore: json['accuracyScore'] != null
           ? json['accuracyScore'].toDouble()
           : json['accuracyScore'],

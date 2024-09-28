@@ -8,13 +8,15 @@ class DoConversationDataModel {
   final String? userText;
   final String? userTextBn;
   final String? userAudio;
+
+  final double? pronScore;
   final double? accuracyScore;
   final double? fluencyScore;
   final double? completenessScore;
   final double? prosodyScore;
   final String? isFemale;
 
-  DoConversationDataModel( {
+  DoConversationDataModel({
     required this.errorCode,
     required this.message,
     required this.sessionId,
@@ -24,6 +26,7 @@ class DoConversationDataModel {
     required this.userText,
     required this.userTextBn,
     required this.userAudio,
+    required this.pronScore,
     required this.accuracyScore,
     required this.fluencyScore,
     required this.completenessScore,
@@ -42,6 +45,9 @@ class DoConversationDataModel {
       userText: json['usertext'],
       userTextBn: json['usertextBn'],
       userAudio: json['useraudio'],
+      pronScore: json['pronScore'] != null
+          ? json['pronScore'].toDouble()
+          : json['pronScore'],
       accuracyScore: json['accuracyScore'] != null
           ? json['accuracyScore'].toDouble()
           : json['accuracyScore'],
@@ -54,7 +60,7 @@ class DoConversationDataModel {
       prosodyScore: json['prosodyScore'] != null
           ? json['prosodyScore'].toDouble()
           : json['prosodyScore'],
-        isFemale : json['isFemale'],
+      isFemale: json['isFemale'],
     );
   }
 }

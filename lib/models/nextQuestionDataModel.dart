@@ -8,6 +8,7 @@ class NextQuestionDataModel {
   final String? userText;
   final String? userTextBn;
   final String? userAudio;
+  final double? pronScore;
   final double? accuracyScore;
   final double? fluencyScore;
   final double? completenessScore;
@@ -24,6 +25,7 @@ class NextQuestionDataModel {
     required this.userText,
     required this.userTextBn,
     required this.userAudio,
+    required this.pronScore,
     required this.accuracyScore,
     required this.fluencyScore,
     required this.completenessScore,
@@ -42,6 +44,7 @@ class NextQuestionDataModel {
       userText: json['usertext'],
       userTextBn: json['usertextBn'],
       userAudio: json['useraudio'],
+      pronScore: json['pronScore'].toDouble(),
       accuracyScore: json['accuracyScore'].toDouble(),
       fluencyScore: json['fluencyScore'].toDouble(),
       completenessScore: json['completenessScore'].toDouble(),

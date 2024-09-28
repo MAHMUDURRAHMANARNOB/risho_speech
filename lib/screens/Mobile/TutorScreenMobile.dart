@@ -262,238 +262,240 @@ class _TutorScreenMobileState extends State<TutorScreenMobile> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundColorDark,
-      appBar: AppBar(
-        title: const Text(
-          "Learn with Tutor",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundColorDark,
+        appBar: AppBar(
+          title: const Text(
+            "Learn with Tutor",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
+          actions: [
+            TextButton(
+              onPressed: () async {
+                var spokenCourseListProvider =
+                    Provider.of<TutorSpokenCourseProvider>(context,
+                        listen: false);
+                String? courseId; // Initially null
+                File? audioFile;
+                showDialog(
+                  context: context,
+                  barrierDismissible:
+                      false, // Prevent dismissing by tapping outside
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      content: Container(
+                        // width: double.maxFinite,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Image.asset(
+                              "assets/images/risho_guru_icon.png",
+                              width: 80,
+                              height: 80,
+                            ),
+                            SizedBox(height: 5),
+                            const SpinKitChasingDots(
+                              color: AppColors.primaryColor,
+                            ),
+                          ],
+                        ),
+                      ), // Loading spinner
+                    );
+                  },
+                );
+                //Call the api
+                await spokenCourseListProvider.fetchSpokenCourses();
+                if (mounted && !spokenCourseListProvider.isLoading) {
+                  Navigator.pop(context); // Close the dialog
+                }
+                //Handling the api response
+                if (mounted) {
+                  if (spokenCourseListProvider.courseResponse != null) {
+                    // Navigate to next page if success
+                    _dialogBoxForCategory(
+                        spokenCourseListProvider.courseResponse!.courseList);
+                  } else {
+                    print("error");
+                  }
+                }
+              },
+              child: const Text(
+                "Level",
+                style: TextStyle(color: AppColors.primaryColor),
+              ),
+            ),
+          ],
         ),
-        centerTitle: true,
-        actions: [
-          TextButton(
-            onPressed: () async {
-              var spokenCourseListProvider =
-                  Provider.of<TutorSpokenCourseProvider>(context,
-                      listen: false);
-              String? courseId; // Initially null
-              File? audioFile;
-              showDialog(
-                context: context,
-                barrierDismissible:
-                    false, // Prevent dismissing by tapping outside
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    content: Container(
-                      // width: double.maxFinite,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Image.asset(
-                            "assets/images/risho_guru_icon.png",
-                            width: 80,
-                            height: 80,
-                          ),
-                          SizedBox(height: 5),
-                          const SpinKitChasingDots(
-                            color: AppColors.primaryColor,
-                          ),
+        body: Container(
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            children: [
+              /*Top*/
+              Container(
+                padding: EdgeInsets.all(5.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Text("Chapter: $chapterTitle"),
+                    RichText(
+                      text: TextSpan(
+                        text: 'Lesson: ',
+                        style: TextStyle(
+                            color: AppColors.secondaryColor,
+                            fontWeight: FontWeight.bold),
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: lessonTitle,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600)),
                         ],
                       ),
-                    ), // Loading spinner
-                  );
-                },
-              );
-              //Call the api
-              await spokenCourseListProvider.fetchSpokenCourses();
-              if (mounted && !spokenCourseListProvider.isLoading) {
-                Navigator.pop(context); // Close the dialog
-              }
-              //Handling the api response
-              if (mounted) {
-                if (spokenCourseListProvider.courseResponse != null) {
-                  // Navigate to next page if success
-                  _dialogBoxForCategory(
-                      spokenCourseListProvider.courseResponse!.courseList);
-                } else {
-                  print("error");
-                }
-              }
-            },
-            child: const Text(
-              "Level",
-              style: TextStyle(color: AppColors.primaryColor),
-            ),
-          ),
-        ],
-      ),
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          children: [
-            /*Top*/
-            Container(
-              padding: EdgeInsets.all(5.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Text("Chapter: $chapterTitle"),
-                  RichText(
-                    text: TextSpan(
-                      text: 'Lesson: ',
+                    )
+                    /*Text(
+                      "Lesson: $lessonTitle",
                       style: TextStyle(
-                          color: AppColors.secondaryColor,
-                          fontWeight: FontWeight.bold),
-                      children: <TextSpan>[
-                        TextSpan(
-                            text: lessonTitle,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600)),
-                      ],
-                    ),
-                  )
-                  /*Text(
-                    "Lesson: $lessonTitle",
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
-                  ),*/
-                ],
-              ),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: _conversationComponents /*.reversed.toList()*/,
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),*/
+                  ],
                 ),
               ),
-            ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: _conversationComponents /*.reversed.toList()*/,
+                  ),
+                ),
+              ),
 
-            /*BottomControl*/
+              /*BottomControl*/
 
-            Stack(
-              children: [
-                if (!_isRecording)
-                  Align(
-                    alignment: Alignment.center,
-                    child: IconButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryColor,
-                        elevation: 4,
-                      ),
-                      onPressed: () async {
-                        // Add your logic to send the message
-                        if (!_isRecording) {
-                          await startRecording();
-                        } else {
-                          await stopRecording();
-                        }
-                        setState(() {});
-                      },
-                      icon: const Padding(
-                        padding: EdgeInsets.all(20.0),
-                        child: Icon(
-                          Iconsax.microphone,
-                          color: Colors.white,
+              Stack(
+                children: [
+                  if (!_isRecording)
+                    Align(
+                      alignment: Alignment.center,
+                      child: IconButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryColor,
+                          elevation: 4,
+                        ),
+                        onPressed: () async {
+                          // Add your logic to send the message
+                          if (!_isRecording) {
+                            await startRecording();
+                          } else {
+                            await stopRecording();
+                          }
+                          setState(() {});
+                        },
+                        icon: const Padding(
+                          padding: EdgeInsets.all(20.0),
+                          child: Icon(
+                            Iconsax.microphone,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                    ),
-                  )
-                else
-                  Align(
-                    alignment: Alignment.center,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        AvatarGlow(
-                          animate: _isRecording,
-                          curve: Curves.fastOutSlowIn,
-                          glowColor: AppColors.primaryColor,
-                          duration: const Duration(milliseconds: 1000),
-                          repeat: true,
-                          glowRadiusFactor: 1,
-                          child: IconButton(
+                    )
+                  else
+                    Align(
+                      alignment: Alignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          AvatarGlow(
+                            animate: _isRecording,
+                            curve: Curves.fastOutSlowIn,
+                            glowColor: AppColors.primaryColor,
+                            duration: const Duration(milliseconds: 1000),
+                            repeat: true,
+                            glowRadiusFactor: 1,
+                            child: IconButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primaryColor),
+                              onPressed: () async {
+                                // Add your logic to send the message
+                                if (!_isRecording) {
+                                  await startRecording();
+                                } else {
+                                  await stopRecording();
+                                }
+                                setState(() {});
+                              },
+                              icon: const Padding(
+                                padding: EdgeInsets.all(20.0),
+                                child: Icon(
+                                  Iconsax.stop,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 10.0),
+                          IconButton(
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primaryColor),
+                                backgroundColor: Colors.redAccent),
                             onPressed: () async {
-                              // Add your logic to send the message
-                              if (!_isRecording) {
-                                await startRecording();
-                              } else {
-                                await stopRecording();
-                              }
-                              setState(() {});
+                              _clearRecording();
                             },
-                            icon: const Padding(
-                              padding: EdgeInsets.all(20.0),
+                            icon: Padding(
+                              padding: const EdgeInsets.all(10.0),
                               child: Icon(
-                                Iconsax.stop,
+                                Iconsax.trash,
                                 color: Colors.white,
                               ),
                             ),
                           ),
-                        ),
-                        SizedBox(width: 10.0),
-                        IconButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.redAccent),
-                          onPressed: () async {
-                            _clearRecording();
-                          },
-                          icon: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Icon(
-                              Iconsax.trash,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                Positioned(
-                  right: 2,
-                  bottom: 10,
-                  child: Visibility(
-                    visible: lessonCount > 19,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primaryCardColor,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _conversationComponents.add(
-                                    AIResponseBox(null, userId, fullName, "Y"));
-                              });
-                            },
-                            child: const Row(
-                              children: [
-                                Text(
-                                  "Next",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                SizedBox(width: 5),
-                                Icon(
-                                  IconsaxPlusBold.direct_right,
-                                  color: AppColors.primaryColor,
-                                ),
-                              ],
-                            ),
-                          ),
                         ],
                       ),
                     ),
+                  Positioned(
+                    right: 2,
+                    bottom: 10,
+                    child: Visibility(
+                      visible: lessonCount > 19,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primaryCardColor,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _conversationComponents.add(AIResponseBox(
+                                      null, userId, fullName, "Y"));
+                                });
+                              },
+                              child: const Row(
+                                children: [
+                                  Text(
+                                    "Next",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Icon(
+                                    IconsaxPlusBold.direct_right,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

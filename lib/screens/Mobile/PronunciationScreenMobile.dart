@@ -18,6 +18,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 import '../../models/validateSpokenSentenceDataModel.dart';
 import '../../providers/auth_provider.dart';
@@ -523,6 +524,9 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
             "";
         String userAudio =
             doGuidedConversationProvider.guidedConversationResponse!.fileLoc!;
+        double pronScore = doGuidedConversationProvider
+                .guidedConversationResponse!.pronScore ??
+            0.0;
         double accuracyScore = doGuidedConversationProvider
                 .guidedConversationResponse!.accuracyScore ??
             0.0;
@@ -809,6 +813,7 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
                                             });
                                             ShowInfoDialog(
                                                 userText,
+                                                pronScore,
                                                 accuracyScore,
                                                 fluencyScore,
                                                 completenessScore,
@@ -989,6 +994,7 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
 
   Future ShowInfoDialog(
     String userText,
+    double pronScore,
     double accuracyScore,
     double fluencyScore,
     double completenessScore,
@@ -996,6 +1002,16 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
     List<WordInfo>? words,
   ) {
     print("words: ${words?[2].word}");
+    Color getColorForScore(double pronScore) {
+      if (pronScore <= 33.3) {
+        return Colors.red;
+      } else if (pronScore <= 66.6) {
+        return Colors.orangeAccent;
+      } else {
+        return Colors.green;
+      }
+    }
+
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -1022,6 +1038,135 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
                         userText,
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 10),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.secondaryCardColorGreenish
+                              .withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: SfRadialGauge(
+                          animationDuration: 500,
+                          title: GaugeTitle(
+                            text: 'Pronunciation Score',
+                            textStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          axes: <RadialAxis>[
+                            RadialAxis(
+                              /*startAngle: 180,
+                                endAngle: 0,*/
+                              interval: 10,
+                              // canScaleToFit: true,
+                              radiusFactor: 0.85,
+                              minimum: 0,
+                              maximum: 100,
+                              showLabels: false,
+                              // centerX: 0.8,
+                              // centerY: 0.6,
+
+                              // showTicks: false,
+                              ranges: <GaugeRange>[
+                                GaugeRange(
+                                  startValue: 0,
+                                  endValue: 100,
+                                  color: AppColors.backgroundColorDark,
+                                  // label: "Poor",
+                                  labelStyle: GaugeTextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  startWidth: 30.0,
+                                  endWidth: 30.0,
+                                ),
+                                /*GaugeRange(
+                                    startValue: 0,
+                                    endValue: 33.3,
+                                    color: Colors.redAccent,
+                                    label: "Poor",
+                                    labelStyle: GaugeTextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    startWidth: 50.0,
+                                    endWidth: 50.0,
+                                  ),
+                                  GaugeRange(
+                                    startValue: 33.3,
+                                    endValue: 66.6,
+                                    color: Colors.orangeAccent,
+                                    label: "Good",
+                                    labelStyle: GaugeTextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    startWidth: 50.0,
+                                    endWidth: 50.0,
+                                  ),
+                                  GaugeRange(
+                                    startValue: 66.6,
+                                    endValue: 100,
+                                    color: Colors.green,
+                                    label: "Perfect",
+                                    labelStyle: GaugeTextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    startWidth: 50.0,
+                                    endWidth: 50.0,
+                                  ),*/
+                              ],
+                              pointers: <GaugePointer>[
+                                RangePointer(
+                                    value: pronScore,
+                                    dashArray: <double>[8, 2],
+                                    width: 30,
+                                    // pointerOffset: 20,
+                                    // cornerStyle: CornerStyle.bothCurve,
+                                    color: getColorForScore(pronScore),
+                                    sizeUnit: GaugeSizeUnit.logicalPixel),
+                              ],
+
+                              /*pointers: <GaugePointer>[
+                                  MarkerPointer(
+                                    value: pronScore,
+                                    // needleLength: 0.7,
+                                    // needleEndWidth: 4,
+                                    enableAnimation: true,
+                                    markerType: MarkerType.invertedTriangle,
+                                    // needleColor: AppColors.primaryColor,
+                                    animationType: AnimationType.slowMiddle,
+                                    animationDuration: 500,
+                                  ),
+                                ],*/
+                              annotations: <GaugeAnnotation>[
+                                GaugeAnnotation(
+                                  widget: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10.0, vertical: 5.0),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primaryColor2,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    child: Text(
+                                      "${pronScore.toString()}%",
+                                      style: const TextStyle(
+                                        fontSize: 32,
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  positionFactor: 0,
+                                  angle: 90,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

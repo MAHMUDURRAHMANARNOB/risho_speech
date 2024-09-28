@@ -65,157 +65,160 @@ class _IeltsAssistantScreenMobileState
     int userId = Provider.of<AuthProvider>(context).user!.id ?? 2;
     /* shonodAiResponseProvider =
         Provider.of<ShonodAiResponseProvider>(context, listen: false);*/
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "IELTS Assistant",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            "IELTS Assistant",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
         ),
-      ),
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              Expanded(
-                child: Container(
-                  width: double.infinity,
-                  child: SingleChildScrollView(
-                    controller: _scrollController,
-                    physics: BouncingScrollPhysics(),
-                    child: _lessonComponents.isNotEmpty
-                        ? Column(
-                            children: _lessonComponents,
-                          )
-                        : Container(
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryCardColor,
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            margin: EdgeInsets.all(8),
-                            padding: EdgeInsets.all(16),
-                            child: const Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Welcome to IELTS ASSISTANT',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      textAlign: TextAlign.center,
-                                      'Ask anything as you are speaking to a Ielts Trainer',
+        body: Stack(
+          children: [
+            Column(
+              children: [
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    child: SingleChildScrollView(
+                      controller: _scrollController,
+                      physics: BouncingScrollPhysics(),
+                      child: _lessonComponents.isNotEmpty
+                          ? Column(
+                              children: _lessonComponents,
+                            )
+                          : Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryCardColor,
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              margin: EdgeInsets.all(8),
+                              padding: EdgeInsets.all(16),
+                              child: const Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Welcome to IELTS ASSISTANT',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                  ],
-                                ),
-                              ],
+                                  ),
+                                  SizedBox(height: 8),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        textAlign: TextAlign.center,
+                                        'Ask anything as you are speaking to a Ielts Trainer',
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
+                    ),
+                  ),
+                ),
+                Container(
+                  // color: AppColors.primaryColor.withOpacity(0.1),
+                  margin: const EdgeInsets.only(
+                      left: 10.0, right: 10.0, bottom: 15.0, top: 8.0),
+                  /*decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(topLeft: )
+              ),*/
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: questionTextFieldController,
+                          maxLines: 3,
+                          minLines: 1,
+                          cursorColor: AppColors.primaryColor,
+                          decoration: InputDecoration(
+                            hintText: 'Ask your question...',
+                            hintStyle: const TextStyle(
+                                color: Colors.white70,
+                                fontWeight: FontWeight.w600),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(50.0)),
+                              borderSide: BorderSide(
+                                  color: AppColors.secondaryCardColorGreenish
+                                      .withOpacity(0.5)), // Transparent border
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(50.0)),
+                              borderSide: BorderSide(
+                                color: AppColors.secondaryCardColorGreenish
+                                    .withOpacity(0.5),
+                              ),
+                            ),
+                            fillColor: AppColors.secondaryCardColorGreenish
+                                .withOpacity(0.5),
+                            filled: true,
                           ),
+                          onChanged: (value) {
+                            _question = value;
+                          },
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          if (_question.isNotEmpty) {
+                            questionTextFieldController.clear();
+                            setState(() {
+                              _lessonComponents.add(
+                                generateComponentGettingResponse(
+                                  "Ielts Preparation expert",
+                                  _question,
+                                  "N",
+                                  "Bangladesh",
+                                  userId,
+                                  _sessionId,
+                                ),
+                              );
+                            });
+                          } else {
+                            ErrorDialog(
+                              message: "Ask Your Question First",
+                            );
+                          }
+                        },
+                        icon: const Icon(
+                          IconsaxPlusBold.direct_right,
+                          color: AppColors.primaryColor,
+                          size: 24,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            if (_showScrollToBottomButton)
+              Positioned(
+                bottom: 90,
+                right: 20,
+                child: FloatingActionButton(
+                  backgroundColor: Colors.white,
+                  onPressed: () {
+                    /*_scrollController.animateTo(
+                      _scrollController.position.maxScrollExtent,
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeOut,
+                    );*/
+                    _scrollToBottom();
+                  },
+                  child: Icon(
+                    Icons.arrow_downward,
+                    color: AppColors.primaryColor,
                   ),
                 ),
               ),
-              Container(
-                // color: AppColors.primaryColor.withOpacity(0.1),
-                margin: const EdgeInsets.only(
-                    left: 10.0, right: 10.0, bottom: 15.0, top: 8.0),
-                /*decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(topLeft: )
-            ),*/
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: questionTextFieldController,
-                        maxLines: 3,
-                        minLines: 1,
-                        cursorColor: AppColors.primaryColor,
-                        decoration: InputDecoration(
-                          hintText: 'Ask your question...',
-                          hintStyle: const TextStyle(
-                              color: Colors.white70,
-                              fontWeight: FontWeight.w600),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(50.0)),
-                            borderSide: BorderSide(
-                                color: AppColors.secondaryCardColorGreenish
-                                    .withOpacity(0.5)), // Transparent border
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(50.0)),
-                            borderSide: BorderSide(
-                              color: AppColors.secondaryCardColorGreenish
-                                  .withOpacity(0.5),
-                            ),
-                          ),
-                          fillColor: AppColors.secondaryCardColorGreenish
-                              .withOpacity(0.5),
-                          filled: true,
-                        ),
-                        onChanged: (value) {
-                          _question = value;
-                        },
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        if (_question.isNotEmpty) {
-                          questionTextFieldController.clear();
-                          setState(() {
-                            _lessonComponents.add(
-                              generateComponentGettingResponse(
-                                "Ielts Preparation expert",
-                                _question,
-                                "N",
-                                "Bangladesh",
-                                userId,
-                                _sessionId,
-                              ),
-                            );
-                          });
-                        } else {
-                          ErrorDialog(
-                            message: "Ask Your Question First",
-                          );
-                        }
-                      },
-                      icon: const Icon(
-                        IconsaxPlusBold.direct_right,
-                        color: AppColors.primaryColor,
-                        size: 24,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          if (_showScrollToBottomButton)
-            Positioned(
-              bottom: 90,
-              right: 20,
-              child: FloatingActionButton(
-                backgroundColor: Colors.white,
-                onPressed: () {
-                  /*_scrollController.animateTo(
-                    _scrollController.position.maxScrollExtent,
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.easeOut,
-                  );*/
-                  _scrollToBottom();
-                },
-                child: Icon(
-                  Icons.arrow_downward,
-                  color: AppColors.primaryColor,
-                ),
-              ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

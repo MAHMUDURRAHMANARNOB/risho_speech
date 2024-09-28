@@ -67,6 +67,7 @@ class DoGuidedConversationProvider extends ChangeNotifier {
           conversationDetails: '',
           discussionTopic: '',
           discusTitle: '',
+          pronScore: null,
           accuracyScore: null,
           fluencyScore: null,
           completenessScore: null,
