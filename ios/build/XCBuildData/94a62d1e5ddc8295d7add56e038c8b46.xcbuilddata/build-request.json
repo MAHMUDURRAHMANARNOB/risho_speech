@@ -1,0 +1,139 @@
+{
+  "buildCommand" : {
+    "command" : "prepareForIndexing",
+    "enableIndexBuildArena" : false,
+    "targets" : null
+  },
+  "configuredTargets" : [
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e989da425bb6d6d5d8dbb95e4afffb82217"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e985f0ec3a68eeed5241cb87afb05bcc380"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e98312b4bc59bbbe2c06c205bf4da6737f5"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e98483832d3c820398e9d40e1a6904b03fe"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e98355cff7d758029119bc2218cc297bc97"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e98306ea98533a6c78c50f5382ab243d3bc"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e98061ad5753743dc10d394720f4d91af46"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e98916834ec4bb54bd12b93f5cff3b46819"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e98d6a3e96f78013eaa4ca36aa0bb49af35"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e98d41ce0bf2141365ff0288286787936d9"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e98583f48d08e567205bb589ccf43c23e63"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e98a562549a031aeda8bf3440b79b3420bc"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e98839a1650b1f10605b2db52456c9e6468"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e985739272bce418ef50bd06c859612bad5"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e984298f17c2f7febdbad1daf849e42a9dc"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e98f1ed40c0d488e7d17a2574221f5de571"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e98a5ae7244e41cc249cf7186dbb9962ecb"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e987b6c2f882d164ef4f3c76673562685a1"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e9830037b09fee48cfce1f8562d753688c8"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e987ea64ee8d53085bf9edd1a57aaf8cbb5"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e98ef10255b706f98e1e88fae00855b0968"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e9802f35ab680609a626ebd2ddd692a3822"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e985e44c3717b25f2738838749fbb1db55a"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e9849c5bdbe31e3b466d37bab9271baf60a"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e9890f568fc9b811cd56b08e401eec0f35e"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e9828cab1f188854e0a973e6ff6905c5ffe"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e98e0be3b0d5ad56f1985578b1f97431765"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e98512dd6ae7d689c296103006db83cb480"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e98903e66fa03d6d27edaa18126a82c20fd"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e9891b3b8cc56823cdea4b418e009a423b2"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e988efdc4dd0ac29b43123295eca853f4ed"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e987c93e943aa0a38b5f6684beaf6b4a3a1"
+    }
+  ],
+  "containerPath" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/Pods/Pods.xcodeproj",
+  "continueBuildingAfterErrors" : true,
+  "dependencyScope" : "workspace",
+  "enableIndexBuildArena" : false,
+  "hideShellScriptEnvironment" : false,
+  "parameters" : {
+    "action" : "build",
+    "arenaInfo" : {
+      "buildIntermediatesPath" : "",
+      "buildProductsPath" : "",
+      "derivedDataPath" : "/Users/mahmudurrahman/Library/Developer/Xcode/DerivedData",
+      "indexDataStoreFolderPath" : "/Users/mahmudurrahman/Library/Developer/Xcode/DerivedData/Pods-baztgqghshisqcbkvsnfwoqxoxge/Index.noindex/DataStore",
+      "indexEnableDataStore" : true,
+      "indexPCHPath" : "/Users/mahmudurrahman/Library/Developer/Xcode/DerivedData/Pods-baztgqghshisqcbkvsnfwoqxoxge/Index.noindex/PrecompiledHeaders",
+      "pchPath" : ""
+    },
+    "configurationName" : "Release",
+    "overrides" : {
+      "synthesized" : {
+        "table" : {
+          "ENABLE_PREVIEWS" : "NO",
+          "ENABLE_XOJIT_PREVIEWS" : "NO",
+          "ONLY_ACTIVE_ARCH" : "YES"
+        }
+      }
+    }
+  },
+  "qos" : "default",
+  "schemeCommand" : "launch",
+  "showNonLoggedProgress" : true,
+  "useDryRun" : true,
+  "useImplicitDependencies" : false,
+  "useLegacyBuildLocations" : false,
+  "useParallelTargets" : false
+}

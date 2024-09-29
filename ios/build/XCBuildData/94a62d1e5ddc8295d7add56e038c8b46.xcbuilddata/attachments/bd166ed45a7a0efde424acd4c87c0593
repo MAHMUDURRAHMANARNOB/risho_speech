@@ -1,0 +1,15 @@
+{
+  "" : {
+    "const-values" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/build/Pods.build/Release-iphoneos/rive_common.build/Objects-normal/arm64/rive_common-master.swiftconstvalues",
+    "dependencies" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/build/Pods.build/Release-iphoneos/rive_common.build/Objects-normal/arm64/rive_common-master.d",
+    "diagnostics" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/build/Pods.build/Release-iphoneos/rive_common.build/Objects-normal/arm64/rive_common-master.dia",
+    "emit-module-dependencies" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/build/Pods.build/Release-iphoneos/rive_common.build/Objects-normal/arm64/rive_common-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/build/Pods.build/Release-iphoneos/rive_common.build/Objects-normal/arm64/rive_common-master-emit-module.dia",
+    "swift-dependencies" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/build/Pods.build/Release-iphoneos/rive_common.build/Objects-normal/arm64/rive_common-master.swiftdeps"
+  },
+  "/Users/mahmudurrahman/.pub-cache/hosted/pub.dev/rive_common-0.4.11/ios/Classes/SwiftRivePlugin.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/rive_common.build/Objects-normal/arm64/SwiftRivePlugin.o",
+    "llvm-bc" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/build/Pods.build/Release-iphoneos/rive_common.build/Objects-normal/arm64/SwiftRivePlugin.bc",
+    "object" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/build/Pods.build/Release-iphoneos/rive_common.build/Objects-normal/arm64/SwiftRivePlugin.o"
+  }
+}

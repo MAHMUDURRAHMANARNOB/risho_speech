@@ -1,0 +1,23 @@
+{
+  'version': 0,
+  'use-external-names': 'false',
+  'case-sensitive': 'false',
+  'roots': [{
+    'type': 'directory',
+    'name': "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/build/Release-iphoneos/rive_common/rive_common.framework/Modules"
+    'contents': [{
+      'type': 'file',
+      'name': "module.modulemap",
+      'external-contents': "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/build/Pods.build/Release-iphoneos/rive_common.build/unextended-module.modulemap",
+    }]
+    },
+    {
+    'type': 'directory',
+    'name': "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/build/Release-iphoneos/rive_common/rive_common.framework/Headers"
+    'contents': [{
+      'type': 'file',
+      'name': "rive_common-Swift.h",
+      'external-contents': "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/build/Pods.build/Release-iphoneos/rive_common.build/unextended-interface-header.h",
+    }]
+    }]
+}

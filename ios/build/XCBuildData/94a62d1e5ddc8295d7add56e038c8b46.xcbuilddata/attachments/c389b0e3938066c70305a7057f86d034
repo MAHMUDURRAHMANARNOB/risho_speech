@@ -1,0 +1,15 @@
+{
+  "" : {
+    "const-values" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/build/Pods.build/Release-iphoneos/speech_to_text.build/Objects-normal/arm64/speech_to_text-master.swiftconstvalues",
+    "dependencies" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/build/Pods.build/Release-iphoneos/speech_to_text.build/Objects-normal/arm64/speech_to_text-master.d",
+    "diagnostics" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/build/Pods.build/Release-iphoneos/speech_to_text.build/Objects-normal/arm64/speech_to_text-master.dia",
+    "emit-module-dependencies" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/build/Pods.build/Release-iphoneos/speech_to_text.build/Objects-normal/arm64/speech_to_text-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/build/Pods.build/Release-iphoneos/speech_to_text.build/Objects-normal/arm64/speech_to_text-master-emit-module.dia",
+    "swift-dependencies" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/build/Pods.build/Release-iphoneos/speech_to_text.build/Objects-normal/arm64/speech_to_text-master.swiftdeps"
+  },
+  "/Users/mahmudurrahman/.pub-cache/hosted/pub.dev/speech_to_text-6.6.0/ios/Classes/SwiftSpeechToTextPlugin.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release-iphoneos/speech_to_text.build/Objects-normal/arm64/SwiftSpeechToTextPlugin.o",
+    "llvm-bc" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/build/Pods.build/Release-iphoneos/speech_to_text.build/Objects-normal/arm64/SwiftSpeechToTextPlugin.bc",
+    "object" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/build/Pods.build/Release-iphoneos/speech_to_text.build/Objects-normal/arm64/SwiftSpeechToTextPlugin.o"
+  }
+}

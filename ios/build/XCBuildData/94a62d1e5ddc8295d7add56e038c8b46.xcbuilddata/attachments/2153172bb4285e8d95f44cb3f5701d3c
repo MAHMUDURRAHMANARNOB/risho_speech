@@ -1,0 +1,23 @@
+{
+  'version': 0,
+  'use-external-names': 'false',
+  'case-sensitive': 'false',
+  'roots': [{
+    'type': 'directory',
+    'name': "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/build/Release-iphoneos/speech_to_text/speech_to_text.framework/Modules"
+    'contents': [{
+      'type': 'file',
+      'name': "module.modulemap",
+      'external-contents': "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/build/Pods.build/Release-iphoneos/speech_to_text.build/unextended-module.modulemap",
+    }]
+    },
+    {
+    'type': 'directory',
+    'name': "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/build/Release-iphoneos/speech_to_text/speech_to_text.framework/Headers"
+    'contents': [{
+      'type': 'file',
+      'name': "speech_to_text-Swift.h",
+      'external-contents': "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/ios/build/Pods.build/Release-iphoneos/speech_to_text.build/unextended-interface-header.h",
+    }]
+    }]
+}

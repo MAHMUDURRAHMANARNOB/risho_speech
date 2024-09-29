@@ -1,0 +1,11 @@
+framework module record {
+  umbrella header "record-umbrella.h"
+
+  export *
+  module * { export * }
+}
+
+module record.Swift {
+  header "record-Swift.h"
+  requires objc
+}
