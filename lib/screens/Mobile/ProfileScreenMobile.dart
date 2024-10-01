@@ -7,6 +7,7 @@ import 'package:risho_speech/screens/AboutScreen.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/subscriptionStatus_provider.dart';
 import '../../ui/colors.dart';
+import '../DeleteAccount.dart';
 import '../LoginScreen.dart';
 import '../packages_screen.dart';
 
@@ -951,6 +952,80 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                         ),
                         Icon(
                           Icons.info,
+                          size: 30,
+                          color: AppColors.primaryColor,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10.0),
+                  //Delete Account
+                  ElevatedButton(
+                    onPressed: () {
+                      // Call the logout method from AuthProvider
+
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text("Delete Account"),
+                            content: Text("Are you sure you want to Proceed?"),
+                            actions: <Widget>[
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      AppColors.primaryColor.withOpacity(0.1),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text(
+                                  "Cancel",
+                                  style:
+                                      TextStyle(color: AppColors.primaryColor),
+                                ),
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      AppColors.secondaryColor.withOpacity(0.1),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const DeleteAccount()),
+                                  );
+                                },
+                                child: Text("Proceed",
+                                    style: TextStyle(
+                                        color: AppColors.secondaryColor)),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      // Navigate back to the login screen
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryCardColor,
+                      padding: EdgeInsets.all(15.0),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Delete Account",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Icon(
+                          Icons.delete_rounded,
                           size: 30,
                           color: AppColors.primaryColor,
                         ),

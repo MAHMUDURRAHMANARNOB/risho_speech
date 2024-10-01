@@ -50,7 +50,7 @@ class _PronunciationScreenState extends State<PronunciationScreen> {
           discusTitle: widget.discusTitle,
           actorName: widget.actorName,
         ),
-        tabletScaffold: PronunciationScreenTablet(
+        tabletScaffold: PronunciationScreenMobile(
           conversationId: widget.conversationId,
           dialogId: widget.dialogId,
           conversationEn: widget.conversationEn,
@@ -62,7 +62,7 @@ class _PronunciationScreenState extends State<PronunciationScreen> {
           discusTitle: widget.discusTitle,
           actorName: widget.actorName,
         ),
-        desktopScaffold: PronunciationScreenTablet(
+        desktopScaffold: PronunciationScreenMobile(
           conversationId: widget.conversationId,
           dialogId: widget.dialogId,
           conversationEn: widget.conversationEn,

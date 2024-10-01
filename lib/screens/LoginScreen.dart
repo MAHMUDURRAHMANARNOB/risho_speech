@@ -19,8 +19,8 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: ResponsiveLayout(
         mobileScaffold: LoginScreenMobile(),
-        tabletScaffold: LoginScreenTablet(),
-        desktopScaffold: LoginScreenTablet(),
+        tabletScaffold: LoginScreenMobile(),
+        desktopScaffold: LoginScreenMobile(),
       ),
     );
   }

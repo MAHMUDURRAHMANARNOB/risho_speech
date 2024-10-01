@@ -10,9 +10,11 @@ import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:risho_speech/screens/Common/terms_and_condition_widget.dart';
 import 'package:risho_speech/screens/Dashboard.dart';
+import '../../providers/createUserProvider.dart';
 import '../../providers/optProvider.dart';
 import '../../ui/colors.dart';
 import '../Mobile/OTPScreenMobile.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class RegistrationForm extends StatefulWidget {
   const RegistrationForm({super.key});
@@ -531,7 +533,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   }
                 : null,
             child: Container(
-              width: 350,
+              width: double.infinity,
               padding: EdgeInsets.all(10.0),
               alignment: Alignment.center,
               child: Text(
@@ -540,10 +542,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
               ),
             ),
           ),
-          const SizedBox(height: 5), // Add vertical space
+          const SizedBox(height: 20), // Add vertical space
 
-          /*Signup with google*/
-          /*Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
@@ -572,46 +573,67 @@ class _RegistrationFormState extends State<RegistrationForm> {
               ),
             ],
           ),
-          const SizedBox(height: 20),*/ // Add vertical space
-          const SizedBox(height: 5),
-          /*Container(
-            width: double.infinity,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25.0),
-                    color: Colors.white,
-                  ),
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: FaIcon(
-                      FontAwesomeIcons.google, // Google icon from Font Awesome
-                      color: Colors.red, // Change the color of the Google logo
-                    ),
-                  ),
+          const SizedBox(height: 10),
+          Center(
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                side: BorderSide(
+                  color: Colors.white,
                 ),
-                SizedBox(
-                  width: 5.0,
+              ),
+              label: Text(
+                'Sign up with Apple',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25.0),
-                    color: Colors.white,
-                  ),
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: FaIcon(
-                      FontAwesomeIcons
-                          .facebookF, // Google icon from Font Awesome
-                      color: Colors.blue, // Change the color of the Google logo
-                    ),
-                  ),
+              ),
+              onPressed: () async {
+                try {
+                  final credential = await SignInWithApple.getAppleIDCredential(
+                    scopes: [
+                      AppleIDAuthorizationScopes.email,
+                      AppleIDAuthorizationScopes.fullName,
+                    ],
+                  );
+                  String authorizationCode = credential.authorizationCode;
+                  String? email = credential.email; // Optional if provided
+                  String? fullName = credential.givenName! +
+                      ' ' +
+                      credential.familyName!; // Optional if provided
+
+                  // Now, handle user creation with the Apple Sign-In information
+                  handleAppleSignIn(
+                      context, authorizationCode, email, fullName);
+                  // Process the credential
+                } catch (e) {
+                  print('Apple Sign-In error: $e');
+                }
+                /*final credential = await SignInWithApple.getAppleIDCredential(
+                  scopes: [
+                    AppleIDAuthorizationScopes.email,
+                    AppleIDAuthorizationScopes.fullName,
+                  ],
+                );*/
+
+                // Send the authorization code to your backend for validation
+                // Use credential.authorizationCode
+                // Extract credentials
+              },
+              icon: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.apple,
+                  color: Colors.white,
+                  size: 34,
                 ),
-              ],
+              ),
             ),
-          ),*/
+          ),
+
+          /*Signup with google*/
+          const SizedBox(height: 30),
 
           /*const SizedBox(height: 20),*/
           Row(
@@ -642,9 +664,61 @@ class _RegistrationFormState extends State<RegistrationForm> {
               )
             ],
           ),
+          const SizedBox(height: 30),
         ],
       ),
     );
+  }
+
+  void handleAppleSignIn(BuildContext context, String authorizationCode,
+      String? email, String? fullName) async {
+    // Call your backend or Provider method to create a user using the authorization code.
+    final response =
+        await Provider.of<UserCreationProvider>(context, listen: false)
+            .createUser(
+      "apple_user_${DateTime.now().millisecondsSinceEpoch}",
+      // You can use a unique ID, such as a timestamp
+      email ?? "unknown@apple.com",
+      // If Apple does not provide email, use a fallback
+      fullName ?? "Unknown User",
+      // If Apple does not provide a name, use a fallback
+      email ?? "unknown@apple.com",
+      "not-provided",
+      // No mobile number provided by Apple
+      "123456",
+      // Set a default password for Apple Sign-In users, or leave blank
+      "S",
+      "not-mentioned",
+      "not-mentioned",
+      "not-mentioned",
+    );
+
+    if (response == true) {
+      // Handle successful user creation and login as shown in your code
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => Dashboard()),
+        (route) => false,
+      );
+    } else if (response == false) {
+      // Show error dialog
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Error"),
+          content: Text('User already exists or other issue occurred.'),
+        ),
+      );
+    } else {
+      // Handle unexpected response
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Error"),
+          content: Text('Unexpected response format.'),
+        ),
+      );
+    }
   }
 
   void _showTermsAndConditionsDialog(BuildContext context) {

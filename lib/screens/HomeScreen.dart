@@ -19,8 +19,8 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         body: ResponsiveLayout(
           mobileScaffold: HomeScreenMobile(),
-          tabletScaffold: HomeScreenTablet(),
-          desktopScaffold: HomeScreenTablet(),
+          tabletScaffold: HomeScreenMobile(),
+          desktopScaffold: HomeScreenMobile(),
         ),
       ),
     );

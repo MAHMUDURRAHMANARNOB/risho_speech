@@ -25,6 +25,8 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 
+    <key>com.apple.developer.applesignin</key>
+    <string>Default</string>
 
 	<key>NSAppTransportSecurity</key>
         <dict>

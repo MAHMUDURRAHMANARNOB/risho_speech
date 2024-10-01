@@ -32,7 +32,7 @@ class _VideoPlayerBoardState extends State<VideoPlayerBoard> {
           isVideo: widget.isVideo,
           lessonContentId: widget.lessonContentId,
         ),
-        tabletScaffold: VideoPlayerBoardScreenMobile(
+        tabletScaffold: VideoPlayerBoardScreenTablet(
           videoUrl: widget.videoUrl,
           videoTitle: widget.videoTitle,
           isVideo: widget.isVideo,
@@ -42,7 +42,7 @@ class _VideoPlayerBoardState extends State<VideoPlayerBoard> {
           videoUrl: widget.videoUrl,
           videoTitle: widget.videoTitle,
           isVideo: widget.isVideo,
-          lessonContentId: widget.lessonContentId.toString(),
+          lessonContentId: widget.lessonContentId,
         ),
       ),
     );

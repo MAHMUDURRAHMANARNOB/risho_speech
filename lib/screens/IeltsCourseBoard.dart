@@ -28,7 +28,10 @@ class _IeltsCourseBoardState extends State<IeltsCourseBoard> {
           lessonId: widget.lessonId,
           lessonName: widget.lessonName,
         ),
-        desktopScaffold: IeltsCourseBoardTabletScreen(),
+        desktopScaffold: IeltsCourseBoardMobileScreen(
+          lessonId: widget.lessonId,
+          lessonName: widget.lessonName,
+        ),
       ),
     );
   }

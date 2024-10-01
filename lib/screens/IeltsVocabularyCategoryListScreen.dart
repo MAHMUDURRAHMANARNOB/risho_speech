@@ -30,7 +30,7 @@ class _IeltsVocabularyCategoryListScreenState
           topicCategory: widget.topicCategory,
           isIdioms: widget.isIdioms,
         ),
-        desktopScaffold: IeltsVocabularyCategoryListScreenTablet(
+        desktopScaffold: IeltsVocabularyCategoryListScreenMobile(
           topicCategory: widget.topicCategory,
           isIdioms: widget.isIdioms,
         ),

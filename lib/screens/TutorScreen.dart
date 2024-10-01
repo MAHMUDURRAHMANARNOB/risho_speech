@@ -7,6 +7,7 @@ import '../responsive/responsive_layout.dart';
 
 class TutorScreen extends StatefulWidget {
   final TutorSuccessResponse tutorResponse;
+
   const TutorScreen({super.key, required this.tutorResponse});
 
   @override
@@ -20,7 +21,7 @@ class _TutorScreenState extends State<TutorScreen> {
       body: ResponsiveLayout(
         mobileScaffold: TutorScreenMobile(tutorResponse: widget.tutorResponse),
         tabletScaffold: TutorScreenMobile(tutorResponse: widget.tutorResponse),
-        desktopScaffold: TutorScreenTablet(),
+        desktopScaffold: TutorScreenMobile(tutorResponse: widget.tutorResponse),
       ),
     );
   }

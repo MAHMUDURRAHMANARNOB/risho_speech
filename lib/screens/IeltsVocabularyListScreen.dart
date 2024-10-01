@@ -29,7 +29,7 @@ class _IeltsVocabularyListScreenState extends State<IeltsVocabularyListScreen> {
             vocabularyCategoryId: widget.vocabularyCategoryId,
             isIdioms: widget.isIdioms,
           ),
-          desktopScaffold: IeltsVocabularyListScreenTablet(
+          desktopScaffold: IeltsVocabularyListScreenMobile(
             vocabularyCategoryId: widget.vocabularyCategoryId,
             isIdioms: widget.isIdioms,
           )),

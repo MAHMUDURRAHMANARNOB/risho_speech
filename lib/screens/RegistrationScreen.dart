@@ -6,6 +6,7 @@ import '../responsive/responsive_layout.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static const String id = "registration_screen";
+
   const RegistrationScreen({super.key});
 
   @override
@@ -18,8 +19,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     return Scaffold(
       body: ResponsiveLayout(
         mobileScaffold: RegistrationScreenMobile(),
-        tabletScaffold: RegistrationScreenTablet(),
-        desktopScaffold: RegistrationScreenTablet(),
+        tabletScaffold: RegistrationScreenMobile(),
+        desktopScaffold: RegistrationScreenMobile(),
       ),
     );
   }

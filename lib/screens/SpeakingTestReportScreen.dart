@@ -28,7 +28,9 @@ class _SpeakingTestReportScreenState extends State<SpeakingTestReportScreen> {
         tabletScaffold: SpeakingTestReportScreenMobile(
           report: widget.report,
         ),
-        desktopScaffold: SpeakingTestReportScreenTablet(),
+        desktopScaffold: SpeakingTestReportScreenMobile(
+          report: widget.report,
+        ),
       ),
     );
   }

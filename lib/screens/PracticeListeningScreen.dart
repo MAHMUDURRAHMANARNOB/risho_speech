@@ -19,7 +19,7 @@ class _PracticeListeningScreenState extends State<PracticeListeningScreen> {
       body: ResponsiveLayout(
         mobileScaffold: PracticeListeningScreenMobile(),
         tabletScaffold: PracticeListeningScreenMobile(),
-        desktopScaffold: PracticeListeningScreenTablet(),
+        desktopScaffold: PracticeListeningScreenMobile(),
       ),
     );
   }

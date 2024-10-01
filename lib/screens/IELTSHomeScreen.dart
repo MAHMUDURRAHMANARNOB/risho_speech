@@ -18,7 +18,7 @@ class _IELTSHomeScreenState extends State<IELTSHomeScreen> {
       body: ResponsiveLayout(
         mobileScaffold: IELTSHomeScreenMobile(),
         tabletScaffold: IELTSHomeScreenMobile(),
-        desktopScaffold: IELTSHomeScreenTablet(),
+        desktopScaffold: IELTSHomeScreenMobile(),
       ),
     );
   }

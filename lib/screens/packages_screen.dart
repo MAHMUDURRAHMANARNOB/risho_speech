@@ -6,6 +6,7 @@ import 'Mobile/packages_screen_mobile.dart';
 
 class PackagesScreen extends StatefulWidget {
   static const String id = "packages_screen";
+
   const PackagesScreen({super.key});
 
   @override
@@ -18,8 +19,8 @@ class _PackagesScreenState extends State<PackagesScreen> {
     return Scaffold(
       body: ResponsiveLayout(
         mobileScaffold: PackagesScreenMobile(),
-        tabletScaffold: PackagesScreenTablet(),
-        desktopScaffold: PackagesScreenTablet(),
+        tabletScaffold: PackagesScreenMobile(),
+        desktopScaffold: PackagesScreenMobile(),
       ),
     );
   }

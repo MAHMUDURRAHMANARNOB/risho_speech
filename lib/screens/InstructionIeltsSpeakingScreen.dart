@@ -20,7 +20,7 @@ class _InstructionIeltsSpeakingScreenState
       body: ResponsiveLayout(
         mobileScaffold: InstructionIeltsSpeakingScreenMobile(),
         tabletScaffold: InstructionIeltsSpeakingScreenMobile(),
-        desktopScaffold: InstructionIeltsSpeakingScreenTablet(),
+        desktopScaffold: InstructionIeltsSpeakingScreenMobile(),
       ),
     );
   }

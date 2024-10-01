@@ -25,7 +25,9 @@ class _ExamAnalysisScreenState extends State<ExamAnalysisScreen> {
         tabletScaffold: ExamAnalysisScreenMobile(
           listeningData: widget.listeningData,
         ),
-        desktopScaffold: ExamAnalysisScreenTablet(),
+        desktopScaffold: ExamAnalysisScreenMobile(
+          listeningData: widget.listeningData,
+        ),
       ),
     );
   }

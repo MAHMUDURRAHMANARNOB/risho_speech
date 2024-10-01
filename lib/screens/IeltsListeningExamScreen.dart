@@ -35,7 +35,7 @@ class _IeltsListeningExamScreenState extends State<IeltsListeningExamScreen> {
             question: widget.question,
             examId: widget.examId*/
             ),
-        desktopScaffold: IeltsListeningExamScreenTablet(
+        desktopScaffold: IeltsListeningExamScreenMobile(
             /*audioFile: widget.audioFile,
             question: widget.question,
             examId: widget.examId*/

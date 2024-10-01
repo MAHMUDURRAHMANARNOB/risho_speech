@@ -17,8 +17,8 @@ class _ChatScreenState extends State<CallingAgentScreen> {
     return Scaffold(
       body: ResponsiveLayout(
         mobileScaffold: CallingAgentScreenMobile(),
-        tabletScaffold: CallingAgentScreenTablet(),
-        desktopScaffold: CallingAgentScreenTablet(),
+        tabletScaffold: CallingAgentScreenMobile(),
+        desktopScaffold: CallingAgentScreenMobile(),
       ),
     );
   }

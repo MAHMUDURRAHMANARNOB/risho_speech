@@ -420,7 +420,7 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                         /*Practice Daily lesson*/
                         Expanded(
                           child: OptionCards(
-                            title: "Advance Speaking",
+                            title: "Advance \nSpeaking",
                             subTitle:
                                 "Practice speaking on real life scenarios ",
                             imageUrl:

@@ -544,25 +544,30 @@ class _TutorScreenMobileState extends State<TutorScreenMobile> {
                         padding: EdgeInsets.all(10.0),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
-                          color: /*color[index]*/ AppColors.backgroundColorDark,
+                          color: /*color[index]*/
+                              AppColors.backgroundColorDark,
                         ),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          // mainAxisSize: MainAxisSize.min,
                           children: [
-                            Container(
-                              padding: EdgeInsets.all(10.0),
-                              decoration: BoxDecoration(
-                                color: /*AppColors.primaryColor2*/
-                                    /*color[index].withOpacity(0.2)*/
-                                    Colors.white,
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              child: Image.asset(
-                                imageIcons[index],
-                                // color: /*AppColors.primaryColor*/ color[index],
-                                width: 34.0,
-                                height: 34.0,
-                                // size: 24.0,
+                            Expanded(
+                              child: Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.all(10.0),
+                                decoration: BoxDecoration(
+                                  color: /*AppColors.primaryColor2*/
+                                      /*color[index].withOpacity(0.2)*/
+                                      Colors.white,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: Image.asset(
+                                  imageIcons[index],
+                                  // color: /*AppColors.primaryColor*/ color[index],
+                                  width: 34.0,
+                                  height: 34.0,
+                                  // size: 24.0,
+                                ),
                               ),
                             ),
                             Expanded(
@@ -571,7 +576,7 @@ class _TutorScreenMobileState extends State<TutorScreenMobile> {
                                 '${courseList[index].courseName}',
                                 style: TextStyle(
                                   color: /*color[index]*/ Colors.white,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w900,
                                 ),
                               ),
                             ),

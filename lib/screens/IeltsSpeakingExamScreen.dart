@@ -21,7 +21,7 @@ class _IeltsSpeakingExamScreenState extends State<IeltsSpeakingExamScreen> {
       body: ResponsiveLayout(
         mobileScaffold: IeltsSpeakingExamScreenMobile(),
         tabletScaffold: IeltsSpeakingExamScreenMobile(),
-        desktopScaffold: IeltsSpeakingExamScreenTablet(),
+        desktopScaffold: IeltsSpeakingExamScreenMobile(),
       ),
     );
   }

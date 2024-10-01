@@ -30,8 +30,9 @@ class _IeltsCourseLessonListScreenState
           courseId: widget.courseId,
           courseTitle: widget.courseTitle,
         ),
-        desktopScaffold: IeltsCourseLessonListTabletScreen(
+        desktopScaffold: IeltsCourseLessonListMobileScreen(
           courseId: widget.courseId,
+          courseTitle: widget.courseTitle,
         ),
       ),
     );

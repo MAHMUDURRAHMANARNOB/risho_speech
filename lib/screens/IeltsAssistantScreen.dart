@@ -18,7 +18,7 @@ class _IeltsAssistantScreenState extends State<IeltsAssistantScreen> {
       body: ResponsiveLayout(
         mobileScaffold: IeltsAssistantScreenMobile(),
         tabletScaffold: IeltsAssistantScreenMobile(),
-        desktopScaffold: IeltsAssistantScreenTablet(),
+        desktopScaffold: IeltsAssistantScreenMobile(),
       ),
     );
   }

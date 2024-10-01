@@ -18,7 +18,7 @@ class _IELTSHoneScreenState extends State<IeltsCourseScreen> {
       body: ResponsiveLayout(
         mobileScaffold: IeltsCourseScreenMobile(),
         tabletScaffold: IeltsCourseScreenMobile(),
-        desktopScaffold: IELTSHomeScreenTablet(),
+        desktopScaffold: IeltsCourseScreenMobile(),
       ),
     );
   }

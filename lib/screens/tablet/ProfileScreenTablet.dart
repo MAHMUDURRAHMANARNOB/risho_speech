@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
+import 'package:risho_speech/screens/AboutScreen.dart';
+import 'package:risho_speech/screens/DeleteAccount.dart';
 
 import '../../providers/auth_provider.dart';
 import '../../providers/subscriptionStatus_provider.dart';
 import '../../ui/colors.dart';
-import '../AboutScreen.dart';
 import '../LoginScreen.dart';
 import '../packages_screen.dart';
 
@@ -14,13 +16,13 @@ class ProfileScreenTablet extends StatefulWidget {
   const ProfileScreenTablet({super.key});
 
   @override
-  State<ProfileScreenTablet> createState() => _ProfileScreenMobileState();
+  State<ProfileScreenTablet> createState() => _ProfileScreenTabletState();
 }
 
-class _ProfileScreenMobileState extends State<ProfileScreenTablet> {
+class _ProfileScreenTabletState extends State<ProfileScreenTablet> {
   final SubscriptionStatusProvider subscriptionStatusProvider =
       SubscriptionStatusProvider();
-  late int userId;
+  late int userId = Provider.of<AuthProvider>(context).user!.id;
   late String userName;
 
   Future<void> _refresh() async {
@@ -38,12 +40,24 @@ class _ProfileScreenMobileState extends State<ProfileScreenTablet> {
     userName = Provider.of<AuthProvider>(context).user!.username;
     subscriptionStatusProvider.fetchSubscriptionData(userId!);
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<SubscriptionStatusProvider>().fetchSubscriptionData(userId);
+    });
+
     return SafeArea(
       child: Scaffold(
-        body: LiquidPullToRefresh(
+        /*appBar: AppBar(
+          title: Text(
+            "Profile",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
+          automaticallyImplyLeading: true,
+        ),*/
+        body: RefreshIndicator(
           onRefresh: _refresh,
-          showChildOpacityTransition: false,
-          springAnimationDurationInMilliseconds: 1000,
+          // showChildOpacityTransition: false,
+          // springAnimationDurationInMilliseconds: 1000,
           color: AppColors.secondaryCardColor,
           backgroundColor: AppColors.primaryColor,
           child: SingleChildScrollView(
@@ -53,241 +67,204 @@ class _ProfileScreenMobileState extends State<ProfileScreenTablet> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  /*About me and Picture*/
-                  Row(
+                  Stack(
                     children: [
-                      Stack(
-                        children: [
-                          SizedBox(
-                            height: 200,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: const Image(
-                                image: AssetImage("assets/images/team.png"),
-                              ),
-                            ),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 200,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: const Image(
+                            image: AssetImage("assets/images/team.png"),
                           ),
-                          /*Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: Container(
-                              width: 35,
-                              height: 35,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  color: AppColors.primaryColor),
-                              child: const Icon(
-                                Icons.edit,
-                                color: Colors.black,
-                                size: 20,
-                              ),
-                            ),
-                          ),*/
-                        ],
+                        ),
                       ),
-                      const SizedBox(height: 10),
-                      /*PERSONAL INFORMATION*/
-                      Expanded(
-                        flex: 1,
+                      /*Positioned(
+                        bottom: 0,
+                        right: 0,
                         child: Container(
-                          padding: EdgeInsets.all(10.0),
+                          width: 35,
+                          height: 35,
                           decoration: BoxDecoration(
-                            color: AppColors.primaryCardColor,
-                            borderRadius: BorderRadius.circular(6),
+                              borderRadius: BorderRadius.circular(100),
+                              color: AppColors.primaryColor),
+                          child: const Icon(
+                            Icons.edit,
+                            color: Colors.black,
+                            size: 20,
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                        ),
+                      ),*/
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    userName,
+                    // "username",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text("Student"),
+                  const SizedBox(height: 10),
+                  /*PERSONAL INFORMATION*/
+                  Container(
+                    padding: EdgeInsets.all(10.0),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryCardColor,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Personal Information",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        /*FullName*/
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
-                                "Personal Information",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primaryColor,
-                                ),
-                              ),
-                              /*FullName*/
                               Container(
-                                width: double.infinity,
-                                padding:
-                                    EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Container(
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.person,
-                                            size: 20,
-                                          ),
-                                          SizedBox(
-                                            width: 2,
-                                          ),
-                                          Text("Full Name: "),
-                                        ],
-                                      ),
+                                    Icon(
+                                      Icons.person,
+                                      size: 20,
                                     ),
                                     SizedBox(
                                       width: 2,
                                     ),
-                                    Expanded(
-                                      child: Text(
-                                        "${Provider.of<AuthProvider>(context).user?.name ?? 'John Doe'}",
-                                        // "John doe",
-                                        textAlign: TextAlign.right,
-                                        softWrap: true,
-                                        maxLines: 2,
-                                      ),
-                                    ),
+                                    Text("Full Name: "),
                                   ],
                                 ),
                               ),
-                              /*Email*/
-                              Container(
-                                width: double.infinity,
-                                padding:
-                                    EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.mail_rounded,
-                                            size: 20,
-                                          ),
-                                          SizedBox(
-                                            width: 2,
-                                          ),
-                                          Text("Email: "),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 2,
-                                    ),
-                                    Expanded(
-                                      child: Text(
-                                        "${Provider.of<AuthProvider>(context).user?.email ?? 'johndoe@gmail.com'}",
-                                        // "johndoe@gmail.com",
-                                        textAlign: TextAlign.right,
-                                        softWrap: true,
-                                        maxLines: 2,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                              SizedBox(
+                                width: 2,
                               ),
-                              /*Phone*/
-                              Container(
-                                width: double.infinity,
-                                padding:
-                                    EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.phone,
-                                            size: 20,
-                                          ),
-                                          SizedBox(
-                                            width: 2,
-                                          ),
-                                          Text("Phone: "),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 2,
-                                    ),
-                                    Expanded(
-                                      child: Text(
-                                        "${Provider.of<AuthProvider>(context).user?.mobile ?? '+8801**********'}",
-                                        // "+8801**********",
-                                        textAlign: TextAlign.right,
-                                        softWrap: true,
-                                        maxLines: 2,
-                                      ),
-                                    ),
-                                  ],
+                              Expanded(
+                                child: Text(
+                                  "${Provider.of<AuthProvider>(context).user?.name ?? 'John Doe'}",
+                                  // "John doe",
+                                  textAlign: TextAlign.right,
+                                  softWrap: true,
+                                  maxLines: 2,
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                    ],
+                        /*Email*/
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.mail_rounded,
+                                      size: 20,
+                                    ),
+                                    SizedBox(
+                                      width: 2,
+                                    ),
+                                    Text("Email: "),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: 2,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "${Provider.of<AuthProvider>(context).user?.email ?? 'johndoe@gmail.com'}",
+                                  // "johndoe@gmail.com",
+                                  textAlign: TextAlign.right,
+                                  softWrap: true,
+                                  maxLines: 2,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        /*Phone*/
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.phone,
+                                      size: 20,
+                                    ),
+                                    SizedBox(
+                                      width: 2,
+                                    ),
+                                    Text("Phone: "),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: 2,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "${Provider.of<AuthProvider>(context).user?.mobile ?? '+8801**********'}",
+                                  // "+8801**********",
+                                  textAlign: TextAlign.right,
+                                  softWrap: true,
+                                  maxLines: 2,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-
+                  const SizedBox(height: 10),
                   /*TOKENS*/
                   Container(
                     width: double.infinity,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        /*USERNAME*/
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            padding: EdgeInsets.all(10.0),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryCardColor,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              children: [
-                                Text(
-                                  userName,
-                                  // "username",
-                                  style: TextStyle(
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text("Student"),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
                         /*Homework Token*/
                         Expanded(
                           flex: 1,
                           child: Container(
-                            padding: const EdgeInsets.all(10.0),
+                            padding: EdgeInsets.all(10.0),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
                               color: AppColors.primaryCardColor,
                             ),
                             child: Column(
                               children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      "Homework Token",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.primaryColor,
-                                      ),
-                                    ),
-                                    Image.asset(
-                                      "assets/images/golf_flag.png",
-                                      width: 50,
-                                      height: 55,
-                                    ),
-                                  ],
+                                Image.asset(
+                                  "assets/images/golf_flag.png",
+                                  width: 50,
+                                  height: 55,
+                                ),
+                                const Text(
+                                  "Homework Token",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(5.0),
@@ -295,39 +272,44 @@ class _ProfileScreenMobileState extends State<ProfileScreenTablet> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
+                                      const Text(
                                         "Used",
                                         style: TextStyle(),
                                       ),
                                       userId != null
-                                          ? FutureBuilder(
-                                              future: subscriptionStatusProvider
-                                                  .fetchSubscriptionData(
-                                                      userId!),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState ==
-                                                    ConnectionState.waiting) {
-                                                  return const SpinKitThreeInOut(
-                                                    size: 10.0,
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                  );
-                                                  // Show a loading indicator while fetching data
-                                                } else if (snapshot.hasError) {
-                                                  return Text(
-                                                      'Error: ${snapshot.error}');
-                                                } else {
-                                                  // Once the data is loaded, display the ticketsAvailable value
-                                                  final ticketsAvailable =
-                                                      subscriptionStatusProvider
-                                                          .subscriptionStatus
-                                                          ?.ticketUsed
-                                                          .toString();
-                                                  return Text(
-                                                    ticketsAvailable.toString(),
-                                                    style: TextStyle(),
-                                                  );
+                                          ? Consumer<
+                                              SubscriptionStatusProvider>(
+                                              builder: (context,
+                                                  subscriptionProvider, child) {
+                                                if (subscriptionProvider
+                                                    .isFetching) {
+                                                  return const SpinKitPulse(
+                                                      color: AppColors
+                                                          .primaryColor,
+                                                      size: 14);
                                                 }
+
+                                                if (subscriptionProvider
+                                                        .subscriptionStatus ==
+                                                    null) {
+                                                  return Center(
+                                                      child: Text(
+                                                          'No subscription data available.'));
+                                                }
+
+                                                return Center(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        '${subscriptionProvider.subscriptionStatus!.ticketUsed}',
+                                                      ),
+                                                      // Add more details as needed
+                                                    ],
+                                                  ),
+                                                );
                                               },
                                             )
                                           : Text(
@@ -348,36 +330,44 @@ class _ProfileScreenMobileState extends State<ProfileScreenTablet> {
                                         style: TextStyle(),
                                       ),
                                       userId != null
-                                          ? FutureBuilder(
-                                              future: subscriptionStatusProvider
-                                                  .fetchSubscriptionData(
-                                                      userId!),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState ==
-                                                    ConnectionState.waiting) {
-                                                  return const SpinKitThreeInOut(
-                                                    size: 10.0,
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                  ); // Show a loading indicator while fetching data
-                                                } else if (snapshot.hasError) {
-                                                  return Text(
-                                                      'Error: ${snapshot.error}');
-                                                } else {
-                                                  // Once the data is loaded, display the ticketsAvailable value
-                                                  final ticketsAvailable =
-                                                      subscriptionStatusProvider
-                                                          .subscriptionStatus
-                                                          ?.ticketsAvailable
-                                                          .toString();
-                                                  return Text(
-                                                    ticketsAvailable.toString(),
-                                                    style: TextStyle(),
-                                                  );
+                                          ? Consumer<
+                                              SubscriptionStatusProvider>(
+                                              builder: (context,
+                                                  subscriptionProvider, child) {
+                                                if (subscriptionProvider
+                                                    .isFetching) {
+                                                  return const SpinKitPulse(
+                                                      color: AppColors
+                                                          .primaryColor,
+                                                      size: 14);
                                                 }
+
+                                                if (subscriptionProvider
+                                                        .subscriptionStatus ==
+                                                    null) {
+                                                  return Center(
+                                                      child: Text('--'));
+                                                }
+
+                                                return Center(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        subscriptionProvider
+                                                            .subscriptionStatus!
+                                                            .ticketsAvailable
+                                                            .toString(),
+                                                      ),
+                                                      // Add more details as needed
+                                                    ],
+                                                  ),
+                                                );
                                               },
                                             )
-                                          : Text(
+                                          : const Text(
                                               "**",
                                               style: TextStyle(),
                                             ),
@@ -400,22 +390,16 @@ class _ProfileScreenMobileState extends State<ProfileScreenTablet> {
                             ),
                             child: Column(
                               children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      "Question Token",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColors.primaryColor),
-                                    ),
-                                    Image.asset(
-                                      "assets/images/diamond.png",
-                                      width: 45,
-                                      height: 55,
-                                    ),
-                                  ],
+                                Image.asset(
+                                  "assets/images/diamond.png",
+                                  width: 45,
+                                  height: 55,
+                                ),
+                                Text(
+                                  "Question Token",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(5.0),
@@ -428,33 +412,41 @@ class _ProfileScreenMobileState extends State<ProfileScreenTablet> {
                                         style: TextStyle(),
                                       ),
                                       userId != null
-                                          ? FutureBuilder(
-                                              future: subscriptionStatusProvider
-                                                  .fetchSubscriptionData(
-                                                      userId!),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState ==
-                                                    ConnectionState.waiting) {
-                                                  return const SpinKitThreeInOut(
-                                                    size: 10.0,
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                  ); // Show a loading indicator while fetching data
-                                                } else if (snapshot.hasError) {
-                                                  return Text(
-                                                      'Error: ${snapshot.error}');
-                                                } else {
-                                                  // Once the data is loaded, display the ticketsAvailable value
-                                                  final ticketsAvailable =
-                                                      subscriptionStatusProvider
-                                                          .subscriptionStatus
-                                                          ?.commentUsed
-                                                          .toString();
-                                                  return Text(
-                                                    ticketsAvailable.toString(),
-                                                    style: TextStyle(),
-                                                  );
+                                          ? Consumer<
+                                              SubscriptionStatusProvider>(
+                                              builder: (context,
+                                                  subscriptionProvider, child) {
+                                                if (subscriptionProvider
+                                                    .isFetching) {
+                                                  return const SpinKitPulse(
+                                                      color: AppColors
+                                                          .primaryColor,
+                                                      size: 14);
                                                 }
+
+                                                if (subscriptionProvider
+                                                        .subscriptionStatus ==
+                                                    null) {
+                                                  return Center(
+                                                      child: Text('--'));
+                                                }
+
+                                                return Center(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        subscriptionProvider
+                                                            .subscriptionStatus!
+                                                            .commentUsed
+                                                            .toString(),
+                                                      ),
+                                                      // Add more details as needed
+                                                    ],
+                                                  ),
+                                                );
                                               },
                                             )
                                           : Text(
@@ -476,36 +468,42 @@ class _ProfileScreenMobileState extends State<ProfileScreenTablet> {
                                           style: TextStyle(),
                                         ),
                                         userId != null
-                                            ? FutureBuilder(
-                                                future:
-                                                    subscriptionStatusProvider
-                                                        .fetchSubscriptionData(
-                                                            userId!),
-                                                builder: (context, snapshot) {
-                                                  if (snapshot
-                                                          .connectionState ==
-                                                      ConnectionState.waiting) {
-                                                    return const SpinKitThreeInOut(
-                                                      size: 10.0,
-                                                      color: AppColors
-                                                          .primaryColor,
-                                                    ); // Show a loading indicator while fetching data
-                                                  } else if (snapshot
-                                                      .hasError) {
-                                                    return Text(
-                                                        'Error: ${snapshot.error}');
-                                                  } else {
-                                                    // Once the data is loaded, display the ticketsAvailable value
-                                                    final ticketsAvailable =
-                                                        subscriptionStatusProvider
-                                                            .subscriptionStatus
-                                                            ?.commentsAvailable;
-                                                    return Text(
-                                                      ticketsAvailable
-                                                          .toString(),
-                                                      style: TextStyle(),
-                                                    );
+                                            ? Consumer<
+                                                SubscriptionStatusProvider>(
+                                                builder: (context,
+                                                    subscriptionProvider,
+                                                    child) {
+                                                  if (subscriptionProvider
+                                                      .isFetching) {
+                                                    return const SpinKitPulse(
+                                                        color: AppColors
+                                                            .primaryColor,
+                                                        size: 14);
                                                   }
+
+                                                  if (subscriptionProvider
+                                                          .subscriptionStatus ==
+                                                      null) {
+                                                    return Center(
+                                                        child: Text('--'));
+                                                  }
+
+                                                  return Center(
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          subscriptionProvider
+                                                              .subscriptionStatus!
+                                                              .commentsAvailable
+                                                              .toString(),
+                                                        ),
+                                                        // Add more details as needed
+                                                      ],
+                                                    ),
+                                                  );
                                                 },
                                               )
                                             : Text(
@@ -524,7 +522,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenTablet> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Container(
+                  SizedBox(
                     width: double.infinity,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -540,23 +538,16 @@ class _ProfileScreenMobileState extends State<ProfileScreenTablet> {
                             ),
                             child: Column(
                               children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      "Audio Minutes",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.primaryColor,
-                                      ),
-                                    ),
-                                    Image.asset(
-                                      "assets/images/audio_minute.png",
-                                      width: 50,
-                                      height: 55,
-                                    ),
-                                  ],
+                                Image.asset(
+                                  "assets/images/audio_minute.png",
+                                  width: 50,
+                                  height: 55,
+                                ),
+                                Text(
+                                  "Audio Minutes",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(5.0),
@@ -569,34 +560,41 @@ class _ProfileScreenMobileState extends State<ProfileScreenTablet> {
                                         style: TextStyle(),
                                       ),
                                       userId != null
-                                          ? FutureBuilder(
-                                              future: subscriptionStatusProvider
-                                                  .fetchSubscriptionData(
-                                                      userId!),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState ==
-                                                    ConnectionState.waiting) {
-                                                  return const SpinKitThreeInOut(
-                                                    size: 10.0,
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                  );
-                                                  // Show a loading indicator while fetching data
-                                                } else if (snapshot.hasError) {
-                                                  return Text(
-                                                      'Error: ${snapshot.error}');
-                                                } else {
-                                                  // Once the data is loaded, display the ticketsAvailable value
-                                                  final ticketsAvailable =
-                                                      subscriptionStatusProvider
-                                                          .subscriptionStatus
-                                                          ?.audioMinutesUsed
-                                                          .toString();
-                                                  return Text(
-                                                    ticketsAvailable.toString(),
-                                                    style: TextStyle(),
-                                                  );
+                                          ? Consumer<
+                                              SubscriptionStatusProvider>(
+                                              builder: (context,
+                                                  subscriptionProvider, child) {
+                                                if (subscriptionProvider
+                                                    .isFetching) {
+                                                  return const SpinKitPulse(
+                                                      color: AppColors
+                                                          .primaryColor,
+                                                      size: 14);
                                                 }
+
+                                                if (subscriptionProvider
+                                                        .subscriptionStatus ==
+                                                    null) {
+                                                  return Center(
+                                                      child: Text('--'));
+                                                }
+
+                                                return Center(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        subscriptionProvider
+                                                            .subscriptionStatus!
+                                                            .audioMinutesUsed
+                                                            .toString(),
+                                                      ),
+                                                      // Add more details as needed
+                                                    ],
+                                                  ),
+                                                );
                                               },
                                             )
                                           : Text(
@@ -617,33 +615,41 @@ class _ProfileScreenMobileState extends State<ProfileScreenTablet> {
                                         style: TextStyle(),
                                       ),
                                       userId != null
-                                          ? FutureBuilder(
-                                              future: subscriptionStatusProvider
-                                                  .fetchSubscriptionData(
-                                                      userId!),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState ==
-                                                    ConnectionState.waiting) {
-                                                  return const SpinKitThreeInOut(
-                                                    size: 10.0,
-                                                    color:
-                                                        AppColors.primaryColor,
-                                                  ); // Show a loading indicator while fetching data
-                                                } else if (snapshot.hasError) {
-                                                  return Text(
-                                                      'Error: ${snapshot.error}');
-                                                } else {
-                                                  // Once the data is loaded, display the ticketsAvailable value
-                                                  final ticketsAvailable =
-                                                      subscriptionStatusProvider
-                                                          .subscriptionStatus
-                                                          ?.audioReamins
-                                                          .toString();
-                                                  return Text(
-                                                    ticketsAvailable.toString(),
-                                                    style: TextStyle(),
-                                                  );
+                                          ? Consumer<
+                                              SubscriptionStatusProvider>(
+                                              builder: (context,
+                                                  subscriptionProvider, child) {
+                                                if (subscriptionProvider
+                                                    .isFetching) {
+                                                  return const SpinKitPulse(
+                                                      color: AppColors
+                                                          .primaryColor,
+                                                      size: 14);
                                                 }
+
+                                                if (subscriptionProvider
+                                                        .subscriptionStatus ==
+                                                    null) {
+                                                  return Center(
+                                                      child: Text('--'));
+                                                }
+
+                                                return Center(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        subscriptionProvider
+                                                            .subscriptionStatus!
+                                                            .audioReamins
+                                                            .toString(),
+                                                      ),
+                                                      // Add more details as needed
+                                                    ],
+                                                  ),
+                                                );
                                               },
                                             )
                                           : Text(
@@ -657,199 +663,195 @@ class _ProfileScreenMobileState extends State<ProfileScreenTablet> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.all(10.0),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryCardColor,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Column(
-                              children: [
-                                Text("Subscription Details"),
-                                Container(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text("Active Package: "),
-                                        userId != null
-                                            ? FutureBuilder(
-                                                future:
-                                                    subscriptionStatusProvider
-                                                        .fetchSubscriptionData(
-                                                            userId!),
-                                                builder: (context, snapshot) {
-                                                  if (snapshot
-                                                          .connectionState ==
-                                                      ConnectionState.waiting) {
-                                                    return const SpinKitThreeInOut(
-                                                      size: 10.0,
-                                                      color: AppColors
-                                                          .primaryColor,
-                                                    ); // Show a loading indicator while fetching data
-                                                  } else if (snapshot
-                                                      .hasError) {
-                                                    return Text(
-                                                        'Error: ${snapshot.error}');
-                                                  } else {
-                                                    // Once the data is loaded, display the ticketsAvailable value
-                                                    final ticketsAvailable =
-                                                        subscriptionStatusProvider
-                                                            .subscriptionStatus
-                                                            ?.packageName
-                                                            .toString();
-                                                    return Text(
-                                                      ticketsAvailable
-                                                          .toString(),
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: AppColors
-                                                            .primaryColor,
-                                                        fontSize: 20,
-                                                      ),
-                                                    );
-                                                  }
-                                                },
-                                              )
-                                            : Text(
-                                                "Invalid User",
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.red,
-                                                  fontSize: 20,
-                                                ),
-                                              ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  width: double.infinity,
-                                  child: Column(
-                                    children: [
-                                      /*Purchased*/
-                                      Container(
-                                        margin: EdgeInsets.all(5.0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text("Purchased Date"),
-                                            userId != null
-                                                ? FutureBuilder(
-                                                    future:
-                                                        subscriptionStatusProvider
-                                                            .fetchSubscriptionData(
-                                                                userId),
-                                                    builder:
-                                                        (context, snapshot) {
-                                                      if (snapshot
-                                                              .connectionState ==
-                                                          ConnectionState
-                                                              .waiting) {
-                                                        return const SpinKitThreeInOut(
-                                                          size: 10.0,
-                                                          color: AppColors
-                                                              .primaryColor,
-                                                        ); // Show a loading indicator while fetching data
-                                                      } else if (snapshot
-                                                          .hasError) {
-                                                        return Text('Error: ');
-                                                      } else {
-                                                        // Once the data is loaded, display the ticketsAvailable value
-                                                        final ticketsAvailable =
-                                                            subscriptionStatusProvider
-                                                                .subscriptionStatus
-                                                                ?.datePurchased;
-                                                        return Text(
-                                                          ticketsAvailable
-                                                              .toString(),
-                                                          softWrap: true,
-                                                          style: TextStyle(),
-                                                        );
-                                                      }
-                                                    },
-                                                  )
-                                                : Text(
-                                                    "***",
-                                                    style: TextStyle(),
-                                                  ),
-                                          ],
-                                        ),
-                                      ),
-                                      /*Validity*/
-                                      Container(
-                                        margin: EdgeInsets.all(5.0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text("Validity Till"),
-                                            userId != null
-                                                ? FutureBuilder(
-                                                    future:
-                                                        subscriptionStatusProvider
-                                                            .fetchSubscriptionData(
-                                                                userId),
-                                                    builder:
-                                                        (context, snapshot) {
-                                                      if (snapshot
-                                                              .connectionState ==
-                                                          ConnectionState
-                                                              .waiting) {
-                                                        return const SpinKitThreeInOut(
-                                                          size: 10.0,
-                                                          color: AppColors
-                                                              .primaryColor,
-                                                        ); // Show a loading indicator while fetching data
-                                                      } else if (snapshot
-                                                          .hasError) {
-                                                        return Text(
-                                                            'Error: ${snapshot.error}');
-                                                      } else {
-                                                        // Once the data is loaded, display the ticketsAvailable value
-                                                        final ticketsAvailable =
-                                                            subscriptionStatusProvider
-                                                                .subscriptionStatus
-                                                                ?.validityDate;
-
-                                                        return Text(
-                                                          ticketsAvailable
-                                                              .toString(),
-                                                          softWrap: true,
-                                                          style: TextStyle(),
-                                                        );
-                                                      }
-                                                    },
-                                                  )
-                                                : Text(
-                                                    "***",
-                                                    style: TextStyle(),
-                                                  ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
                       ],
                     ),
                   ),
                   SizedBox(
                     height: 10.0,
                   ),
+
+                  /*SUBSCRIPTION*/
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryCardColor,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Column(
+                      children: [
+                        Text("Subscription Details"),
+                        Container(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("Active Package: "),
+                                userId != null
+                                    ? Consumer<SubscriptionStatusProvider>(
+                                        builder: (context, subscriptionProvider,
+                                            child) {
+                                          if (subscriptionProvider.isFetching) {
+                                            return const SpinKitPulse(
+                                                color: AppColors.primaryColor,
+                                                size: 14);
+                                          }
+
+                                          if (subscriptionProvider
+                                                  .subscriptionStatus ==
+                                              null) {
+                                            return Center(child: Text('--'));
+                                          }
+
+                                          return Center(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  subscriptionProvider
+                                                      .subscriptionStatus!
+                                                      .packageName
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                    color:
+                                                        AppColors.primaryColor,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 24,
+                                                  ),
+                                                ),
+                                                // Add more details as needed
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      )
+                                    : Text(
+                                        "Invalid User",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.red,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: double.infinity,
+                          child: Column(
+                            children: [
+                              /*Purchased*/
+                              Container(
+                                margin: EdgeInsets.all(5.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("Purchased Date"),
+                                    userId != null
+                                        ? Consumer<SubscriptionStatusProvider>(
+                                            builder: (context,
+                                                subscriptionProvider, child) {
+                                              if (subscriptionProvider
+                                                  .isFetching) {
+                                                return const SpinKitPulse(
+                                                    color:
+                                                        AppColors.primaryColor,
+                                                    size: 14);
+                                              }
+
+                                              if (subscriptionProvider
+                                                      .subscriptionStatus ==
+                                                  null) {
+                                                return Center(
+                                                    child: Text('--'));
+                                              }
+
+                                              return Center(
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      subscriptionProvider
+                                                          .subscriptionStatus!
+                                                          .datePurchased
+                                                          .toString(),
+                                                    ),
+                                                    // Add more details as needed
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                          )
+                                        : Text(
+                                            "***",
+                                            style: TextStyle(),
+                                          ),
+                                  ],
+                                ),
+                              ),
+                              /*Validity*/
+                              Container(
+                                margin: EdgeInsets.all(5.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("Validity Till"),
+                                    userId != null
+                                        ? Consumer<SubscriptionStatusProvider>(
+                                            builder: (context,
+                                                subscriptionProvider, child) {
+                                              if (subscriptionProvider
+                                                  .isFetching) {
+                                                return const SpinKitPulse(
+                                                    color:
+                                                        AppColors.primaryColor,
+                                                    size: 14);
+                                              }
+
+                                              if (subscriptionProvider
+                                                      .subscriptionStatus ==
+                                                  null) {
+                                                return Center(
+                                                    child: Text('--'));
+                                              }
+
+                                              return Center(
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      subscriptionProvider
+                                                          .subscriptionStatus!
+                                                          .validityDate
+                                                          .toString(),
+                                                    ),
+                                                    // Add more details as needed
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                          )
+                                        : Text(
+                                            "***",
+                                            style: TextStyle(),
+                                          ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
 
                   /*Purchase Subscription package*/
                   ElevatedButton(
@@ -884,6 +886,41 @@ class _ProfileScreenMobileState extends State<ProfileScreenTablet> {
                     ),
                   ),
                   SizedBox(height: 10),
+
+                  /*HISTORY*/
+                  /*ElevatedButton(
+                    onPressed: () {
+                      */ /*Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const HistoryScreen()),
+                      );*/ /*
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryCardColor,
+                      padding: EdgeInsets.all(15.0),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "History",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_circle_right_rounded,
+                          size: 30,
+                          color: AppColors.primaryColor,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 10),*/
+
                   /*About*/
                   ElevatedButton(
                     onPressed: () {
@@ -911,6 +948,81 @@ class _ProfileScreenMobileState extends State<ProfileScreenTablet> {
                         ),
                         Icon(
                           Icons.info,
+                          size: 30,
+                          color: AppColors.primaryColor,
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 10.0),
+                  //Delete Account
+                  ElevatedButton(
+                    onPressed: () {
+                      // Call the logout method from AuthProvider
+
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text("Delete Account"),
+                            content: Text("Are you sure you want to Proceed?"),
+                            actions: <Widget>[
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      AppColors.primaryColor.withOpacity(0.1),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text(
+                                  "Cancel",
+                                  style:
+                                      TextStyle(color: AppColors.primaryColor),
+                                ),
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      AppColors.secondaryColor.withOpacity(0.1),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const DeleteAccount()),
+                                  );
+                                },
+                                child: Text("Proceed",
+                                    style: TextStyle(
+                                        color: AppColors.secondaryColor)),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      // Navigate back to the login screen
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryCardColor,
+                      padding: EdgeInsets.all(15.0),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Delete Account",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Icon(
+                          Icons.delete_rounded,
                           size: 30,
                           color: AppColors.primaryColor,
                         ),
