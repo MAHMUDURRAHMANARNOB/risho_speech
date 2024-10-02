@@ -102,6 +102,7 @@ class _ChatScreenMobileState extends State<ChatScreenMobile> {
   Future<void> startRecording() async {
     try {
       if (await audioRecord.hasPermission()) {
+        audioPlayer.stop();
         await audioRecord.start();
         setState(() {
           _isRecording = true;

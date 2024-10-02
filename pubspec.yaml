@@ -66,6 +66,12 @@ dependencies:
   upgrader: ^10.3.0
 
   sign_in_with_apple: ^4.0.0
+  the_apple_sign_in: ^1.1.1
+  google_sign_in: ^6.2.1
+  firebase_core: ^3.6.0
+  firebase_auth: ^5.3.1
+  cloud_firestore: ^5.4.3
+
 
 
 dev_dependencies:

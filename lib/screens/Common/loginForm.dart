@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:risho_speech/screens/RegistrationScreen.dart';
+import 'package:risho_speech/services/auth.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../models/user.dart';
 import '../../providers/auth_provider.dart';
@@ -275,6 +277,115 @@ class _LoginformState extends State<Loginform> {
               ),
             ),
             const SizedBox(height: 10),
+
+            Container(
+              width: double.infinity,
+              constraints: BoxConstraints(
+                minWidth: 100.0,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Container(
+                      height: 1.0,
+                      width: 30.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Text(
+                    'Login',
+                    style:
+                        TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    ' with Others',
+                    style: TextStyle(fontSize: 14.0),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Container(
+                      height: 1.0,
+                      width: 30.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+
+            Center(
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  side: BorderSide(
+                    color: Colors.white,
+                  ),
+                ),
+                label: Text(
+                  'Login with Google',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () async {
+                  try {
+                    AuthMethod().signInWithGoogle(context);
+                  } catch (error) {
+                    // Handle errors
+                    print("Error during login: $error");
+                    // Show an error dialog if needed
+                  }
+                },
+                icon: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    FontAwesomeIcons.google,
+                    color: Colors.white,
+                    size: 27,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+
+            Center(
+              child: ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  side: BorderSide(
+                    color: Colors.white,
+                  ),
+                ),
+                label: Text(
+                  'Login with Apple',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () async {
+                  AuthMethod().signInWithApple();
+                },
+                icon: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    FontAwesomeIcons.apple,
+                    color: Colors.white,
+                    size: 34,
+                  ),
+                ),
+              ),
+            ),
+
+            /*Signup with google*/
+            const SizedBox(height: 30),
             /*Login with others*/
             /*Container(
               width: double.infinity,

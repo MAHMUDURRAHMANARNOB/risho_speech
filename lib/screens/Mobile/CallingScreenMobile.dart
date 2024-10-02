@@ -152,6 +152,7 @@ class _CallingScreenMobileState extends State<CallingScreenMobile> {
   Future<void> startRecording() async {
     try {
       if (await audioRecord.hasPermission()) {
+        audioPlayer.stop();
         await audioRecord.start();
         setState(() {
           _isRecording = true;

@@ -10,11 +10,15 @@ import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:risho_speech/screens/Common/terms_and_condition_widget.dart';
 import 'package:risho_speech/screens/Dashboard.dart';
+import '../../providers/auth_provider.dart';
 import '../../providers/createUserProvider.dart';
 import '../../providers/optProvider.dart';
+import '../../services/auth.dart';
 import '../../ui/colors.dart';
 import '../Mobile/OTPScreenMobile.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
+import 'error_dialog.dart';
 
 class RegistrationForm extends StatefulWidget {
   const RegistrationForm({super.key});
@@ -590,36 +594,45 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 ),
               ),
               onPressed: () async {
-                try {
-                  final credential = await SignInWithApple.getAppleIDCredential(
+                /*try {
+                  final appleCredential =
+                      await SignInWithApple.getAppleIDCredential(
                     scopes: [
                       AppleIDAuthorizationScopes.email,
                       AppleIDAuthorizationScopes.fullName,
                     ],
                   );
-                  String authorizationCode = credential.authorizationCode;
-                  String? email = credential.email; // Optional if provided
-                  String? fullName = credential.givenName! +
-                      ' ' +
-                      credential.familyName!; // Optional if provided
+                  String authorizationCode = appleCredential.authorizationCode;
+                  String? email = appleCredential.email; // Optional if provided
+                  String? firstName = appleCredential.givenName;
+                  String? lastName = appleCredential.givenName;
+                  debugPrint(
+                      "$email - $firstName - $lastName - $authorizationCode");
 
+                  if (email == null && firstName == null && lastName == null) {
+                    debugPrint(
+                        "User previously logged in, fetching data from backend...");
+
+                    // Log him in
+
+                    // Fetch user data from your backend based on their unique identifier
+                    // You should already have saved their email, fullName, etc.
+                  } else {
+                    // First time sign-in, save email and name to backend
+                    debugPrint("First time sign-in, saving user info...");
+
+                    // Handle user creation with the Apple Sign-In information
+                    handleAppleSignIn(
+                        context, authorizationCode, email, firstName, lastName);
+                  }
                   // Now, handle user creation with the Apple Sign-In information
-                  handleAppleSignIn(
-                      context, authorizationCode, email, fullName);
+                  */ /*handleAppleSignIn(
+                      context, authorizationCode, email, firstName, lastName);*/ /*
                   // Process the credential
                 } catch (e) {
                   print('Apple Sign-In error: $e');
-                }
-                /*final credential = await SignInWithApple.getAppleIDCredential(
-                  scopes: [
-                    AppleIDAuthorizationScopes.email,
-                    AppleIDAuthorizationScopes.fullName,
-                  ],
-                );*/
-
-                // Send the authorization code to your backend for validation
-                // Use credential.authorizationCode
-                // Extract credentials
+                }*/
+                AuthMethod().signInWithApple();
               },
               icon: Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -671,54 +684,222 @@ class _RegistrationFormState extends State<RegistrationForm> {
   }
 
   void handleAppleSignIn(BuildContext context, String authorizationCode,
-      String? email, String? fullName) async {
-    // Call your backend or Provider method to create a user using the authorization code.
-    final response =
-        await Provider.of<UserCreationProvider>(context, listen: false)
-            .createUser(
-      "apple_user_${DateTime.now().millisecondsSinceEpoch}",
-      // You can use a unique ID, such as a timestamp
-      email ?? "unknown@apple.com",
-      // If Apple does not provide email, use a fallback
-      fullName ?? "Unknown User",
-      // If Apple does not provide a name, use a fallback
-      email ?? "unknown@apple.com",
-      "not-provided",
-      // No mobile number provided by Apple
-      "123456",
-      // Set a default password for Apple Sign-In users, or leave blank
-      "S",
-      "not-mentioned",
-      "not-mentioned",
-      "not-mentioned",
+      String? email, String? firstName, String? lastName) async {
+    // Step 1: Get additional information from the user through a dialog
+    final result = await showUsernamePhoneDialog(
+      context,
+      email ?? "--",
+      firstName ?? "--",
+      lastName ?? " ",
     );
 
-    if (response == true) {
-      // Handle successful user creation and login as shown in your code
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => Dashboard()),
-        (route) => false,
+    if (result != null) {
+      // Step 2: After getting the username and phone number, proceed with registration
+      final username = result['username'] ?? "";
+      final phone = result['phone'] ?? "";
+      final defaultPass = "123456";
+
+      String fullName = firstName! + lastName!;
+
+      // Step 3: Call your backend or Provider method to create a user using the Apple and user-provided information
+      final response =
+          await Provider.of<UserCreationProvider>(context, listen: false)
+              .createUser(
+        "username_${DateTime.now().millisecondsSinceEpoch}",
+        // Unique ID
+        username,
+        // Username provided by user
+        fullName,
+        // Full name from Apple Sign In
+        email!,
+        // Email from Apple Sign In
+        phone,
+        // Phone number provided by user
+        defaultPass,
+        // Set a default password or generate one
+        "S",
+        "not-mentioned",
+        "not-mentioned",
+        "not-mentioned",
       );
-    } else if (response == false) {
-      // Show error dialog
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text("Error"),
-          content: Text('User already exists or other issue occurred.'),
-        ),
-      );
+
+      // Step 4: Handle the registration response
+      if (response == true) {
+        /*Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => Dashboard()),
+          (route) => false,
+        );*/
+        Navigator.pop(context);
+        showDialog(
+          context: context,
+          barrierDismissible: false, // Set to false to make it non-cancelable
+          builder: (BuildContext context) {
+            return Stack(
+              children: [
+                BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                  child: Container(
+                    color: Colors.black
+                        .withOpacity(0.5), // Adjust opacity as needed
+                  ),
+                ),
+                AlertDialog(
+                  title: Center(child: Text("Success")),
+                  contentPadding: EdgeInsets.all(10.0),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('User created successfully! Logging you in'),
+                      SpinKitThreeInOut(
+                        color: AppColors.primaryColor,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+        try {
+          // Call the login method from the AuthProvider
+          await Provider.of<AuthProvider>(context, listen: false)
+              .login(email, defaultPass);
+
+          // Check if the user is authenticated
+          if (Provider.of<AuthProvider>(context, listen: false).user != null) {
+            // Navigate to the DashboardScreen on successful login
+            Navigator.pop(context);
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => Dashboard()),
+              (route) => false,
+            );
+          } else {
+            // Handle unsuccessful login
+            print("Login failed");
+            Navigator.pop(context);
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return ErrorDialog(
+                  message: "Login failed, check username and password.",
+                );
+              },
+            );
+          }
+        } catch (error) {
+          // Handle errors from the API call or login process
+          print("Error during login: $error");
+          // Show the custom error dialog
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return ErrorDialog(message: error.toString());
+            },
+          );
+        }
+      } else if (response == false) {
+        // Show error dialog
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("Error"),
+            content: Text('User already exists or another issue occurred.'),
+          ),
+        );
+      } else {
+        // Handle unexpected response
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("Error"),
+            content: Text('Unexpected response format.'),
+          ),
+        );
+      }
     } else {
-      // Handle unexpected response
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text("Error"),
-          content: Text('Unexpected response format.'),
-        ),
-      );
+      // Handle case where user cancels the dialog or doesn't provide data
+      print('User canceled input');
     }
+  }
+
+  Future<Map<String, String>?> showUsernamePhoneDialog(BuildContext context,
+      String email, String firstName, String lastName) async {
+    final usernameController = TextEditingController();
+    final phoneController = TextEditingController();
+    String? username;
+    String? phone;
+
+    return showDialog<Map<String, String>>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Complete Registration'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                    'Please provide a username and phone number to complete your registration'),
+                SizedBox(height: 10),
+                TextField(
+                  controller: usernameController,
+                  decoration: InputDecoration(
+                    labelText: 'Username',
+                    errorText: username == null || username!.isEmpty
+                        ? 'Username is required'
+                        : null,
+                  ),
+                  onChanged: (value) {
+                    username = value;
+                  },
+                ),
+                SizedBox(height: 10),
+                TextField(
+                  controller: phoneController,
+                  decoration: InputDecoration(
+                    labelText: 'Phone Number',
+                    errorText: phone == null || phone!.isEmpty
+                        ? 'Phone number is required'
+                        : null,
+                  ),
+                  onChanged: (value) {
+                    phone = value;
+                  },
+                  keyboardType: TextInputType.phone,
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Submit'),
+              onPressed: () {
+                if (usernameController.text.isNotEmpty &&
+                    phoneController.text.isNotEmpty) {
+                  Navigator.of(context).pop({
+                    'username': usernameController.text,
+                    'phone': phoneController.text,
+                  });
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("All fields are required")),
+                  );
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _showTermsAndConditionsDialog(BuildContext context) {

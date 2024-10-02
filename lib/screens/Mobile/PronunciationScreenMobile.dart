@@ -113,6 +113,7 @@ class _PronunciationScreenMobileState extends State<PronunciationScreenMobile> {
   Future<void> startRecording() async {
     try {
       if (await audioRecord.hasPermission()) {
+        audioPlayer.stop();
         await audioRecord.start();
         setState(() {
           _isRecording = true;
