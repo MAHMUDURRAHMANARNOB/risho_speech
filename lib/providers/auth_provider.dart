@@ -1,3 +1,344 @@
+import 'dart:ffi';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:risho_speech/ui/colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../api/api_service.dart';
+import '../api/responses/login_response.dart';
+import '../models/user.dart';
+import '../screens/Dashboard.dart';
+import '../services/database.dart';
+
+class AuthProvider with ChangeNotifier {
+  AppUser? _user; // Using your custom User model (renamed as AppUser)
+  AppUser? get user => _user;
+
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+  // Updated login method with extlogin flag for manual login
+  Future<void> login(String username, String password, String extlogin) async {
+    try {
+      LoginResponse loginResponse =
+          await ApiService.loginApi(username, password, extlogin);
+
+      if (loginResponse.errorCode == 200) {
+        _user = AppUser(
+          id: loginResponse.id,
+          userID: loginResponse.userID,
+          username: loginResponse.username,
+          name: loginResponse.name,
+          email: loginResponse.email,
+          mobile: loginResponse.mobile,
+          userType: loginResponse.userType,
+        );
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('username', username);
+        await prefs.setString('password', password);
+
+        notifyListeners();
+      } else {
+        print(
+            "Login failed. ErrorCode: ${loginResponse.errorCode}, Message: ${loginResponse.message}");
+      }
+    } catch (error) {
+      print("Error during login: $error");
+    }
+  }
+
+  // Google sign-in method
+  Future<void> signInWithGoogle(BuildContext context) async {
+    // Show loading dialog
+
+    try {
+      // Navigator.pop(context);
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      final GoogleSignInAccount? googleSignInAccount =
+          await googleSignIn.signIn();
+
+      if (googleSignInAccount == null) {
+        return; // User canceled the sign-in
+      }
+
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        idToken: googleSignInAuthentication.idToken,
+        accessToken: googleSignInAuthentication.accessToken,
+      );
+
+      UserCredential result =
+          await _firebaseAuth.signInWithCredential(credential);
+      User? firebaseUser = result.user;
+
+      print("firebase user id: ${firebaseUser?.uid}");
+      if (firebaseUser != null) {
+        // Check or create user in your MySQL DB
+        /*final loginSuccess = */ await _handleSocialLogin(
+            firebaseUser, "Google");
+        notifyListeners();
+        // Navigate to dashboard if login was successful
+        /*if (loginSuccess) {
+          Navigator.pop(context);
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => Dashboard()),
+          );
+
+          notifyListeners();
+        } else {
+          // Show alert dialog if login is invalid
+          _showInvalidLoginDialog(context);
+        }*/
+      }
+    } catch (e) {
+      print("Google sign-in failed: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Google Sign-in failed. Please try again.")),
+      );
+    }
+  }
+
+  // Function to show an alert dialog for invalid login
+  void _showInvalidLoginDialog(BuildContext context) {
+    Navigator.pop(context);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Invalid Login"),
+        content: Text("The login attempt was unsuccessful. Please try again."),
+        actions: [
+          TextButton(
+            child: Text(
+              "OK",
+              style: TextStyle(
+                  color: AppColors.primaryColor, fontWeight: FontWeight.bold),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Handle Apple Sign-in similarly
+  Future<void> signInWithApple(BuildContext context) async {
+    // Your existing Apple sign-in logic
+  }
+
+  // Handle user registration or login in your MySQL DB after social login
+  Future<void> _handleSocialLogin(User firebaseUser, String provider) async {
+    bool userExists =
+        await DatabaseMethods().checkIfUserExists(firebaseUser.uid);
+
+    if (!userExists) {
+      Map<String, dynamic> userInfoMap = {
+        "email": firebaseUser.email ?? "",
+        "name": firebaseUser.displayName ?? "",
+        "imgUrl": firebaseUser.photoURL ?? "",
+        "id": firebaseUser.uid,
+        "phone": firebaseUser.phoneNumber ?? "",
+      };
+      await DatabaseMethods().addUser(firebaseUser.uid, userInfoMap);
+      await ApiService.createUser(
+        firebaseUser.uid,
+        firebaseUser.displayName ?? "",
+        firebaseUser.displayName ?? "",
+        firebaseUser.email ?? "",
+        firebaseUser.phoneNumber ?? "",
+        "",
+        "S",
+        // userType
+        "",
+        "",
+        provider,
+      );
+    }
+
+    // Fetch user data from your API to set the custom AppUser
+    LoginResponse loginResponse =
+        await ApiService.loginApi(firebaseUser.email!, null, "Y");
+
+    print(loginResponse.errorCode);
+
+    if (loginResponse.errorCode == 200) {
+      _user = AppUser(
+        id: loginResponse.id,
+        userID: loginResponse.userID,
+        username: loginResponse.username,
+        name: loginResponse.name,
+        email: loginResponse.email,
+        mobile: loginResponse.mobile,
+        userType: loginResponse.userType,
+      );
+      print(_user!.email);
+      notifyListeners();
+      // return true;
+    } else {
+      print("Failed to fetch user data");
+
+      notifyListeners();
+      // throw Exception("Failed to fetch user data");
+      // return false;
+    }
+  }
+
+  /*Future<bool> _handleSocialLogin(User firebaseUser, String platform) async {
+    try {
+      // Check if user exists in Firestore
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(firebaseUser.uid)
+          .get();
+
+      if (userDoc.exists) {
+        // User exists, proceed with login
+        final loginResponse =
+            await ApiService.loginApi(firebaseUser.email!, null, "Y");
+        // Handle successful login response
+
+        print("login response: ${loginResponse.name}");
+        if (loginResponse.errorCode == 200) {
+          _user = AppUser(
+            id: loginResponse.id,
+            userID: loginResponse.userID,
+            username: loginResponse.username,
+            name: loginResponse.name,
+            email: loginResponse.email,
+            mobile: loginResponse.mobile,
+            userType: loginResponse.userType,
+          );
+          notifyListeners();
+          return true;
+        } else {
+          print("Error during social login");
+          throw Exception("Failed to fetch user data");
+        }
+      } else {
+        await _createUserInFirestore(firebaseUser);
+        return true;
+      }
+    } catch (error) {
+      print("Error during social login: $error");
+      // throw Exception('Failed to handle social login: $error');
+      return false;
+    }
+    // return false; // Login failed
+  }*/
+
+  /*Future<void> _createUserInFirestore(User firebaseUser) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(firebaseUser.uid)
+          .set({
+        'email': firebaseUser.email,
+        'name': firebaseUser.displayName,
+        'uid': firebaseUser.uid,
+        // Add other fields as necessary
+      });
+    } catch (e) {
+      print("Error creating user in Firestore: $e");
+      // Handle error if needed
+    }
+  }*/
+
+  Future<void> logout() async {
+    try {
+      // Firebase logout
+      await _firebaseAuth.signOut();
+
+      // Clear locally stored user data
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+
+      _user = null; // Clear the custom AppUser
+      notifyListeners();
+    } catch (error) {
+      print('Error during logout: $error');
+    }
+  }
+}
+
+/*import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../api/api_service.dart';
+import '../api/responses/login_response.dart';
+import '../models/user.dart';
+import 'package:http/http.dart' as http;
+
+class AuthProvider with ChangeNotifier {
+  User? _user;
+
+  User? get user => _user;
+
+  // Updated login method with extlogin flag
+  Future<void> login(String username, String password, String extlogin) async {
+    try {
+      // Call the loginApi method from the ApiService with extlogin flag
+      LoginResponse loginResponse =
+          await ApiService.loginApi(username, password, extlogin);
+
+      // Process the API response
+      if (loginResponse.errorCode == 200) {
+        _user = User(
+          id: loginResponse.id,
+          userID: loginResponse.userID,
+          username: loginResponse.username,
+          name: loginResponse.name,
+          email: loginResponse.email,
+          mobile: loginResponse.mobile,
+          password: loginResponse.password,
+          userType: loginResponse.userType,
+        );
+
+        // Optionally, store user data using SharedPreferences if needed
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('username', username);
+        await prefs.setString('password', password);
+
+        // Notify listeners to trigger a rebuild in the UI
+        notifyListeners();
+      } else {
+        // Handle unsuccessful login
+        print(
+            "Login failed. ErrorCode: ${loginResponse.errorCode}, Message: ${loginResponse.message}");
+      }
+    } catch (error) {
+      // Handle errors from the ApiService
+      print("Error during login: $error");
+    }
+  }
+
+  Future<void> logout() async {
+    try {
+      // Clear stored credentials using SharedPreferences
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.remove('username');
+      await prefs.remove('password');
+
+      // Clear any other session data or tokens
+
+      // Notify listeners that the user has logged out
+      _user = null;
+      notifyListeners();
+    } catch (error) {
+      // Handle errors gracefully
+      print('Error during logout: $error');
+    }
+  }
+}*/
+
+/*
 // providers/auth_provider.dart
 import 'dart:convert';
 
@@ -5,6 +346,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../api/api_service.dart';
 import '../api/responses/login_response.dart';
+
+
 import '../models/user.dart';
 import 'package:http/http.dart' as http;
 
@@ -64,3 +407,4 @@ class AuthProvider with ChangeNotifier {
     }
   }
 }
+*/

@@ -37,7 +37,7 @@ dependencies:
   flutter_hooks: ^0.20.3
   animated_custom_dropdown: 1.5.0
   flutter_otp_text_field: ^1.1.1
-  intl: ^0.18.0
+  intl_utils: ^2.8.7
   flutter_spinkit: ^5.2.0
   shared_preferences: ^2.2.2
   permission_handler: ^11.3.1
@@ -71,6 +71,8 @@ dependencies:
   firebase_core: ^3.6.0
   firebase_auth: ^5.3.1
   cloud_firestore: ^5.4.3
+
+  pay: ^2.0.0
 
 
 
@@ -132,6 +134,7 @@ flutter:
     - assets/RiveAssets/
     - assets/images/background_contents/
     - assets/images/level_icons/
+    - assets/images/com_icon/
 #    - assets/images/icons/
 #    - assets/images/new_icons/
 

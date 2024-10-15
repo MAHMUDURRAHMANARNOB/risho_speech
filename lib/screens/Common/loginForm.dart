@@ -1,10 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:risho_speech/screens/RegistrationScreen.dart';
-import 'package:risho_speech/services/auth.dart';
+
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../models/user.dart';
@@ -217,12 +219,12 @@ class _LoginformState extends State<Loginform> {
                   String password = passwordController.text;
                   // Call the login method from the AuthProvider
                   await Provider.of<AuthProvider>(context, listen: false)
-                      .login(username, password);
+                      .login(username, password, "N");
                   Navigator.pop(context);
                   // Check if the user is authenticated
                   if (Provider.of<AuthProvider>(context, listen: false).user !=
                       null) {
-                    User user =
+                    AppUser user =
                         Provider.of<AuthProvider>(context, listen: false).user!;
                     print("User ID: ${user.userID}");
                     print("Username: ${user.username}");
@@ -317,155 +319,115 @@ class _LoginformState extends State<Loginform> {
             ),
             const SizedBox(height: 10),
 
-            Center(
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  side: BorderSide(
-                    color: Colors.white,
-                  ),
-                ),
-                label: Text(
-                  'Login with Google',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-                onPressed: () async {
-                  try {
-                    AuthMethod().signInWithGoogle(context);
-                  } catch (error) {
-                    // Handle errors
-                    print("Error during login: $error");
-                    // Show an error dialog if needed
-                  }
-                },
-                icon: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(
-                    FontAwesomeIcons.google,
-                    color: Colors.white,
-                    size: 27,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: IconButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                    ),
+                    onPressed: () async {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        // Prevent dismissal by tapping outside
+                        builder: (context) => AlertDialog(
+                          content: Row(
+                            children: [
+                              CircularProgressIndicator(
+                                color: AppColors.primaryColor,
+                              ),
+                              SizedBox(width: 20),
+                              Text("Signing in..."), // Loading message
+                            ],
+                          ),
+                        ),
+                      );
+                      try {
+                        await Provider.of<AuthProvider>(context, listen: false)
+                            .signInWithGoogle(context);
+                        // AuthProvider().signInWithGoogle(context);
+                        // Remove the loading dialog
+                        Navigator.pop(context);
 
-            Center(
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  side: BorderSide(
-                    color: Colors.white,
-                  ),
-                ),
-                label: Text(
-                  'Login with Apple',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-                onPressed: () async {
-                  AuthMethod().signInWithApple();
-                },
-                icon: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(
-                    FontAwesomeIcons.apple,
-                    color: Colors.white,
-                    size: 34,
-                  ),
-                ),
-              ),
-            ),
+                        AppUser? user =
+                            Provider.of<AuthProvider>(context, listen: false)
+                                .user;
 
-            /*Signup with google*/
-            const SizedBox(height: 30),
-            /*Login with others*/
-            /*Container(
-              width: double.infinity,
-              constraints: BoxConstraints(
-                minWidth: 100.0,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Container(
-                      height: 1.0,
-                      width: 30.0,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Text(
-                    'Login',
-                    style:
-                        TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    ' with Others',
-                    style: TextStyle(fontSize: 14.0),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Container(
-                      height: 1.0,
-                      width: 30.0,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 5),
-            Container(
-              width: double.infinity,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25.0),
-                      color: Colors.white,
-                    ),
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: FaIcon(
-                        FontAwesomeIcons
-                            .google, // Google icon from Font Awesome
-                        color:
-                            Colors.red, // Change the color of the Google logo
+                        if (user != null) {
+                          // Login success, navigate to Dashboard
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Dashboard()),
+                          );
+                          // widget.onLoginSuccess(username, password);
+                        } else {
+                          // Handle unsuccessful login
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return ErrorDialog(
+                                message:
+                                    "Login failed, \nCheck username and password.",
+                              );
+                            },
+                          );
+                        }
+                      } catch (error) {
+                        // Handle errors
+                        Navigator.pop(context);
+                        // Handle errors during sign-in
+                        print("Error during Google sign-in: $error");
+
+                        // Show an error dialog
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return ErrorDialog(
+                              message:
+                                  "An error occurred during sign-in: $error",
+                            );
+                          },
+                        );
+                        // Show an error dialog if needed
+                      }
+                    },
+                    icon: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.asset(
+                        "assets/images/com_icon/google_icon.png",
+                        width: 30,
+                        height: 30,
                       ),
                     ),
                   ),
-                  SizedBox(
-                    width: 5.0,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25.0),
-                      color: Colors.white,
-                    ),
+                ),
+                const SizedBox(width: 10),
+                Visibility(
+                  visible: Platform.isIOS,
+                  child: Center(
                     child: IconButton(
-                      onPressed: () {},
-                      icon: FaIcon(
-                        FontAwesomeIcons
-                            .facebookF, // Google icon from Font Awesome
-                        color:
-                            Colors.blue, // Change the color of the Google logo
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                      ),
+                      onPressed: () async {
+                        AuthProvider().signInWithApple(context);
+                      },
+                      icon: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.asset(
+                          "assets/images/com_icon/apple_icon.png",
+                          height: 30,
+                          width: 30,
+                        ),
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),*/
+                ),
+              ],
+            ),
 
             const SizedBox(height: 10),
             /*Signup*/

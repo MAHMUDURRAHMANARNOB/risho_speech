@@ -217,7 +217,7 @@ class _OtpScreenMobileState extends State<OtpScreenMobile> {
                       try {
                         // Call the login method from the AuthProvider
                         await Provider.of<AuthProvider>(context, listen: false)
-                            .login(widget.email!, widget.password!);
+                            .login(widget.email!, widget.password!, "N");
 
                         // Check if the user is authenticated
                         if (Provider.of<AuthProvider>(context, listen: false)

@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>83003546482-s8qurh3aitj9cujtplpj5qfhc6mg2bv4.apps.googleusercontent.com</string>
+	<string>505210270064-45suomudqoj6fi8c2gv9rsm1ad5kdggu.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.83003546482-s8qurh3aitj9cujtplpj5qfhc6mg2bv4</string>
+	<string>com.googleusercontent.apps.505210270064-45suomudqoj6fi8c2gv9rsm1ad5kdggu</string>
 	<key>API_KEY</key>
-	<string>AIzaSyD8ya1ksfOnZt6dTJq_EgPG4rnPyY02F_8</string>
+	<string>AIzaSyAgm9gujcRbmjb_5wnKfz2EzbH61jhXs40</string>
 	<key>GCM_SENDER_ID</key>
-	<string>83003546482</string>
+	<string>505210270064</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.rishoguru.rishoSpeech</string>
 	<key>PROJECT_ID</key>
-	<string>rishospeechdemo</string>
+	<string>risho-speech</string>
 	<key>STORAGE_BUCKET</key>
-	<string>rishospeechdemo.appspot.com</string>
+	<string>risho-speech.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:83003546482:ios:8c71d90f0dd5d612ba1beb</string>
+	<string>1:505210270064:ios:62a9f0e110d57d379cdfb5</string>
 </dict>
 </plist>

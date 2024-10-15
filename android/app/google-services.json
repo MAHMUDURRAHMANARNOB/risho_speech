@@ -1,26 +1,43 @@
 {
   "project_info": {
-    "project_number": "83003546482",
-    "project_id": "rishospeechdemo",
-    "storage_bucket": "rishospeechdemo.appspot.com"
+    "project_number": "505210270064",
+    "project_id": "risho-speech",
+    "storage_bucket": "risho-speech.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:83003546482:android:7a9dae68228ab28fba1beb",
+        "mobilesdk_app_id": "1:505210270064:android:2a5b63937fc9ed269cdfb5",
         "android_client_info": {
           "package_name": "com.rishoguru.risho_speech"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "505210270064-5k6m9jq03vgse9t51luk0euala4vtser.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyD9hY9V4485pF1jZ9KvE-OJjr_oaghXCi0"
+          "current_key": "AIzaSyB3nd3SC8P6nTV2JbXGaudfT_c68bPYRX8"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "505210270064-5k6m9jq03vgse9t51luk0euala4vtser.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "505210270064-45suomudqoj6fi8c2gv9rsm1ad5kdggu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rishoguru.rishoSpeech"
+              }
+            }
+          ]
         }
       }
     }

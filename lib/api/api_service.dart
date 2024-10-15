@@ -14,13 +14,13 @@ class ApiService {
   // static const String baseUrl_guru = 'https://api.risho.guru';
 
   /*LOGIN*/
-  static Future<LoginResponse> loginApi(
+  /*static Future<LoginResponse> loginApi(
       String username, String password) async {
     const apiUrl = '$baseUrl/loginuser/';
 
-    /*for query type url*/
+    */ /*for query type url*/ /*
     final Uri uri = Uri.parse('$apiUrl?userid=$username&password=$password');
-    /*Query type url*/
+    */ /*Query type url*/ /*
     final response = await http.post(
       uri,
       headers: {'Content-Type': 'application/json'},
@@ -43,6 +43,45 @@ class ApiService {
       print("Error during loginApi: $error");
       throw Exception('Failed to login. Error: $error');
     }
+  }*/
+
+  static Future<LoginResponse> loginApi(
+      String userId, String? password, String? extLogin) async {
+    print("Im here");
+    const apiUrl = '$baseUrl/loginusernew/';
+
+    final Uri uri = Uri.parse(apiUrl);
+
+    final Map<String, dynamic> body = {
+      'userid': userId.toString(),
+      // 'password': password,
+      'extlogin': extLogin.toString(), // "N" for manual, "Y" for social login
+    };
+    // Add 'password' only if it's not null
+    if (password != null) {
+      body['password'] = password.toString();
+    }
+
+    try {
+      final response = await http.post(
+        uri,
+        // headers: {'Content-Type': 'application/json'},
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        // Parse successful response
+        print(jsonDecode(response.body));
+        return LoginResponse.fromJson(jsonDecode(response.body));
+      } else {
+        print("HTTP Error: ${response.statusCode}");
+        print("Response Body: ${response.body}");
+        throw Exception('Failed to login. HTTP Error: ${response.statusCode}');
+      }
+    } catch (error) {
+      print("Error during loginApi: $error");
+      throw Exception('Failed to login. Error: $error');
+    }
   }
 
   /*CREATE USER*/
@@ -52,7 +91,7 @@ class ApiService {
       String name,
       String email,
       String mobile,
-      String password,
+      String? password,
       String userType,
       String school,
       String address,
@@ -60,23 +99,29 @@ class ApiService {
     const apiUrl = '$baseUrl/creatuser/';
 
     try {
+      final body = <String, dynamic>{
+        'user_id': userId.toString(),
+        'username': username.toString(),
+        'name': name.toString(),
+        'email': email.toString(),
+        'mobile': mobile.toString(),
+        'usertype': userType.toString(),
+        'school': school.toString(),
+        'address': address.toString(),
+        'marketingSource': marketingSource.toString(),
+      };
+
+      // Add 'password' only if it's not null
+      if (password != null) {
+        body['password'] = password.toString();
+      }
+
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(<String, dynamic>{
-          'user_id': userId.toString(),
-          'username': username.toString(),
-          'name': name.toString(),
-          'email': email.toString(),
-          'mobile': mobile.toString(),
-          'password': password.toString(),
-          'usertype': userType.toString(),
-          'school': school.toString(),
-          'address': address.toString(),
-          'marketingSource': marketingSource.toString(),
-        }),
+        body: jsonEncode(body),
       );
 
       if (response.statusCode == 200) {
@@ -1198,6 +1243,79 @@ class ApiService {
     } catch (e) {
       print("Response in getPackagesList Catch" + e.toString());
       throw Exception("Failed getPackagesList $e");
+    }
+  }
+
+  /*Language List*/
+  Future<Map<String, dynamic>> getLanguageList() async {
+    final response = await http.post(Uri.parse('$baseUrl/getLanguageList/'));
+
+    if (response.statusCode == 200) {
+      var responseBody = await response.body;
+      // print("hello boss:${json.decode(responseBody)}");
+      return json.decode(responseBody);
+    } else {
+      throw Exception('Failed to load courses');
+    }
+  }
+
+  /*Language List*/
+  Future<Map<String, dynamic>> getLanguageTutorResponse(
+    int userid,
+    String userName,
+    String? courseId,
+    File? audioFile,
+    String nextLesson,
+    String? langName,
+  ) async {
+    print("$userid , $userName , $courseId, $userid, $nextLesson, $langName");
+    try {
+      final uri = Uri.parse("$baseUrl/LanguageTutor/");
+
+      // Build the request body dynamically
+      var request = http.MultipartRequest('POST', uri)
+        ..fields['userid'] = userid.toString()
+        ..fields['userName'] = userName.toString()
+        ..fields['nextlesson'] = nextLesson.toString();
+
+      if (audioFile != null) {
+        request.files.add(
+            await http.MultipartFile.fromPath('audioFile', audioFile.path));
+      }
+      if (courseId != null && courseId.isNotEmpty) {
+        request.fields['courseid'] = courseId.toString();
+      }
+      if (langName != null && langName.isNotEmpty) {
+        request.fields['langName'] = langName.toString();
+      }
+
+      var response = await request.send();
+      print("getLanguageTutor: ${response.statusCode}");
+      if (response.statusCode == 200) {
+        var responseBody = await response.stream.bytesToString();
+        // print(json.decode(responseBody));
+        return json.decode(responseBody);
+      } else {
+        // Handle error
+        return {'error': 'Failed to make API call'};
+      }
+      /*final response = await http.post(
+        uri,
+        body: body,
+      );
+      // print(response.body.toString());
+
+      // var response = await request.send();
+      if (response.statusCode == 200) {
+        var responseBody = await response.body;
+        // print("hello course lesson list:${json.decode(responseBody)}");
+        var finalResponse = Utf8Decoder().convert(response.bodyBytes);
+        return json.decode(finalResponse);
+      } else {
+        throw Exception('Failed to load Data');
+      }*/
+    } catch (e) {
+      throw Exception(e.toString());
     }
   }
 }

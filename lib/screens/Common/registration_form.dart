@@ -13,7 +13,6 @@ import 'package:risho_speech/screens/Dashboard.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/createUserProvider.dart';
 import '../../providers/optProvider.dart';
-import '../../services/auth.dart';
 import '../../ui/colors.dart';
 import '../Mobile/OTPScreenMobile.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -577,76 +576,100 @@ class _RegistrationFormState extends State<RegistrationForm> {
               ),
             ],
           ),
+
           const SizedBox(height: 10),
-          Center(
-            child: ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                side: BorderSide(
-                  color: Colors.white,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: IconButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                  ),
+                  onPressed: () async {
+                    try {
+                      AuthProvider().signInWithGoogle(context);
+                    } catch (error) {
+                      // Handle errors
+                      print("Error during login: $error");
+                      // Show an error dialog if needed
+                    }
+                  },
+                  icon: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.asset(
+                      "assets/images/com_icon/google_icon.png",
+                      width: 30,
+                      height: 30,
+                    ),
+                  ),
                 ),
               ),
-              label: Text(
-                'Sign up with Apple',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
+              const SizedBox(width: 10),
+              Center(
+                child: IconButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    /*side: BorderSide(
+                      color: Colors.white,
+                    ),*/
+                  ),
+                  onPressed: () async {
+                    /*try {
+                      final appleCredential =
+                          await SignInWithApple.getAppleIDCredential(
+                        scopes: [
+                          AppleIDAuthorizationScopes.email,
+                          AppleIDAuthorizationScopes.fullName,
+                        ],
+                      );
+                      String authorizationCode = appleCredential.authorizationCode;
+                      String? email = appleCredential.email; // Optional if provided
+                      String? firstName = appleCredential.givenName;
+                      String? lastName = appleCredential.givenName;
+                      debugPrint(
+                          "$email - $firstName - $lastName - $authorizationCode");
+
+                      if (email == null && firstName == null && lastName == null) {
+                        debugPrint(
+                            "User previously logged in, fetching data from backend...");
+
+                        // Log him in
+
+                        // Fetch user data from your backend based on their unique identifier
+                        // You should already have saved their email, fullName, etc.
+                      } else {
+                        // First time sign-in, save email and name to backend
+                        debugPrint("First time sign-in, saving user info...");
+
+                        // Handle user creation with the Apple Sign-In information
+                        handleAppleSignIn(
+                            context, authorizationCode, email, firstName, lastName);
+                      }
+                      // Now, handle user creation with the Apple Sign-In information
+                      */ /*handleAppleSignIn(
+                          context, authorizationCode, email, firstName, lastName);*/ /*
+                      // Process the credential
+                    } catch (e) {
+                      print('Apple Sign-In error: $e');
+                    }*/
+                    AuthProvider().signInWithApple(context);
+                  },
+                  icon: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.asset(
+                      "assets/images/com_icon/apple_icon.png",
+                      height: 30,
+                      width: 30,
+                    ),
+                  ),
                 ),
               ),
-              onPressed: () async {
-                /*try {
-                  final appleCredential =
-                      await SignInWithApple.getAppleIDCredential(
-                    scopes: [
-                      AppleIDAuthorizationScopes.email,
-                      AppleIDAuthorizationScopes.fullName,
-                    ],
-                  );
-                  String authorizationCode = appleCredential.authorizationCode;
-                  String? email = appleCredential.email; // Optional if provided
-                  String? firstName = appleCredential.givenName;
-                  String? lastName = appleCredential.givenName;
-                  debugPrint(
-                      "$email - $firstName - $lastName - $authorizationCode");
-
-                  if (email == null && firstName == null && lastName == null) {
-                    debugPrint(
-                        "User previously logged in, fetching data from backend...");
-
-                    // Log him in
-
-                    // Fetch user data from your backend based on their unique identifier
-                    // You should already have saved their email, fullName, etc.
-                  } else {
-                    // First time sign-in, save email and name to backend
-                    debugPrint("First time sign-in, saving user info...");
-
-                    // Handle user creation with the Apple Sign-In information
-                    handleAppleSignIn(
-                        context, authorizationCode, email, firstName, lastName);
-                  }
-                  // Now, handle user creation with the Apple Sign-In information
-                  */ /*handleAppleSignIn(
-                      context, authorizationCode, email, firstName, lastName);*/ /*
-                  // Process the credential
-                } catch (e) {
-                  print('Apple Sign-In error: $e');
-                }*/
-                AuthMethod().signInWithApple();
-              },
-              icon: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Icon(
-                  Icons.apple,
-                  color: Colors.white,
-                  size: 34,
-                ),
-              ),
-            ),
+            ],
           ),
 
           /*Signup with google*/
-          const SizedBox(height: 30),
+          const SizedBox(height: 20),
 
           /*const SizedBox(height: 20),*/
           Row(
@@ -764,7 +787,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
         try {
           // Call the login method from the AuthProvider
           await Provider.of<AuthProvider>(context, listen: false)
-              .login(email, defaultPass);
+              .login(email, defaultPass, "Y");
 
           // Check if the user is authenticated
           if (Provider.of<AuthProvider>(context, listen: false).user != null) {

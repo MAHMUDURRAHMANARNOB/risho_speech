@@ -37,7 +37,7 @@ class _LoginScreenMobileState extends State<LoginScreenMobile> {
       if (username != null && password != null) {
         // Call the login method from the AuthProvider
         await Provider.of<AuthProvider>(context, listen: false)
-            .login(username, password);
+            .login(username, password, "N");
 
         // Check if the user is authenticated
         if (Provider.of<AuthProvider>(context, listen: false).user != null) {

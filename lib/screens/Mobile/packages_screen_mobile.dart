@@ -190,7 +190,7 @@ class _PackagesScreenMobileState extends State<PackagesScreenMobile> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
+                          const Row(
                             children: [
                               Icon(
                                 Iconsax.timer,
@@ -200,7 +200,7 @@ class _PackagesScreenMobileState extends State<PackagesScreenMobile> {
                                 width: 5,
                               ),
                               Text(
-                                "Minutes",
+                                "Conversation (seconds)",
                               ),
                             ],
                           ),
@@ -212,7 +212,7 @@ class _PackagesScreenMobileState extends State<PackagesScreenMobile> {
                               color: AppColors.primaryColor,
                             ),
                             child: Text(
-                              audiominutes.toString(),
+                              "${(audiominutes * 60).toString()} ",
                             ),
                           ),
                         ],

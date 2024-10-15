@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -412,6 +414,118 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                   ),
 
             /*Text("Transection Status:  $status"),*/
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    side: BorderSide(color: Colors.white)),
+                onPressed: () {
+                  generatedTransectionId =
+                      DateTime.now().millisecondsSinceEpoch;
+                  if (kDebugMode) {
+                    print("$generatedTransectionId");
+                  }
+                  setState(() {
+                    generatedTransectionId;
+                  });
+                  /*ApiService.initiatePayment(
+                    userID,
+                    _packageID,
+                    generatedTransectionId.toString(),
+                    _payableAmount,
+                    _mainAmount,
+                    _couponDiscountAmount,
+                    _couponPartnerId,
+                  );*/
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Pay with ",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20),
+                      ),
+                      Image.asset(
+                        "assets/images/com_icon/google_icon.png",
+                        width: 24,
+                        height: 24,
+                      ),
+                      Text(
+                        " Pay",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
+            Visibility(
+              visible: Platform.isIOS,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: ElevatedButton(
+                  style:
+                      ElevatedButton.styleFrom(backgroundColor: Colors.white),
+                  onPressed: () {
+                    generatedTransectionId =
+                        DateTime.now().millisecondsSinceEpoch;
+                    if (kDebugMode) {
+                      print("$generatedTransectionId");
+                    }
+                    setState(() {
+                      generatedTransectionId;
+                    });
+                    /*ApiService.initiatePayment(
+                      userID,
+                      _packageID,
+                      generatedTransectionId.toString(),
+                      _payableAmount,
+                      _mainAmount,
+                      _couponDiscountAmount,
+                      _couponPartnerId,
+                    );*/
+                    // _initiatePayment();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Pay with ",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
+                        ),
+                        Image.asset(
+                          "assets/images/com_icon/apple_icon.png",
+                          width: 24,
+                          height: 24,
+                        ),
+                        Text(
+                          " Pay",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

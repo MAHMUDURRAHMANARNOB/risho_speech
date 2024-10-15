@@ -103,6 +103,10 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
     // final userId = Provider.of<AuthProvider>(context).user?.id;
     // subscriptionStatusProvider.fetchSubscriptionData(userId!);
     final authProvider = Provider.of<AuthProvider>(context);
+    // Check if _user is null and handle accordingly
+    if (authProvider.user == null) {
+      return Center(child: Text("User not logged in."));
+    }
     userId = Provider.of<AuthProvider>(context).user!.id;
     userName = Provider.of<AuthProvider>(context).user!.username;
     fullName = Provider.of<AuthProvider>(context).user!.name;
@@ -301,6 +305,7 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                     child: ThreeDCard(),
                   ),
                   const SizedBox(height: 5.0),
+
                   /*IELTS*/
                   Container(
                     width: double.infinity,

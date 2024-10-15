@@ -223,13 +223,13 @@ class _LoginFormTabletState extends State<LoginFormTablet> {
                       String password = passwordController.text;
                       // Call the login method from the AuthProvider
                       await Provider.of<AuthProvider>(context, listen: false)
-                          .login(username, password);
+                          .login(username, password, "N");
                       Navigator.pop(context);
                       // Check if the user is authenticated
                       if (Provider.of<AuthProvider>(context, listen: false)
                               .user !=
                           null) {
-                        User user =
+                        AppUser user =
                             Provider.of<AuthProvider>(context, listen: false)
                                 .user!;
                         print("User ID: ${user.userID}");

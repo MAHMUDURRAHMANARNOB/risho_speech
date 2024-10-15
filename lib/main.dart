@@ -6,6 +6,7 @@ import 'package:risho_speech/providers/IeltsCourseListProvider.dart';
 import 'package:risho_speech/providers/IeltsCourseVideoAnsProvider.dart';
 import 'package:risho_speech/providers/IeltsVocabularyCategoryListProvider.dart';
 import 'package:risho_speech/providers/IeltsVocabularyListProvider.dart';
+import 'package:risho_speech/providers/LanguageTutorResponseProvider.dart';
 import 'package:risho_speech/providers/ShonodAiResponseProvider.dart';
 import 'package:risho_speech/providers/TutorResponseProvider.dart';
 import 'package:risho_speech/providers/TutorSpokenCourseProvider.dart';
@@ -21,6 +22,7 @@ import 'package:risho_speech/providers/doGuidedConversationProvider.dart';
 import 'package:risho_speech/providers/endIeltsListeningExamPrivider.dart';
 import 'package:risho_speech/providers/ieltsCourseLessonListProvider.dart';
 import 'package:risho_speech/providers/ieltsListeningExamQuestionProvider.dart';
+import 'package:risho_speech/providers/languageListProvider.dart';
 import 'package:risho_speech/providers/nextQuestionProvider.dart';
 import 'package:risho_speech/providers/optProvider.dart';
 import 'package:risho_speech/providers/packagesProvider.dart';
@@ -41,9 +43,16 @@ import 'package:risho_speech/utils/theme/theme.dart';
 import 'package:shurjopay/utilities/functions.dart';
 import 'package:upgrader/upgrader.dart';
 
+import 'firebase_options.dart';
+
+// import 'firebase_options.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   initializeShurjopay(environment: "live");
 
   runApp(
@@ -93,6 +102,9 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => TutorResponseProvider()),
         ChangeNotifierProvider(
             create: (context) => TutorSpokenCourseProvider()),
+        ChangeNotifierProvider(create: (context) => LanguageListProvider()),
+        ChangeNotifierProvider(
+            create: (context) => LanguageTutorResponseProvider()),
       ],
       child: UpgradeAlert(
         child: RishoSpeech(),

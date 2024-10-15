@@ -110,7 +110,7 @@ class _IeltsAssistantScreenMobileState
                                     children: [
                                       Text(
                                         textAlign: TextAlign.center,
-                                        'Ask anything as you are speaking to a Ielts Trainer',
+                                        'Ask anything as you are speaking to an Ielts Trainer',
                                       ),
                                     ],
                                   ),

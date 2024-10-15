@@ -8,6 +8,7 @@ import 'package:iconsax_plus/iconsax_plus.dart';
 
 import '../screens/HomeScreen.dart';
 import '../screens/IELTSHomeScreen.dart';
+import '../screens/LanguageHomeScreen.dart';
 import '../screens/ProfileScreen.dart';
 import '../ui/colors.dart';
 
@@ -51,6 +52,7 @@ class _NavigationPageState extends State<NavigationPage> {
         title: 'Home', imagePath: 'assets/images/risho_guru_icon.png'),
     CustomDestination(
         title: 'IELTS', imagePath: 'assets/images/ielts_logo.png'),
+    CustomDestination(title: 'Language', imagePath: 'assets/images/school.png'),
     CustomDestination(
         title: 'Profile', imagePath: 'assets/images/man_chat.png'),
   ];
@@ -64,18 +66,29 @@ class _NavigationPageState extends State<NavigationPage> {
       label: 'Home',
       selectedIcon: Icon(
         IconsaxPlusBold.home_1,
-        color: AppColors.primaryColor,
+        color: AppColors.primaryColor2,
       ),
     ),
     const NavigationDestination(
       icon: Icon(
-        Iconsax.language_circle,
+        Iconsax.global,
         color: AppColors.primaryColor,
       ),
       label: 'IELTS',
       selectedIcon: Icon(
-        IconsaxPlusBold.language_circle,
+        IconsaxPlusBold.global,
+        color: AppColors.primaryColor2,
+      ),
+    ),
+    const NavigationDestination(
+      icon: Icon(
+        Iconsax.language_square,
         color: AppColors.primaryColor,
+      ),
+      label: 'Language',
+      selectedIcon: Icon(
+        IconsaxPlusBold.language_square,
+        color: AppColors.primaryColor2,
       ),
     ),
     const NavigationDestination(
@@ -86,7 +99,7 @@ class _NavigationPageState extends State<NavigationPage> {
       label: 'Profile',
       selectedIcon: Icon(
         IconsaxPlusBold.user,
-        color: AppColors.primaryColor,
+        color: AppColors.primaryColor2,
       ),
     ),
   ];
@@ -271,6 +284,9 @@ class _NavigationPageState extends State<NavigationPage> {
         return IELTSHomeScreen();
         break;
       case 2:
+        return LanguageHomeScreen();
+        break;
+      case 3:
         return ProfileScreen();
         break;
 
@@ -289,6 +305,9 @@ class _NavigationPageState extends State<NavigationPage> {
         return IELTSHomeScreen();
         break;
       case 2:
+        return LanguageHomeScreen();
+        break;
+      case 3:
         return ProfileScreen();
         break;
       default:
