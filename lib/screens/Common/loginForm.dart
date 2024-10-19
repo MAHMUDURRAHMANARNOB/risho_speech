@@ -413,7 +413,72 @@ class _LoginformState extends State<Loginform> {
                         backgroundColor: Colors.white,
                       ),
                       onPressed: () async {
-                        AuthProvider().signInWithApple(context);
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          // Prevent dismissal by tapping outside
+                          builder: (context) => AlertDialog(
+                            content: Row(
+                              children: [
+                                CircularProgressIndicator(
+                                  color: AppColors.primaryColor,
+                                ),
+                                SizedBox(width: 20),
+                                Text("Signing in..."), // Loading message
+                              ],
+                            ),
+                          ),
+                        );
+                        try {
+                          await Provider.of<AuthProvider>(context,
+                                  listen: false)
+                              .signInWithApple(context);
+                          // AuthProvider().signInWithGoogle(context);
+                          // Remove the loading dialog
+                          Navigator.pop(context);
+
+                          AppUser? user =
+                              Provider.of<AuthProvider>(context, listen: false)
+                                  .user;
+
+                          if (user != null) {
+                            // Login success, navigate to Dashboard
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Dashboard()),
+                            );
+                            // widget.onLoginSuccess(username, password);
+                          } else {
+                            // Handle unsuccessful login
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return ErrorDialog(
+                                  message:
+                                      "Login failed, \nCheck username and password.",
+                                );
+                              },
+                            );
+                          }
+                        } catch (error) {
+                          // Handle errors
+                          Navigator.pop(context);
+                          // Handle errors during sign-in
+                          print("Error during Google sign-in: $error");
+
+                          // Show an error dialog
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return ErrorDialog(
+                                message:
+                                    "An error occurred during sign-in: $error",
+                              );
+                            },
+                          );
+                          // Show an error dialog if needed
+                        }
                       },
                       icon: Padding(
                         padding: const EdgeInsets.all(8.0),

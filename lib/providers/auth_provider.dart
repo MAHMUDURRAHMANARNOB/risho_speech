@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:risho_speech/ui/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../api/api_service.dart';
 import '../api/responses/login_response.dart';
@@ -78,24 +79,15 @@ class AuthProvider with ChangeNotifier {
 
       print("firebase user id: ${firebaseUser?.uid}");
       if (firebaseUser != null) {
+        // Store user information in SharedPreferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('googleEmail', firebaseUser.email!);
+        await prefs.setString('googleName', firebaseUser.displayName ?? "");
+        await prefs.setString('extLogin', "Y");
+
         // Check or create user in your MySQL DB
-        /*final loginSuccess = */ await _handleSocialLogin(
-            firebaseUser, "Google");
+        await _handleSocialLogin(firebaseUser, "Google");
         notifyListeners();
-        // Navigate to dashboard if login was successful
-        /*if (loginSuccess) {
-          Navigator.pop(context);
-
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => Dashboard()),
-          );
-
-          notifyListeners();
-        } else {
-          // Show alert dialog if login is invalid
-          _showInvalidLoginDialog(context);
-        }*/
       }
     } catch (e) {
       print("Google sign-in failed: $e");
@@ -105,33 +97,57 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  // Function to show an alert dialog for invalid login
-  void _showInvalidLoginDialog(BuildContext context) {
-    Navigator.pop(context);
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text("Invalid Login"),
-        content: Text("The login attempt was unsuccessful. Please try again."),
-        actions: [
-          TextButton(
-            child: Text(
-              "OK",
-              style: TextStyle(
-                  color: AppColors.primaryColor, fontWeight: FontWeight.bold),
-            ),
-            onPressed: () {
-              Navigator.of(context).pop(); // Close the dialog
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Handle Apple Sign-in similarly
   Future<void> signInWithApple(BuildContext context) async {
-    // Your existing Apple sign-in logic
+    // Show loading dialog or loader
+    try {
+      // Apple Sign-In authorization process
+      final AuthorizationCredentialAppleID appleCredential =
+          await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      // Generate an OAuth credential using the ID token and authorization code
+      final OAuthProvider oAuthProvider = OAuthProvider('apple.com');
+      final AuthCredential credential = oAuthProvider.credential(
+        idToken: appleCredential.identityToken,
+        accessToken: appleCredential.authorizationCode,
+      );
+
+      // Sign in to Firebase with the Apple credential
+      UserCredential result =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      User? firebaseUser = result.user;
+
+      print("Firebase user ID: ${firebaseUser?.uid}");
+
+      if (firebaseUser != null) {
+        // Check or create user in your MySQL DB
+        await _handleSocialLogin(firebaseUser, "Apple");
+
+        // Notify listeners or update UI
+        notifyListeners();
+
+        // Optionally navigate to dashboard or show success
+        /*Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Dashboard()),
+      );*/
+      } else {
+        // Handle failed login
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text("Sign in with Apple failed. Please try again.")),
+        );
+      }
+    } catch (e) {
+      print("Apple sign-in failed: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Apple Sign-in failed. Please try again.")),
+      );
+    }
   }
 
   // Handle user registration or login in your MySQL DB after social login
@@ -188,6 +204,26 @@ class AuthProvider with ChangeNotifier {
       notifyListeners();
       // throw Exception("Failed to fetch user data");
       // return false;
+    }
+  }
+
+  Future<void> autoLoginWithGoogle() async {
+    try {
+      // Check if the user is currently signed in
+      User? firebaseUser = _firebaseAuth.currentUser;
+
+      if (firebaseUser != null) {
+        // The user is already signed in with Google
+        print("Auto-logged in with Google: ${firebaseUser.email}");
+
+        // You might want to fetch user details from your API
+        await _handleSocialLogin(firebaseUser, "Google");
+        notifyListeners();
+      } else {
+        print("No user is currently signed in.");
+      }
+    } catch (e) {
+      print("Auto-login with Google failed: $e");
     }
   }
 

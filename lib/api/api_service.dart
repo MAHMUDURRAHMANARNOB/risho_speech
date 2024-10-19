@@ -1318,4 +1318,33 @@ class ApiService {
       throw Exception(e.toString());
     }
   }
+
+  /*Delete Account*/
+  Future<Map<String, dynamic>> getDeleteResponse(
+    int userid,
+    String reason,
+  ) async {
+    final url = '$baseUrl/deleteuser/';
+    print("Posting in api service $url");
+    print("$userid , $reason");
+    try {
+      final Map<String, dynamic> body = {
+        'id': userid.toString(),
+      };
+      final response = await http.post(
+        Uri.parse(url),
+        body: body,
+      );
+      print("Response: ${response.body}");
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        print("Response in getDeleteResponse else" + response.body);
+        throw Exception('Failed to load data in getPackagesList');
+      }
+    } catch (e) {
+      print("Response in getPackagesList Catch" + e.toString());
+      throw Exception("Failed getPackagesList $e");
+    }
+  }
 }

@@ -1068,7 +1068,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                   // Perform logout action here
                                   // For example: navigate to login screen
                                   Navigator.of(context).pop();
-
+                                  authProvider.logout();
                                   Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
@@ -1076,7 +1076,6 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                                     (route) =>
                                         false, // This removes all routes in the stack
                                   );
-                                  authProvider.logout();
                                 },
                                 child: Text("Logout",
                                     style: TextStyle(

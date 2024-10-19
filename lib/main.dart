@@ -17,6 +17,7 @@ import 'package:risho_speech/providers/callAndConversationProvider.dart';
 import 'package:risho_speech/providers/calling_agentProvider.dart';
 import 'package:risho_speech/providers/coupnDiscountProvider.dart';
 import 'package:risho_speech/providers/createUserProvider.dart';
+import 'package:risho_speech/providers/deleteUserProvider.dart';
 import 'package:risho_speech/providers/doConversationProvider.dart';
 import 'package:risho_speech/providers/doGuidedConversationProvider.dart';
 import 'package:risho_speech/providers/endIeltsListeningExamPrivider.dart';
@@ -105,6 +106,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => LanguageListProvider()),
         ChangeNotifierProvider(
             create: (context) => LanguageTutorResponseProvider()),
+        ChangeNotifierProvider(create: (context) => DeleteUserProvider()),
       ],
       child: UpgradeAlert(
         child: RishoSpeech(),

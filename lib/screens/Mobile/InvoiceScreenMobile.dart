@@ -2,11 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pay/pay.dart';
 import 'package:provider/provider.dart';
 import 'package:risho_speech/providers/coupnDiscountProvider.dart';
+import 'package:risho_speech/services/paymentConfiguration.dart';
 /*
 import 'package:shurjopay/models/config.dart';
 import 'package:shurjopay/models/payment_verification_model.dart';
@@ -68,6 +71,8 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
   late ShurjoPay shurjoPay;
   late ShurjopayConfigs shurjopayConfigs;
 
+  PaymentConfiguration? _paymentConfiguration;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -91,12 +96,29 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
       password: "rishyqb8\$ts&\$#dn",
       clientIP: "127.0.0.1",
     );
+    // _loadPaymentConfiguration();
+  }
+
+  Future<void> _loadPaymentConfiguration() async {
+    final String configString = await rootBundle
+        .loadString('assets/default_payment_profile_apple_pay.json');
+    final paymentConfig = PaymentConfiguration.fromJsonString(configString);
+
+    setState(() {
+      _paymentConfiguration = defaultApplePayConfig;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     userID = authProvider.user!.id;
+
+    /*if (Platform.isIOS && defaultApplePayConfig == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }*/
 
     return Scaffold(
       appBar: AppBar(
@@ -341,6 +363,9 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                                   backgroundColor: AppColors
                                       .secondaryCardColorGreenish
                                       .withOpacity(0.5),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(6.0),
+                                  ),
                                 ),
                                 onPressed: () {
                                   _handleApplyButton(context);
@@ -378,10 +403,14 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                   )
                 : Container(
                     width: double.infinity,
-                    margin: const EdgeInsets.all(10.0),
+                    margin: const EdgeInsets.symmetric(horizontal: 15.0),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryColor),
+                        backgroundColor: AppColors.primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6.0),
+                        ),
+                      ),
                       onPressed: () {
                         generatedTransectionId =
                             DateTime.now().millisecondsSinceEpoch;
@@ -391,6 +420,8 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                         setState(() {
                           generatedTransectionId;
                         });
+                        print(
+                            "$userID, $_packageID, ${generatedTransectionId.toString()}, $_payableAmount, $_mainAmount, $_couponDiscountAmount, $_couponPartnerId,");
                         ApiService.initiatePayment(
                           userID,
                           _packageID,
@@ -412,24 +443,23 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                       ),
                     ),
                   ),
-
-            /*Text("Transection Status:  $status"),*/
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    side: BorderSide(color: Colors.white)),
-                onPressed: () {
+            SizedBox(height: 10),
+            Visibility(
+              visible: Platform.isIOS,
+              child: ApplePayButton(
+                width: double.infinity,
+                margin: EdgeInsets.symmetric(horizontal: 15.0),
+                height: 40,
+                onPressed: () async {
                   generatedTransectionId =
                       DateTime.now().millisecondsSinceEpoch;
                   if (kDebugMode) {
-                    print("$generatedTransectionId");
+                    print("apple g tran id: $generatedTransectionId");
                   }
                   setState(() {
                     generatedTransectionId;
                   });
-                  /*ApiService.initiatePayment(
+                  ApiService.initiatePayment(
                     userID,
                     _packageID,
                     generatedTransectionId.toString(),
@@ -437,92 +467,26 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                     _mainAmount,
                     _couponDiscountAmount,
                     _couponPartnerId,
-                  );*/
+                  );
+                  print("pressed");
                 },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Pay with ",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20),
-                      ),
-                      Image.asset(
-                        "assets/images/com_icon/google_icon.png",
-                        width: 24,
-                        height: 24,
-                      ),
-                      Text(
-                        " Pay",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20),
-                      ),
-                    ],
+                paymentConfiguration: defaultApplePayConfig,
+                paymentItems: [
+                  PaymentItem(
+                    label: _packageName,
+                    amount: _payableAmount.toString(),
+                    // Example amount in USD
+                    status: PaymentItemStatus.final_price,
                   ),
-                ),
-              ),
-            ),
-            SizedBox(height: 10),
-            Visibility(
-              visible: Platform.isIOS,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: ElevatedButton(
-                  style:
-                      ElevatedButton.styleFrom(backgroundColor: Colors.white),
-                  onPressed: () {
-                    generatedTransectionId =
-                        DateTime.now().millisecondsSinceEpoch;
-                    if (kDebugMode) {
-                      print("$generatedTransectionId");
-                    }
-                    setState(() {
-                      generatedTransectionId;
-                    });
-                    /*ApiService.initiatePayment(
-                      userID,
-                      _packageID,
-                      generatedTransectionId.toString(),
-                      _payableAmount,
-                      _mainAmount,
-                      _couponDiscountAmount,
-                      _couponPartnerId,
-                    );*/
-                    // _initiatePayment();
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Pay with ",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20),
-                        ),
-                        Image.asset(
-                          "assets/images/com_icon/apple_icon.png",
-                          width: 24,
-                          height: 24,
-                        ),
-                        Text(
-                          " Pay",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20),
-                        ),
-                      ],
-                    ),
-                  ),
+                ],
+                style: ApplePayButtonStyle.white,
+                // Button style
+                type: ApplePayButtonType.buy,
+                // Button type
+                onPaymentResult: onApplePayResult,
+                // Payment result callback
+                loadingIndicator: const Center(
+                  child: CircularProgressIndicator(),
                 ),
               ),
             ),
@@ -530,6 +494,34 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
         ),
       ),
     );
+  }
+
+  Future<double> convertBdtToUsd(double amountInBdt) async {
+    // Call the conversion API and get the rate
+    double conversionRate = 0.011; // Example conversion rate BDT to USD
+    return amountInBdt * conversionRate;
+  }
+
+  void onApplePayResult(paymentResult) {
+    if (kDebugMode) {
+      print("Amount in USD: ${_payableAmount.toString()}");
+      print(paymentResult.toString()); // Handle the successful payment here
+    }
+
+    // You can send this paymentResult to your server for verification
+    // Assuming paymentResult contains a payment token
+    final String? paymentToken = paymentResult['token'];
+    print("paymentToken: $paymentToken");
+    // Send this token to your server for processing
+    // final response = await processPaymentOnServer(paymentToken);
+    // Handle the server response
+    /*if (response.success) {
+      print("Payment Successful");
+      // Perform actions on success, e.g., show a confirmation message
+    } else {
+      print("Payment Failed: ${response.errorMessage}");
+      // Handle payment failure, e.g., show an error message
+    }*/
   }
 
   void _handleApplyButton(BuildContext context) async {
@@ -751,54 +743,54 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
           }
         }
 
-        ApiService.receivePayment(
-          userID,
-          _packageID,
-          generatedTransectionId.toString(),
-          shurjopayVerificationModel.spCode == "1000" ? "VALID" : "FAILED",
-          //STATUS
-          double.tryParse(shurjopayVerificationModel.amount != null
-              ? shurjopayVerificationModel.amount!
-              : "0")!,
-          //amount
-          shurjopayVerificationModel.receivedAmount != null
-              ? shurjopayVerificationModel.receivedAmount.toString()
-              : "0",
-          //store amount
-          shurjopayVerificationModel.cardNumber != null
-              ? shurjopayVerificationModel.cardNumber!
-              : "null",
-          //cardNumber
-          shurjopayVerificationModel.bankTrxId != null
-              ? shurjopayVerificationModel.bankTrxId!
-              : "null",
-          //bankTranId
-          shurjopayVerificationModel.currency != null
-              ? shurjopayVerificationModel.currency!
-              : "null",
-          //currencyType
-          shurjopayVerificationModel.cardHolderName != null
-              ? shurjopayVerificationModel.cardHolderName!
-              : "null",
-          //cardIssuer
-          shurjopayVerificationModel.bankStatus != null
-              ? shurjopayVerificationModel.bankStatus!
-              : "null",
-          //cardBrand
-          shurjopayVerificationModel.transactionStatus != null
-              ? shurjopayVerificationModel.transactionStatus!
-              : "null",
-          //cardIssuerCountry
-          shurjopayVerificationModel.spCode != null
-              ? shurjopayVerificationModel.spCode!
-              : "null",
-          //riskLevel
-          shurjopayVerificationModel.spMessage != null
-              ? shurjopayVerificationModel.spMessage!
-              : "null", //risk title
-        );
         // Handle payment response
         if (shurjopayVerificationModel.spCode.toString() == "1000") {
+          ApiService.receivePayment(
+            userID,
+            _packageID,
+            generatedTransectionId.toString(),
+            shurjopayVerificationModel.spCode == "1000" ? "VALID" : "FAILED",
+            //STATUS
+            double.tryParse(shurjopayVerificationModel.amount != null
+                ? shurjopayVerificationModel.amount!
+                : "0")!,
+            //amount
+            shurjopayVerificationModel.receivedAmount != null
+                ? shurjopayVerificationModel.receivedAmount.toString()
+                : "0",
+            //store amount
+            shurjopayVerificationModel.cardNumber != null
+                ? shurjopayVerificationModel.cardNumber!
+                : "null",
+            //cardNumber
+            shurjopayVerificationModel.bankTrxId != null
+                ? shurjopayVerificationModel.bankTrxId!
+                : "null",
+            //bankTranId
+            shurjopayVerificationModel.currency != null
+                ? shurjopayVerificationModel.currency!
+                : "null",
+            //currencyType
+            shurjopayVerificationModel.cardHolderName != null
+                ? shurjopayVerificationModel.cardHolderName!
+                : "null",
+            //cardIssuer
+            shurjopayVerificationModel.bankStatus != null
+                ? shurjopayVerificationModel.bankStatus!
+                : "null",
+            //cardBrand
+            shurjopayVerificationModel.transactionStatus != null
+                ? shurjopayVerificationModel.transactionStatus!
+                : "null",
+            //cardIssuerCountry
+            shurjopayVerificationModel.spCode != null
+                ? shurjopayVerificationModel.spCode!
+                : "null",
+            //riskLevel
+            shurjopayVerificationModel.spMessage != null
+                ? shurjopayVerificationModel.spMessage!
+                : "null", //risk title
+          );
           setState(() {
             status = "true";
           });

@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
+import 'package:provider/provider.dart';
+import 'package:risho_speech/models/user.dart';
 import 'package:risho_speech/ui/colors.dart';
+
+import '../../providers/auth_provider.dart';
+import '../../providers/deleteUserProvider.dart';
+import '../WelcomeScreen.dart';
 
 class DeleteAccountScreenMobile extends StatefulWidget {
   const DeleteAccountScreenMobile({super.key});
@@ -14,9 +20,12 @@ class DeleteAccountScreenMobile extends StatefulWidget {
 
 class _DeleteAccountScreenMobileState extends State<DeleteAccountScreenMobile> {
   String selectedOption = "";
+  late int userid;
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    userid = authProvider.user?.id ?? 0;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Delete Account"),
@@ -75,7 +84,7 @@ class _DeleteAccountScreenMobileState extends State<DeleteAccountScreenMobile> {
                               style: const TextStyle(
                                 color: Colors.white,
                               ),
-                              "Your account will be deleted permanently",
+                              "Your account will be deleted permanently and can never be recovered.",
                             ),
                             const SizedBox(height: 10.0),
                             Text(
@@ -112,6 +121,7 @@ class _DeleteAccountScreenMobileState extends State<DeleteAccountScreenMobile> {
                                     builder: (context) =>
                                     const DeleteAccount()),
                               );*/
+                              _deleteUser(context, selectedOption);
                             },
                             child: Text(
                               "Delete",
@@ -140,6 +150,46 @@ class _DeleteAccountScreenMobileState extends State<DeleteAccountScreenMobile> {
           ),
         ),
       ),
+    );
+  }
+
+  void _deleteUser(BuildContext context, String reason) async {
+    final deleteUserProvider =
+        Provider.of<DeleteUserProvider>(context, listen: false);
+    bool success = await deleteUserProvider.deleteUser(userid, reason);
+
+    if (success) {
+      _showSuccessDialog(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to delete account. Please try again.')),
+      );
+    }
+  }
+
+  void _showSuccessDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('We are so sorry to see you go'),
+          content: Text('Your account has been successfully deleted.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => WelcomeScreen()),
+                  (Route<dynamic> route) =>
+                      false, // Navigate to WelcomeScreen and remove all routes
+                );
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

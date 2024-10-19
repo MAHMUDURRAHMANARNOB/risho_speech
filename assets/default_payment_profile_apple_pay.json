@@ -1,0 +1,26 @@
+{
+  "provider": "apple_pay",
+  "data": {
+    "merchantIdentifier": "merchant.com.shonod",
+    "displayName": "Risho Speech",
+    "merchantCapabilities": [
+      "3DS",
+      "debit",
+      "credit"
+    ],
+    "supportedNetworks": [
+      "amex",
+      "visa",
+      "discover",
+      "masterCard"
+    ],
+    "countryCode": "US",
+    "currencyCode": "USD",
+    "requiredBillingContactFields": [
+      "emailAddress",
+      "name",
+      "phoneNumber"
+    ],
+    "requiredShippingContactFields": []
+  }
+}

@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:risho_speech/screens/Common/terms_and_condition_widget.dart';
 import 'package:risho_speech/screens/Dashboard.dart';
+import '../../models/user.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/createUserProvider.dart';
 import '../../providers/optProvider.dart';
@@ -587,11 +588,67 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     backgroundColor: Colors.white,
                   ),
                   onPressed: () async {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      // Prevent dismissal by tapping outside
+                      builder: (context) => AlertDialog(
+                        content: Row(
+                          children: [
+                            CircularProgressIndicator(
+                              color: AppColors.primaryColor,
+                            ),
+                            SizedBox(width: 20),
+                            Text("Signing in..."), // Loading message
+                          ],
+                        ),
+                      ),
+                    );
                     try {
-                      AuthProvider().signInWithGoogle(context);
+                      await Provider.of<AuthProvider>(context, listen: false)
+                          .signInWithGoogle(context);
+                      // AuthProvider().signInWithGoogle(context);
+                      // Remove the loading dialog
+                      Navigator.pop(context);
+
+                      AppUser? user =
+                          Provider.of<AuthProvider>(context, listen: false)
+                              .user;
+
+                      if (user != null) {
+                        // Login success, navigate to Dashboard
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => Dashboard()),
+                        );
+                        // widget.onLoginSuccess(username, password);
+                      } else {
+                        // Handle unsuccessful login
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return ErrorDialog(
+                              message:
+                                  "Login failed, \nCheck username and password.",
+                            );
+                          },
+                        );
+                      }
                     } catch (error) {
                       // Handle errors
-                      print("Error during login: $error");
+                      Navigator.pop(context);
+                      // Handle errors during sign-in
+                      print("Error during Google sign-in: $error");
+
+                      // Show an error dialog
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return ErrorDialog(
+                            message: "An error occurred during sign-in: $error",
+                          );
+                        },
+                      );
                       // Show an error dialog if needed
                     }
                   },
@@ -615,45 +672,69 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     ),*/
                   ),
                   onPressed: () async {
-                    /*try {
-                      final appleCredential =
-                          await SignInWithApple.getAppleIDCredential(
-                        scopes: [
-                          AppleIDAuthorizationScopes.email,
-                          AppleIDAuthorizationScopes.fullName,
-                        ],
-                      );
-                      String authorizationCode = appleCredential.authorizationCode;
-                      String? email = appleCredential.email; // Optional if provided
-                      String? firstName = appleCredential.givenName;
-                      String? lastName = appleCredential.givenName;
-                      debugPrint(
-                          "$email - $firstName - $lastName - $authorizationCode");
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      // Prevent dismissal by tapping outside
+                      builder: (context) => AlertDialog(
+                        content: Row(
+                          children: [
+                            CircularProgressIndicator(
+                              color: AppColors.primaryColor,
+                            ),
+                            SizedBox(width: 20),
+                            Text("Signing in..."), // Loading message
+                          ],
+                        ),
+                      ),
+                    );
+                    try {
+                      await Provider.of<AuthProvider>(context, listen: false)
+                          .signInWithApple(context);
+                      // AuthProvider().signInWithGoogle(context);
+                      // Remove the loading dialog
+                      Navigator.pop(context);
 
-                      if (email == null && firstName == null && lastName == null) {
-                        debugPrint(
-                            "User previously logged in, fetching data from backend...");
+                      AppUser? user =
+                          Provider.of<AuthProvider>(context, listen: false)
+                              .user;
 
-                        // Log him in
-
-                        // Fetch user data from your backend based on their unique identifier
-                        // You should already have saved their email, fullName, etc.
+                      if (user != null) {
+                        // Login success, navigate to Dashboard
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => Dashboard()),
+                        );
+                        // widget.onLoginSuccess(username, password);
                       } else {
-                        // First time sign-in, save email and name to backend
-                        debugPrint("First time sign-in, saving user info...");
-
-                        // Handle user creation with the Apple Sign-In information
-                        handleAppleSignIn(
-                            context, authorizationCode, email, firstName, lastName);
+                        // Handle unsuccessful login
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return ErrorDialog(
+                              message:
+                                  "Login failed, \nCheck username and password.",
+                            );
+                          },
+                        );
                       }
-                      // Now, handle user creation with the Apple Sign-In information
-                      */ /*handleAppleSignIn(
-                          context, authorizationCode, email, firstName, lastName);*/ /*
-                      // Process the credential
-                    } catch (e) {
-                      print('Apple Sign-In error: $e');
-                    }*/
-                    AuthProvider().signInWithApple(context);
+                    } catch (error) {
+                      // Handle errors
+                      Navigator.pop(context);
+                      // Handle errors during sign-in
+                      print("Error during Google sign-in: $error");
+
+                      // Show an error dialog
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return ErrorDialog(
+                            message: "An error occurred during sign-in: $error",
+                          );
+                        },
+                      );
+                      // Show an error dialog if needed
+                    }
                   },
                   icon: Padding(
                     padding: const EdgeInsets.all(8.0),

@@ -31,31 +31,52 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   void autoLogin() async {
-    try {
-      // Get stored credentials from a secure storage mechanism
-      String? username = await _getStoredUsername();
-      String? password = await _getStoredPassword();
-
-      if (username != null && password != null) {
-        // Call the login method from the AuthProvider
+    String? extLogin = await _getExtLogin();
+    if (extLogin == "Y") {
+      try {
         await Provider.of<AuthProvider>(context, listen: false)
-            .login(username, password, "N");
-
-        // Check if the user is authenticated
+            .autoLoginWithGoogle();
         if (Provider.of<AuthProvider>(context, listen: false).user != null) {
           // Navigate to the DashboardScreen on successful login
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => Dashboard()));
         }
+      } catch (error) {
+        // Handle errors, if any
+        print("Auto-login error: $error");
+      } finally {
+        // Set isLoading to false after auto-login attempt is finished
+        setState(() {
+          _isLoading = false;
+        });
       }
-    } catch (error) {
-      // Handle errors, if any
-      print("Auto-login error: $error");
-    } finally {
-      // Set isLoading to false after auto-login attempt is finished
-      setState(() {
-        _isLoading = false;
-      });
+    } else {
+      try {
+        // Get stored credentials from a secure storage mechanism
+        String? username = await _getStoredUsername();
+        String? password = await _getStoredPassword();
+
+        if (username != null && password != null) {
+          // Call the login method from the AuthProvider
+          await Provider.of<AuthProvider>(context, listen: false)
+              .login(username, password, "N");
+
+          // Check if the user is authenticated
+          if (Provider.of<AuthProvider>(context, listen: false).user != null) {
+            // Navigate to the DashboardScreen on successful login
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => Dashboard()));
+          }
+        }
+      } catch (error) {
+        // Handle errors, if any
+        print("Auto-login error: $error");
+      } finally {
+        // Set isLoading to false after auto-login attempt is finished
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -71,6 +92,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     // For example, use SharedPreferences or secure storage library
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('password');
+  }
+
+  Future<String?> _getExtLogin() async {
+    // Implement this method to retrieve the stored password
+    // For example, use SharedPreferences or secure storage library
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('extLogin');
   }
 
   @override

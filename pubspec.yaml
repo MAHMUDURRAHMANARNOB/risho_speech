@@ -135,6 +135,7 @@ flutter:
     - assets/images/background_contents/
     - assets/images/level_icons/
     - assets/images/com_icon/
+    - assets/default_payment_profile_apple_pay.json
 #    - assets/images/icons/
 #    - assets/images/new_icons/
 
