@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
+import 'package:markdown_widget/config/configs.dart';
 import 'package:markdown_widget/widget/markdown.dart';
 import 'package:risho_speech/screens/Common/Shimmer_Arrow.dart';
 import 'package:risho_speech/screens/VideoPlayerBoard.dart';
@@ -27,8 +30,17 @@ class _IeltsCourseBoardMobileScreenState
     with SingleTickerProviderStateMixin {
   IeltsCourseLessonProvider ieltsCourseLessonProvider =
       IeltsCourseLessonProvider();
+
+  List<Widget> _lessonComponents = [];
+  ScrollController _scrollController = ScrollController();
+
   bool _isLoading = true;
   late TabController _tabController;
+  TextEditingController questionTextFieldController = TextEditingController();
+  bool _askQuestionActive = false; // To toggle the visibility
+
+  late String sessionIdNew = "";
+  late String _question = '';
 
   @override
   void initState() {
@@ -52,6 +64,20 @@ class _IeltsCourseBoardMobileScreenState
       ),
       body: _body(widget.lessonId),
       // SingleChildScrollView(child: _body(widget.lessonId)),
+      /*floatingActionButton: _askQuestionActive
+          ? null // Hide the FAB when the question box is active
+          : FloatingActionButton(
+              backgroundColor: AppColors.primaryColor2,
+              onPressed: () {
+                setState(() {
+                  _askQuestionActive = true; // Show the question box
+                });
+              },
+              child: const Icon(
+                Icons.chat_bubble_outline_rounded,
+                color: Colors.white,
+              ),
+            ),*/
     );
   }
 
@@ -83,8 +109,20 @@ class _IeltsCourseBoardMobileScreenState
         controller: _tabController,
         children: [
           // _buildAnswerSheet(),
-          _lessonContent(),
-          _videoContent()
+          Container(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height, // Define height here
+            child: _lessonContent(),
+          ),
+
+          /*Column(
+            children: _lessonComponents,
+          ),*/
+          Container(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height, // Define height here
+            child: _videoContent(),
+          ),
         ],
       ),
     );
@@ -110,6 +148,17 @@ class _IeltsCourseBoardMobileScreenState
           final videoLessonList =
               ieltsCourseLessonProvider.ieltsCourseLessonResponse?.videoList;
 
+          /*_lessonComponents.add(
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: MarkdownWidget(
+                data: ieltsCourseLessonProvider
+                    .ieltsCourseLessonResponse!.lessonContent
+                    .toString(),
+                config: config,
+              ),
+            ),
+          );*/
           return Stack(
             children: [
               Positioned(
@@ -126,6 +175,77 @@ class _IeltsCourseBoardMobileScreenState
                   ],
                 ),
               ),
+
+              /// Animated Container for the question box
+              /// need to implement afterward
+
+              /*Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.fastOutSlowIn,
+                  width: _askQuestionActive
+                      ? MediaQuery.of(context).size.width
+                      : 0.0,
+                  height: _askQuestionActive ? 80.0 : 0.0,
+                  color: AppColors.backgroundColorDark,
+                  // Background color for the question box
+                  padding: const EdgeInsets.all(10.0),
+                  child: _askQuestionActive
+                      ? Row(
+                          children: [
+                            */ /* Question Box */ /*
+                            Expanded(
+                              child: TextField(
+                                controller: questionTextFieldController,
+                                maxLines: 3,
+                                minLines: 1,
+                                cursorColor: AppColors.primaryColor,
+                                decoration: const InputDecoration(
+                                  hintText: 'Ask anything about this lesson',
+                                  border: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(50.0)),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(40.0)),
+                                    borderSide: BorderSide(
+                                      color: AppColors.primaryColor,
+                                    ),
+                                  ),
+                                ),
+                                onChanged: (value) {
+                                  _question = value;
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 2),
+                            */ /* Send Button */ /*
+                            IconButton.filledTonal(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.backgroundColorDark,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  // Add your logic to send the message
+                                  questionTextFieldController.clear();
+                                  _askQuestionActive =
+                                      false; // Hide the question box
+                                });
+                              },
+                              icon: const Icon(
+                                Iconsax.direct_right,
+                                color: AppColors.primaryColor,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Container(),
+                ),
+              ),*/
             ],
           );
         }
@@ -133,13 +253,36 @@ class _IeltsCourseBoardMobileScreenState
     );
   }
 
+  final config = MarkdownConfig.darkConfig;
+
+  /*Widget _lessonContent() {
+    return Column(
+      children: [
+        _lessonComponents.add(
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: MarkdownWidget(
+              data: ieltsCourseLessonProvider
+                  .ieltsCourseLessonResponse!.lessonContent
+                  .toString(),
+              config: config,
+            ),
+          ),
+        )
+      ],
+    );
+  }*/
   Widget _lessonContent() {
-    return Padding(
+    return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(10.0),
       child: MarkdownWidget(
-          data: ieltsCourseLessonProvider
-              .ieltsCourseLessonResponse!.lessonContent
-              .toString()),
+        data: ieltsCourseLessonProvider.ieltsCourseLessonResponse!.lessonContent
+            .toString(),
+        config: config,
+      ),
+
+      // After the Markdown widget, display the other lesson components
     );
   }
 

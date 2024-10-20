@@ -24,4 +24,32 @@ class DatabaseMethods {
       return false; // Return false in case of an error
     }
   }
+
+// Function to retrieve the Firestore ID based on API ID
+/*Future<String?> getFirestoreIdByApiId(String apiId) async {
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection("Users")
+          .where("apiId", isEqualTo: apiId) // Adjust field name as needed
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        return querySnapshot.docs.first.id; // Return the document ID
+      }
+    } catch (e) {
+      print("Error retrieving Firestore ID: $e");
+    }
+    return null; // Return null if not found or an error occurs
+  }*/
+
+// Function to delete a user from Firestore
+/*Future<void> deleteUser(String userId) async {
+    try {
+      // Delete the document for the given userId
+      await FirebaseFirestore.instance.collection("Users").doc(userId).delete();
+      print("User with ID $userId deleted successfully.");
+    } catch (e) {
+      print("Error deleting user: $e");
+    }
+  }*/
 }

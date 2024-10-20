@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 
@@ -663,85 +664,90 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 ),
               ),
               const SizedBox(width: 10),
-              Center(
-                child: IconButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    /*side: BorderSide(
-                      color: Colors.white,
-                    ),*/
-                  ),
-                  onPressed: () async {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      // Prevent dismissal by tapping outside
-                      builder: (context) => AlertDialog(
-                        content: Row(
-                          children: [
-                            CircularProgressIndicator(
-                              color: AppColors.primaryColor,
-                            ),
-                            SizedBox(width: 20),
-                            Text("Signing in..."), // Loading message
-                          ],
+              Visibility(
+                visible: Platform.isIOS,
+                child: Center(
+                  child: IconButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      /*side: BorderSide(
+                        color: Colors.white,
+                      ),*/
+                    ),
+                    onPressed: () async {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        // Prevent dismissal by tapping outside
+                        builder: (context) => AlertDialog(
+                          content: Row(
+                            children: [
+                              CircularProgressIndicator(
+                                color: AppColors.primaryColor,
+                              ),
+                              SizedBox(width: 20),
+                              Text("Signing in..."), // Loading message
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                    try {
-                      await Provider.of<AuthProvider>(context, listen: false)
-                          .signInWithApple(context);
-                      // AuthProvider().signInWithGoogle(context);
-                      // Remove the loading dialog
-                      Navigator.pop(context);
+                      );
+                      try {
+                        await Provider.of<AuthProvider>(context, listen: false)
+                            .signInWithApple(context);
+                        // AuthProvider().signInWithGoogle(context);
+                        // Remove the loading dialog
+                        Navigator.pop(context);
 
-                      AppUser? user =
-                          Provider.of<AuthProvider>(context, listen: false)
-                              .user;
+                        AppUser? user =
+                            Provider.of<AuthProvider>(context, listen: false)
+                                .user;
 
-                      if (user != null) {
-                        // Login success, navigate to Dashboard
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => Dashboard()),
-                        );
-                        // widget.onLoginSuccess(username, password);
-                      } else {
-                        // Handle unsuccessful login
+                        if (user != null) {
+                          // Login success, navigate to Dashboard
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Dashboard()),
+                          );
+                          // widget.onLoginSuccess(username, password);
+                        } else {
+                          // Handle unsuccessful login
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return ErrorDialog(
+                                message:
+                                    "Login failed, \nCheck username and password.",
+                              );
+                            },
+                          );
+                        }
+                      } catch (error) {
+                        // Handle errors
+                        Navigator.pop(context);
+                        // Handle errors during sign-in
+                        print("Error during Google sign-in: $error");
+
+                        // Show an error dialog
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return ErrorDialog(
                               message:
-                                  "Login failed, \nCheck username and password.",
+                                  "An error occurred during sign-in: $error",
                             );
                           },
                         );
+                        // Show an error dialog if needed
                       }
-                    } catch (error) {
-                      // Handle errors
-                      Navigator.pop(context);
-                      // Handle errors during sign-in
-                      print("Error during Google sign-in: $error");
-
-                      // Show an error dialog
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return ErrorDialog(
-                            message: "An error occurred during sign-in: $error",
-                          );
-                        },
-                      );
-                      // Show an error dialog if needed
-                    }
-                  },
-                  icon: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.asset(
-                      "assets/images/com_icon/apple_icon.png",
-                      height: 30,
-                      width: 30,
+                    },
+                    icon: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.asset(
+                        "assets/images/com_icon/apple_icon.png",
+                        height: 30,
+                        width: 30,
+                      ),
                     ),
                   ),
                 ),

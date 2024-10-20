@@ -53,6 +53,7 @@ dependencies:
   youtube_player_flutter: ^9.0.3
   #  flutter_inappwebview:
   flutter_inappwebview_ios: ^1.1.0+3
+  #  flutter_inappwebview: ^6.1.5
 
   shurjopay: ^2.0.5
   liquid_pull_to_refresh: ^3.0.1

@@ -53,10 +53,9 @@ class _VideoPlayerBoardScreenMobileState
     _controller = YoutubePlayerController(
       initialVideoId: YoutubePlayer.convertUrlToId(widget.videoUrl)!,
       flags: YoutubePlayerFlags(
-        // autoPlay: false,
         showLiveFullscreenButton: false,
-        // useHybridComposition: true,
-        autoPlay: false,
+        useHybridComposition: true,
+        autoPlay: true,
         mute: false,
         isLive: false,
       ),
