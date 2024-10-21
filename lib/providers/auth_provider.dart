@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -99,54 +100,57 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> signInWithApple(BuildContext context) async {
     // Show loading dialog or loader
-    try {
-      // Apple Sign-In authorization process
-      final AuthorizationCredentialAppleID appleCredential =
-          await SignInWithApple.getAppleIDCredential(
-        scopes: [
-          AppleIDAuthorizationScopes.email,
-          AppleIDAuthorizationScopes.fullName,
-        ],
-      );
 
-      // Generate an OAuth credential using the ID token and authorization code
-      final OAuthProvider oAuthProvider = OAuthProvider('apple.com');
-      final AuthCredential credential = oAuthProvider.credential(
-        idToken: appleCredential.identityToken,
-        accessToken: appleCredential.authorizationCode,
-      );
+    if (Platform.isIOS) {
+      try {
+        // Apple Sign-In authorization process
+        final AuthorizationCredentialAppleID appleCredential =
+            await SignInWithApple.getAppleIDCredential(
+          scopes: [
+            AppleIDAuthorizationScopes.email,
+            AppleIDAuthorizationScopes.fullName,
+          ],
+        );
 
-      // Sign in to Firebase with the Apple credential
-      UserCredential result =
-          await FirebaseAuth.instance.signInWithCredential(credential);
-      User? firebaseUser = result.user;
+        // Generate an OAuth credential using the ID token and authorization code
+        final OAuthProvider oAuthProvider = OAuthProvider('apple.com');
+        final AuthCredential credential = oAuthProvider.credential(
+          idToken: appleCredential.identityToken,
+          accessToken: appleCredential.authorizationCode,
+        );
 
-      print("Firebase user ID: ${firebaseUser?.uid}");
+        // Sign in to Firebase with the Apple credential
+        UserCredential result =
+            await FirebaseAuth.instance.signInWithCredential(credential);
+        User? firebaseUser = result.user;
 
-      if (firebaseUser != null) {
-        // Check or create user in your MySQL DB
-        await _handleSocialLogin(firebaseUser, "Apple");
+        print("Firebase user ID: ${firebaseUser?.uid}");
 
-        // Notify listeners or update UI
-        notifyListeners();
+        if (firebaseUser != null) {
+          // Check or create user in your MySQL DB
+          await _handleSocialLogin(firebaseUser, "Apple");
 
-        // Optionally navigate to dashboard or show success
-        /*Navigator.pushReplacement(
+          // Notify listeners or update UI
+          notifyListeners();
+
+          // Optionally navigate to dashboard or show success
+          /*Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => Dashboard()),
       );*/
-      } else {
-        // Handle failed login
+        } else {
+          // Handle failed login
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text("Sign in with Apple failed. Please try again.")),
+          );
+        }
+      } catch (e) {
+        print("Apple sign-in failed: $e");
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text("Sign in with Apple failed. Please try again.")),
+          SnackBar(content: Text("Apple Sign-in failed. Please try again.")),
         );
       }
-    } catch (e) {
-      print("Apple sign-in failed: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Apple Sign-in failed. Please try again.")),
-      );
     }
   }
 

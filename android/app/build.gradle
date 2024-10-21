@@ -76,6 +76,14 @@ android {
             signingConfig signingConfigs.release
         }
     }
+
+    // Exclude 'sign_in_with_apple' from the Android build
+    /*configurations {
+        all {
+            exclude module: 'sign_in_with_apple'
+            exclude module: 'the_apple_sign_in'
+        }
+    }*/
 }
 
 flutter {

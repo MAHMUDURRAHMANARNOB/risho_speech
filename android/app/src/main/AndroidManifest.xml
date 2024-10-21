@@ -30,9 +30,9 @@
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/NormalTheme" />
-            <meta-data
+            <!--<meta-data
                 android:name="com.google.android.gms.games.APP_ID"
-                android:value="@string/com.rishoguru.risho_speech" />
+                android:value="@string/com.rishoguru.risho_speech" />-->
             <meta-data
                 android:name="com.google.android.gms.appinvite.automatic_install"
                 android:value="true" />
