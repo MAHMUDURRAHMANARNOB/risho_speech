@@ -401,44 +401,47 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   )
-                : Container(
-                    width: double.infinity,
-                    margin: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6.0),
+                : Visibility(
+                    visible: !Platform.isIOS,
+                    child: Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.symmetric(horizontal: 15.0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6.0),
+                          ),
                         ),
-                      ),
-                      onPressed: () {
-                        generatedTransectionId =
-                            DateTime.now().millisecondsSinceEpoch;
-                        if (kDebugMode) {
-                          print("$generatedTransectionId");
-                        }
-                        setState(() {
-                          generatedTransectionId;
-                        });
-                        print(
-                            "$userID, $_packageID, ${generatedTransectionId.toString()}, $_payableAmount, $_mainAmount, $_couponDiscountAmount, $_couponPartnerId,");
-                        ApiService.initiatePayment(
-                          userID,
-                          _packageID,
-                          generatedTransectionId.toString(),
-                          _payableAmount,
-                          _mainAmount,
-                          _couponDiscountAmount,
-                          _couponPartnerId,
-                        );
-                        _initiatePayment();
-                      },
-                      child: const Text(
-                        "Purchase",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: Colors.white,
+                        onPressed: () {
+                          generatedTransectionId =
+                              DateTime.now().millisecondsSinceEpoch;
+                          if (kDebugMode) {
+                            print("$generatedTransectionId");
+                          }
+                          setState(() {
+                            generatedTransectionId;
+                          });
+                          print(
+                              "$userID, $_packageID, ${generatedTransectionId.toString()}, $_payableAmount, $_mainAmount, $_couponDiscountAmount, $_couponPartnerId,");
+                          ApiService.initiatePayment(
+                            userID,
+                            _packageID,
+                            generatedTransectionId.toString(),
+                            _payableAmount,
+                            _mainAmount,
+                            _couponDiscountAmount,
+                            _couponPartnerId,
+                          );
+                          _initiatePayment();
+                        },
+                        child: const Text(
+                          "Purchase",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
