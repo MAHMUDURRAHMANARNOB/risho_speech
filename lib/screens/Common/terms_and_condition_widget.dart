@@ -14,10 +14,10 @@ class TermsAndConditionsDialog extends StatelessWidget {
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30.0),
                     topRight: Radius.circular(30.0)),
-                color: AppColors.ExpandedCourseCardColor,
+                color: AppColors.backgroundColorDark,
               ),
               width: double.infinity,
-              padding: EdgeInsets.all(10.0),
+              padding: EdgeInsets.all(12.0),
               /*decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
       ),*/
@@ -30,7 +30,7 @@ class TermsAndConditionsDialog extends StatelessWidget {
                       Text(
                         'Privacy Policy',
                         style: TextStyle(
-                            color: AppColors.secondaryColor,
+                            color: AppColors.primaryColor,
                             fontSize: 24,
                             fontWeight: FontWeight.bold),
                       ),
@@ -40,13 +40,19 @@ class TermsAndConditionsDialog extends StatelessWidget {
                         },
                         icon: Icon(
                           Icons.close_rounded,
-                          color: AppColors.secondaryColor,
+                          color: AppColors.primaryColor,
                         ),
                       )
                     ],
                   ),
-                  Text(
-                    """At risho-speech, accessible from risho-speech, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by risho-speech and how we use it.
+                  Divider(
+                    color: AppColors.primaryColor,
+                    // height: 1,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      """At risho-speech, accessible from risho-speech, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by risho-speech and how we use it.
         This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.
         We use Your Personal data to provide and improve the Service. By using the Service, You agree to the collection and use of information in accordance with this Privacy Policy.
         Interpretation
@@ -196,9 +202,10 @@ class TermsAndConditionsDialog extends StatelessWidget {
         By using our website, you hereby consent to our Privacy Policy and agree to its Terms and Conditions.
         
         """,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
                     ),
                   ),
                 ],

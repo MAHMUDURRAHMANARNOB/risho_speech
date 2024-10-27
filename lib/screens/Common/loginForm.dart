@@ -455,8 +455,7 @@ class _LoginformState extends State<Loginform> {
                               context: context,
                               builder: (BuildContext context) {
                                 return ErrorDialog(
-                                  message:
-                                      "Login failed, \nCheck username and password.",
+                                  message: "Login failed. Please Try Again",
                                 );
                               },
                             );

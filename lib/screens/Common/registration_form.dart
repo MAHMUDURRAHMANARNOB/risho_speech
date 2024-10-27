@@ -629,8 +629,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                           context: context,
                           builder: (BuildContext context) {
                             return ErrorDialog(
-                              message:
-                                  "Login failed, \nCheck username and password.",
+                              message: "Login failed. Please Try Again",
                             );
                           },
                         );
@@ -670,16 +669,13 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   child: IconButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
-                      /*side: BorderSide(
-                        color: Colors.white,
-                      ),*/
                     ),
                     onPressed: () async {
                       showDialog(
                         context: context,
                         barrierDismissible: false,
                         // Prevent dismissal by tapping outside
-                        builder: (context) => AlertDialog(
+                        builder: (context) => const AlertDialog(
                           content: Row(
                             children: [
                               CircularProgressIndicator(
@@ -694,7 +690,6 @@ class _RegistrationFormState extends State<RegistrationForm> {
                       try {
                         await Provider.of<AuthProvider>(context, listen: false)
                             .signInWithApple(context);
-                        // AuthProvider().signInWithGoogle(context);
                         // Remove the loading dialog
                         Navigator.pop(context);
 
@@ -716,17 +711,16 @@ class _RegistrationFormState extends State<RegistrationForm> {
                             context: context,
                             builder: (BuildContext context) {
                               return ErrorDialog(
-                                message:
-                                    "Login failed, \nCheck username and password.",
+                                message: "Login failed. Please Try Again",
                               );
                             },
                           );
                         }
                       } catch (error) {
                         // Handle errors
-                        Navigator.pop(context);
+                        Navigator.of(context, rootNavigator: true).pop();
                         // Handle errors during sign-in
-                        print("Error during Google sign-in: $error");
+                        print("Error during Apple sign-in: $error");
 
                         // Show an error dialog
                         showDialog(
@@ -1008,15 +1002,6 @@ class _RegistrationFormState extends State<RegistrationForm> {
             ),
           ],
         );
-      },
-    );
-  }
-
-  void _showTermsAndConditionsDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return TermsAndConditionsDialog(); // Call TermsAndConditionsDialog to display the dialog
       },
     );
   }

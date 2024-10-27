@@ -132,12 +132,6 @@ class AuthProvider with ChangeNotifier {
 
           // Notify listeners or update UI
           notifyListeners();
-
-          // Optionally navigate to dashboard or show success
-          /*Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Dashboard()),
-      );*/
         } else {
           // Handle failed login
           ScaffoldMessenger.of(context).showSnackBar(

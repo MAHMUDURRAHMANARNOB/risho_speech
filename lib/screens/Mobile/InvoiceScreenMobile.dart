@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -72,6 +74,96 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
   late ShurjopayConfigs shurjopayConfigs;
 
   PaymentConfiguration? _paymentConfiguration;
+  StreamSubscription? _purchaseUpdatedSubscription;
+
+  void setupPurchaseListener() {
+    _purchaseUpdatedSubscription =
+        FlutterInappPurchase.purchaseUpdated.listen((purchasedItem) async {
+      // if (purchasedItem == null) return;
+
+      if (purchasedItem != null &&
+          purchasedItem.transactionStateIOS == TransactionState.purchased) {
+        print("Apple Purchase successful for: ${purchasedItem.productId}");
+
+        // Verify and confirm payment on your backend
+        ApiService.receivePayment(
+          userID,
+          _packageID,
+          generatedTransectionId.toString(),
+          "VALID",
+          // or any status Apple provides for successful purchase
+          double.parse(purchasedItem.transactionReceipt!),
+          // amount
+          "0",
+          // store amount (modify as needed)
+          "",
+          purchasedItem.transactionId ?? "null",
+          // bankTranId
+          "USD",
+          // currency
+          "Apple",
+          // cardIssuer
+          purchasedItem.transactionId ?? "null",
+          // bankStatus
+          "",
+          // cardBrand
+          "Apple",
+          // cardIssuerCountry
+          "1000",
+          // riskLevel (modify based on actual status)
+          // risk title (status message)
+        );
+
+        // Complete the transaction on Apple’s end
+        await FlutterInappPurchase.instance.finishTransaction(purchasedItem);
+        Fluttertoast.showToast(
+          msg:
+              "Apple Purchase successful. Transaction ID: ${purchasedItem.transactionId}",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+        );
+      } else if (purchasedItem?.transactionStateIOS ==
+          TransactionState.failed) {
+        print("Apple Purchase failed for: ${purchasedItem?.productId}");
+        Fluttertoast.showToast(
+          msg: "Apple Purchase failed.",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+        );
+      }
+    });
+  }
+
+  List<String> _productIds = [
+    'starter_pack',
+    'monthly_pack',
+    'quarterly_pack',
+    'semiannual_pack',
+    'annual_pack'
+  ];
+
+  Future<void> initPlatformState() async {
+    await FlutterInappPurchase.instance.initialize();
+  }
+
+  List<IAPItem> _products = [];
+
+  Future<void> fetchProducts() async {
+    List<IAPItem> items =
+        await FlutterInappPurchase.instance.getProducts(['_productIds']);
+    setState(() {
+      _products = items;
+    });
+  }
+
+  void makePurchase(IAPItem product) async {
+    try {
+      await FlutterInappPurchase.instance
+          .requestPurchase(product.productId.toString());
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Purchase failed: $e");
+    }
+  }
 
   @override
   void initState() {
@@ -85,6 +177,9 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
     _mainAmount = widget.payableAmount;
     _isApplied = false;
 
+    initPlatformState();
+    setupPurchaseListener();
+
     shurjoPay = ShurjoPay();
     shurjopayConfigs = ShurjopayConfigs(
       /*prefix: "TLH",
@@ -97,6 +192,13 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
       clientIP: "127.0.0.1",
     );
     // _loadPaymentConfiguration();
+  }
+
+  @override
+  void dispose() {
+    _purchaseUpdatedSubscription?.cancel();
+    FlutterInappPurchase.instance.finalize();
+    super.dispose();
   }
 
   Future<void> _loadPaymentConfiguration() async {
@@ -134,7 +236,22 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      body: SingleChildScrollView(
+      body: /*ListView.builder(
+        itemCount: _products.length,
+        itemBuilder: (context, index) {
+          IAPItem product = _products[index];
+          return ListTile(
+            title: Text(product.title!),
+            subtitle: Text("${product.description}\nPrice: ${product.price}"),
+            trailing: ElevatedButton(
+              onPressed: () => makePurchase(product),
+              child: Text("Buy"),
+            ),
+          );
+        },
+      ),*/
+
+          SingleChildScrollView(
         child: Column(
           children: [
             const Text(
@@ -155,7 +272,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
               ),
               child: Column(
                 children: [
-                  /*Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text("PackageID "),
@@ -165,7 +282,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                   Divider(
                     thickness: 2,
                     color: Colors.white,
-                  ),*/
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -401,53 +518,50 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   )
-                : Visibility(
-                    visible: !Platform.isIOS,
-                    child: Container(
-                      width: double.infinity,
-                      margin: const EdgeInsets.symmetric(horizontal: 15.0),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(6.0),
-                          ),
+                : Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6.0),
                         ),
-                        onPressed: () {
-                          generatedTransectionId =
-                              DateTime.now().millisecondsSinceEpoch;
-                          if (kDebugMode) {
-                            print("$generatedTransectionId");
-                          }
-                          setState(() {
-                            generatedTransectionId;
-                          });
-                          print(
-                              "$userID, $_packageID, ${generatedTransectionId.toString()}, $_payableAmount, $_mainAmount, $_couponDiscountAmount, $_couponPartnerId,");
-                          ApiService.initiatePayment(
-                            userID,
-                            _packageID,
-                            generatedTransectionId.toString(),
-                            _payableAmount,
-                            _mainAmount,
-                            _couponDiscountAmount,
-                            _couponPartnerId,
-                          );
-                          _initiatePayment();
-                        },
-                        child: const Text(
-                          "Purchase",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
+                      ),
+                      onPressed: () {
+                        generatedTransectionId =
+                            DateTime.now().millisecondsSinceEpoch;
+                        if (kDebugMode) {
+                          print("$generatedTransectionId");
+                        }
+                        setState(() {
+                          generatedTransectionId;
+                        });
+                        print(
+                            "$userID, $_packageID, ${generatedTransectionId.toString()}, $_payableAmount, $_mainAmount, $_couponDiscountAmount, $_couponPartnerId,");
+                        ApiService.initiatePayment(
+                          userID,
+                          _packageID,
+                          generatedTransectionId.toString(),
+                          _payableAmount,
+                          _mainAmount,
+                          _couponDiscountAmount,
+                          _couponPartnerId,
+                        );
+                        _initiatePayment();
+                      },
+                      child: const Text(
+                        "Purchase",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Colors.white,
                         ),
                       ),
                     ),
                   ),
             SizedBox(height: 10),
-            Visibility(
+            /*Visibility(
               visible: Platform.isIOS,
               child: ApplePayButton(
                 width: double.infinity,
@@ -484,7 +598,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                 ],
                 style: ApplePayButtonStyle.white,
                 // Button style
-                type: ApplePayButtonType.buy,
+                type: ApplePayButtonType.subscribe,
                 // Button type
                 onPaymentResult: onApplePayResult,
                 // Payment result callback
@@ -492,7 +606,53 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                   child: CircularProgressIndicator(),
                 ),
               ),
-            ),
+            ),*/
+            Visibility(
+              visible: Platform.isIOS,
+              child: Container(
+                width: double.infinity,
+                margin: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    generatedTransectionId =
+                        DateTime.now().millisecondsSinceEpoch;
+
+                    if (kDebugMode) {
+                      print(
+                          "Generated Transaction ID: $generatedTransectionId");
+                    }
+                    // Initiate payment on backend
+                    ApiService.initiatePayment(
+                      userID,
+                      _packageID,
+                      generatedTransectionId.toString(),
+                      _payableAmount,
+                      _mainAmount,
+                      _couponDiscountAmount,
+                      _couponPartnerId,
+                    );
+
+                    // Initiate In-App Purchase using flutter_inapp_purchase
+                    try {
+                      await FlutterInappPurchase.instance
+                          .requestPurchase(_packageID.toString());
+                      print("Purchase initiated for package: $_packageID");
+                    } catch (e) {
+                      print("Error initiating purchase: $e");
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    // Similar style to Apple Pay button
+                    minimumSize: const Size.fromHeight(40), // Button height
+                  ),
+                  child: Text(
+                    "Purchase $_packageName for $_payableAmount",
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),

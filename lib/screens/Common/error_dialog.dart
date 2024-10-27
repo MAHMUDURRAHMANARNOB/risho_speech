@@ -31,7 +31,7 @@ class ErrorDialog extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          style: TextButton.styleFrom(
+          style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
             backgroundColor: AppColors.primaryColor,
             padding: const EdgeInsets.all(16.0),
