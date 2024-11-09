@@ -89,8 +89,8 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
   final SubscriptionStatusProvider subscriptionStatusProvider =
       SubscriptionStatusProvider();
   late int userId = Provider.of<AuthProvider>(context).user!.id;
-  late String userName = Provider.of<AuthProvider>(context).user!.username;
-  late String fullName = Provider.of<AuthProvider>(context).user!.name;
+  late String userName = Provider.of<AuthProvider>(context).user!.username!;
+  late String fullName = Provider.of<AuthProvider>(context).user!.name!;
 
   // late final userId;
   Future<void> _refresh() async {
@@ -108,8 +108,8 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
       return Center(child: Text("User not logged in."));
     }
     userId = Provider.of<AuthProvider>(context).user!.id;
-    userName = Provider.of<AuthProvider>(context).user!.username;
-    fullName = Provider.of<AuthProvider>(context).user!.name;
+    userName = Provider.of<AuthProvider>(context).user!.username!;
+    fullName = Provider.of<AuthProvider>(context).user!.name!;
     subscriptionStatusProvider.fetchSubscriptionData(userId);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {

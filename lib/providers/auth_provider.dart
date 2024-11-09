@@ -1,5 +1,6 @@
 import 'dart:ffi';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -98,6 +99,26 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<UserCredential> _signInWithApple() async {
+    final appleProvider = AppleAuthProvider();
+    return await FirebaseAuth.instance.signInWithProvider(appleProvider);
+  }
+
+  /*Future<void> handleSignIn(String type)async{
+    try{
+      if(type=="apple"){
+        var auth = await _signInWithApple();
+        if(auth.user!=null){
+          String? displayName = auth.user?.displayName;
+          String? email = auth.user?.email;
+          String? id = auth.user?.uid;
+          String? photoURL = auth.user?.photoURL??"";
+          UserLogin;
+        }
+      };
+    }
+  }*/
+
   Future<void> signInWithApple(BuildContext context) async {
     // Show loading dialog or loader
 
@@ -114,12 +135,15 @@ class AuthProvider with ChangeNotifier {
 
         // Generate an OAuth credential using the ID token and authorization code
         final OAuthProvider oAuthProvider = OAuthProvider('apple.com');
+        final appleProvider = AppleAuthProvider();
         final AuthCredential credential = oAuthProvider.credential(
           idToken: appleCredential.identityToken,
           accessToken: appleCredential.authorizationCode,
         );
 
         // Sign in to Firebase with the Apple credential
+        /*UserCredential result =
+            await FirebaseAuth.instance.signInWithProvider(appleProvider);*/
         UserCredential result =
             await FirebaseAuth.instance.signInWithCredential(credential);
         User? firebaseUser = result.user;
@@ -148,24 +172,46 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  String generateRandomCode() {
+    DateTime now = DateTime.now();
+    String dateTimeString =
+        '${now.year}${now.month}${now.day}${now.hour}${now.minute}${now.second}';
+    int randomNumber = Random().nextInt(999999); // Random 6-digit number
+    String combinedString = dateTimeString + randomNumber.toString();
+    return combinedString.substring(combinedString.length - 6);
+  }
+
   // Handle user registration or login in your MySQL DB after social login
   Future<void> _handleSocialLogin(User firebaseUser, String provider) async {
     bool userExists =
         await DatabaseMethods().checkIfUserExists(firebaseUser.uid);
 
+    DateTime now = DateTime.now();
+    String dateTimeString = '${now.year}${now.month}${now.day}${now.hour}';
+    /*int randomNumber = Random().nextInt(999999); // Random 6-digit number
+    String combinedString = dateTimeString + randomNumber.toString();*/
+    // print(combinedString);
+
     if (!userExists) {
+      print("user doesnt exists");
+      String email = firebaseUser.email ?? "";
+      String displayName = firebaseUser.displayName ?? email.split('@')[0];
       Map<String, dynamic> userInfoMap = {
         "email": firebaseUser.email ?? "",
-        "name": firebaseUser.displayName ?? "",
+        "name": firebaseUser.displayName ?? displayName,
         "imgUrl": firebaseUser.photoURL ?? "",
         "id": firebaseUser.uid,
         "phone": firebaseUser.phoneNumber ?? "",
       };
       await DatabaseMethods().addUser(firebaseUser.uid, userInfoMap);
+      print("Calling createUser API with data:");
+      print(
+          "UID: ${firebaseUser.uid}, Name: ${firebaseUser.displayName}, Email: ${firebaseUser.email}");
+
       await ApiService.createUser(
         firebaseUser.uid,
-        firebaseUser.displayName ?? "",
-        firebaseUser.displayName ?? "",
+        firebaseUser.displayName ?? displayName + dateTimeString,
+        firebaseUser.displayName ?? displayName,
         firebaseUser.email ?? "",
         firebaseUser.phoneNumber ?? "",
         "",
@@ -179,7 +225,7 @@ class AuthProvider with ChangeNotifier {
 
     // Fetch user data from your API to set the custom AppUser
     LoginResponse loginResponse =
-        await ApiService.loginApi(firebaseUser.email!, null, "Y");
+        await ApiService.loginApi(firebaseUser.uid!, null, "Y");
 
     print(loginResponse.errorCode);
 

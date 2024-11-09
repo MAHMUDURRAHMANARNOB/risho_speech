@@ -38,7 +38,7 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     userId = Provider.of<AuthProvider>(context).user!.id;
-    userName = Provider.of<AuthProvider>(context).user!.username;
+    userName = Provider.of<AuthProvider>(context).user!.username!;
     subscriptionStatusProvider.fetchSubscriptionData(userId!);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -860,38 +860,35 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                   const SizedBox(height: 10),
 
                   /*Purchase Subscription package*/
-                  Visibility(
-                    visible: Platform.isAndroid,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const PackagesScreen()),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryCardColor,
-                        padding: EdgeInsets.all(15.0),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Subscription Plans",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const PackagesScreen()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryCardColor,
+                      padding: EdgeInsets.all(15.0),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Subscription Plans",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
-                          Icon(
-                            Icons.arrow_circle_right_rounded,
-                            size: 30,
-                            color: AppColors.primaryColor,
-                          ),
-                        ],
-                      ),
+                        ),
+                        Icon(
+                          Icons.arrow_circle_right_rounded,
+                          size: 30,
+                          color: AppColors.primaryColor,
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(height: 10),

@@ -1,3 +1,4 @@
+/*
 import 'dart:async';
 
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
@@ -55,3 +56,4 @@ class InAppPurchaseService {
     await FlutterInappPurchase.instance.finishTransaction(purchasedItem);
   }
 }
+*/

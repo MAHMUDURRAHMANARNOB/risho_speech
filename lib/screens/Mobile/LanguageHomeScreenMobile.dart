@@ -27,9 +27,9 @@ class _LanguageHomeScreenMobileState extends State<LanguageHomeScreenMobile> {
 
   late int userId = Provider.of<AuthProvider>(context, listen: false).user!.id;
   late String userName =
-      Provider.of<AuthProvider>(context, listen: false).user!.username;
+      Provider.of<AuthProvider>(context, listen: false).user!.username!;
   late String fullName =
-      Provider.of<AuthProvider>(context, listen: false).user!.name;
+      Provider.of<AuthProvider>(context, listen: false).user!.name!;
 
   @override
   Widget build(BuildContext context) {

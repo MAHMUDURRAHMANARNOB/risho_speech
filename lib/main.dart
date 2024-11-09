@@ -1,7 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
+
+// import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
+
 import 'package:provider/provider.dart';
 import 'package:risho_speech/providers/IeltsCourseListProvider.dart';
 import 'package:risho_speech/providers/IeltsCourseVideoAnsProvider.dart';
@@ -52,7 +55,7 @@ import 'firebase_options.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // await Firebase.initializeApp();
-  await FlutterInappPurchase.instance.initialize();
+  // await FlutterInappPurchase.instance.initialize();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

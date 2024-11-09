@@ -39,7 +39,7 @@ class _ProfileScreenTabletState extends State<ProfileScreenTablet> {
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     userId = Provider.of<AuthProvider>(context).user!.id;
-    userName = Provider.of<AuthProvider>(context).user!.username;
+    userName = Provider.of<AuthProvider>(context).user!.username!;
     subscriptionStatusProvider.fetchSubscriptionData(userId!);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {

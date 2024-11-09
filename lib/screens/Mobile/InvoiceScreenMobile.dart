@@ -4,7 +4,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
+
+// import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -76,7 +77,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
   PaymentConfiguration? _paymentConfiguration;
   StreamSubscription? _purchaseUpdatedSubscription;
 
-  void setupPurchaseListener() {
+  /*void setupPurchaseListener() {
     _purchaseUpdatedSubscription =
         FlutterInappPurchase.purchaseUpdated.listen((purchasedItem) async {
       // if (purchasedItem == null) return;
@@ -132,7 +133,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
         );
       }
     });
-  }
+  }*/
 
   List<String> _productIds = [
     'starter_pack',
@@ -142,7 +143,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
     'annual_pack'
   ];
 
-  Future<void> initPlatformState() async {
+  /*Future<void> initPlatformState() async {
     await FlutterInappPurchase.instance.initialize();
   }
 
@@ -163,7 +164,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
     } catch (e) {
       Fluttertoast.showToast(msg: "Purchase failed: $e");
     }
-  }
+  }*/
 
   @override
   void initState() {
@@ -177,8 +178,8 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
     _mainAmount = widget.payableAmount;
     _isApplied = false;
 
-    initPlatformState();
-    setupPurchaseListener();
+    /*initPlatformState();
+    setupPurchaseListener();*/
 
     shurjoPay = ShurjoPay();
     shurjopayConfigs = ShurjopayConfigs(
@@ -197,7 +198,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
   @override
   void dispose() {
     _purchaseUpdatedSubscription?.cancel();
-    FlutterInappPurchase.instance.finalize();
+    // FlutterInappPurchase.instance.finalize();
     super.dispose();
   }
 
@@ -551,7 +552,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                         _initiatePayment();
                       },
                       child: const Text(
-                        "Purchase",
+                        "Purchase Subscription",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
@@ -607,7 +608,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                 ),
               ),
             ),*/
-            Visibility(
+            /*Visibility(
               visible: Platform.isIOS,
               child: Container(
                 width: double.infinity,
@@ -633,13 +634,14 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                     );
 
                     // Initiate In-App Purchase using flutter_inapp_purchase
-                    try {
+                    */ /*try {
+                      print("Pressed");
                       await FlutterInappPurchase.instance
                           .requestPurchase(_packageID.toString());
                       print("Purchase initiated for package: $_packageID");
                     } catch (e) {
                       print("Error initiating purchase: $e");
-                    }
+                    }*/ /*
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
@@ -652,7 +654,7 @@ class _InvoiceScreenState extends State<InvoiceScreenMobile> {
                   ),
                 ),
               ),
-            )
+            )*/
           ],
         ),
       ),
