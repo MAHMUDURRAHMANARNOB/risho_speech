@@ -12,6 +12,7 @@ import '../../ui/colors.dart';
 import '../DeleteAccount.dart';
 import '../LoginScreen.dart';
 import '../packages_screen.dart';
+import 'SubscriptionScreenIOS.dart';
 
 class ProfileScreenMobile extends StatefulWidget {
   const ProfileScreenMobile({super.key});
@@ -865,7 +866,9 @@ class _ProfileScreenMobileState extends State<ProfileScreenMobile> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const PackagesScreen()),
+                            builder: (context) => Platform.isIOS
+                                ? SubscriptionScreenIOS()
+                                : PackagesScreen()),
                       );
                     },
                     style: ElevatedButton.styleFrom(

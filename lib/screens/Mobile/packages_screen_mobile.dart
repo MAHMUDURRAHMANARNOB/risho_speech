@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:iconsax/iconsax.dart';
@@ -6,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/packagesProvider.dart';
 import '../../ui/colors.dart';
+import 'InvoiceScreenIOS.dart';
 import 'InvoiceScreenMobile.dart';
 
 class PackagesScreenMobile extends StatefulWidget {
@@ -279,12 +282,19 @@ class _PackagesScreenMobileState extends State<PackagesScreenMobile> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => InvoiceScreenMobile(
-                        packageID: id,
-                        packageName: name,
-                        packageValue: price,
-                        discountValue: discountedPrice,
-                        payableAmount: finalPrice),
+                    builder: (context) => Platform.isIOS
+                        ? InvoiceScreenIOS(
+                            packageID: id,
+                            packageName: name,
+                            packageValue: price,
+                            discountValue: discountedPrice,
+                            payableAmount: finalPrice)
+                        : InvoiceScreenMobile(
+                            packageID: id,
+                            packageName: name,
+                            packageValue: price,
+                            discountValue: discountedPrice,
+                            payableAmount: finalPrice),
                   ),
                 );
               },

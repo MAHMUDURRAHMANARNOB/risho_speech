@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -6,6 +8,7 @@ import 'package:risho_speech/screens/Mobile/InvoiceScreenMobile.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/packagesProvider.dart';
 import '../../ui/colors.dart';
+import '../Mobile/InvoiceScreenIOS.dart';
 
 class PackagesScreenTablet extends StatefulWidget {
   const PackagesScreenTablet({super.key});
@@ -263,15 +266,23 @@ class _PackagesScreenTabletState extends State<PackagesScreenTablet> {
               ),
               onPressed: () {
                 // print("pressed id: $id");
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => InvoiceScreenMobile(
-                        packageID: id,
-                        packageName: name,
-                        packageValue: price,
-                        discountValue: discountedPrice,
-                        payableAmount: finalPrice),
+                    builder: (context) => Platform.isIOS
+                        ? InvoiceScreenIOS(
+                            packageID: id,
+                            packageName: name,
+                            packageValue: price,
+                            discountValue: discountedPrice,
+                            payableAmount: finalPrice)
+                        : InvoiceScreenMobile(
+                            packageID: id,
+                            packageName: name,
+                            packageValue: price,
+                            discountValue: discountedPrice,
+                            payableAmount: finalPrice),
                   ),
                 );
               },
