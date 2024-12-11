@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
     appId: '1:505210270064:android:2a5b63937fc9ed269cdfb5',
     messagingSenderId: '505210270064',
     projectId: 'risho-speech',
-    storageBucket: 'risho-speech.appspot.com',
+    storageBucket: 'risho-speech.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -59,7 +59,7 @@ class DefaultFirebaseOptions {
     appId: '1:505210270064:ios:62a9f0e110d57d379cdfb5',
     messagingSenderId: '505210270064',
     projectId: 'risho-speech',
-    storageBucket: 'risho-speech.appspot.com',
+    storageBucket: 'risho-speech.firebasestorage.app',
     iosClientId: '505210270064-45suomudqoj6fi8c2gv9rsm1ad5kdggu.apps.googleusercontent.com',
     iosBundleId: 'com.rishoguru.rishoSpeech',
   );
@@ -70,7 +70,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '505210270064',
     projectId: 'risho-speech',
     authDomain: 'risho-speech.firebaseapp.com',
-    storageBucket: 'risho-speech.appspot.com',
+    storageBucket: 'risho-speech.firebasestorage.app',
     measurementId: 'G-00BY0C278S',
   );
+
 }

@@ -1,0 +1,10 @@
+framework module flutter_inappwebview_macos {
+  umbrella header "flutter_inappwebview_macos-umbrella.h"
+
+  export *
+  module * { export * }
+}
+
+module flutter_inappwebview_macos.__Swift {
+  exclude header "flutter_inappwebview_macos-Swift.h"
+}

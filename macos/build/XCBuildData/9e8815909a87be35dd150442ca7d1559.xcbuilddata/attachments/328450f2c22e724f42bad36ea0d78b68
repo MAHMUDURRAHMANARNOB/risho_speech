@@ -1,0 +1,23 @@
+{
+  'version': 0,
+  'use-external-names': 'false',
+  'case-sensitive': 'false',
+  'roots': [{
+    'type': 'directory',
+    'name': "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Release/in_app_review/in_app_review.framework/Modules"
+    'contents': [{
+      'type': 'file',
+      'name': "module.modulemap",
+      'external-contents': "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/in_app_review.build/unextended-module.modulemap",
+    }]
+    },
+    {
+    'type': 'directory',
+    'name': "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Release/in_app_review/in_app_review.framework/Headers"
+    'contents': [{
+      'type': 'file',
+      'name': "in_app_review-Swift.h",
+      'external-contents': "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/in_app_review.build/unextended-interface-header.h",
+    }]
+    }]
+}

@@ -1,0 +1,15 @@
+{
+  "" : {
+    "const-values" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/in_app_review.build/Objects-normal/arm64/in_app_review-master.swiftconstvalues",
+    "dependencies" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/in_app_review.build/Objects-normal/arm64/in_app_review-master.d",
+    "diagnostics" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/in_app_review.build/Objects-normal/arm64/in_app_review-master.dia",
+    "emit-module-dependencies" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/in_app_review.build/Objects-normal/arm64/in_app_review-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/in_app_review.build/Objects-normal/arm64/in_app_review-master-emit-module.dia",
+    "swift-dependencies" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/in_app_review.build/Objects-normal/arm64/in_app_review-master.swiftdeps"
+  },
+  "/Users/mahmudurrahman/.pub-cache/hosted/pub.dev/in_app_review-2.0.9/macos/Classes/InAppReviewPlugin.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release/in_app_review.build/Objects-normal/arm64/InAppReviewPlugin.o",
+    "llvm-bc" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/in_app_review.build/Objects-normal/arm64/InAppReviewPlugin.bc",
+    "object" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/in_app_review.build/Objects-normal/arm64/InAppReviewPlugin.o"
+  }
+}

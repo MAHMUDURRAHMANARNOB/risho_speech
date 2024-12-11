@@ -1,0 +1,15 @@
+{
+  "" : {
+    "const-values" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/record_macos.build/Objects-normal/arm64/record_macos-master.swiftconstvalues",
+    "dependencies" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/record_macos.build/Objects-normal/arm64/record_macos-master.d",
+    "diagnostics" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/record_macos.build/Objects-normal/arm64/record_macos-master.dia",
+    "emit-module-dependencies" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/record_macos.build/Objects-normal/arm64/record_macos-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/record_macos.build/Objects-normal/arm64/record_macos-master-emit-module.dia",
+    "swift-dependencies" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/record_macos.build/Objects-normal/arm64/record_macos-master.swiftdeps"
+  },
+  "/Users/mahmudurrahman/.pub-cache/hosted/pub.dev/record_macos-0.2.2/macos/Classes/RecordMacosPlugin.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release/record_macos.build/Objects-normal/arm64/RecordMacosPlugin.o",
+    "llvm-bc" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/record_macos.build/Objects-normal/arm64/RecordMacosPlugin.bc",
+    "object" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/record_macos.build/Objects-normal/arm64/RecordMacosPlugin.o"
+  }
+}

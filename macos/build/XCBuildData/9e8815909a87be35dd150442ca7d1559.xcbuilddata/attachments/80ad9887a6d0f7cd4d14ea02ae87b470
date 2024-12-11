@@ -1,0 +1,23 @@
+{
+  'version': 0,
+  'use-external-names': 'false',
+  'case-sensitive': 'false',
+  'roots': [{
+    'type': 'directory',
+    'name': "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Release/OrderedSet/OrderedSet.framework/Modules"
+    'contents': [{
+      'type': 'file',
+      'name': "module.modulemap",
+      'external-contents': "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/OrderedSet.build/unextended-module.modulemap",
+    }]
+    },
+    {
+    'type': 'directory',
+    'name': "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Release/OrderedSet/OrderedSet.framework/Headers"
+    'contents': [{
+      'type': 'file',
+      'name': "OrderedSet-Swift.h",
+      'external-contents': "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/OrderedSet.build/unextended-interface-header.h",
+    }]
+    }]
+}

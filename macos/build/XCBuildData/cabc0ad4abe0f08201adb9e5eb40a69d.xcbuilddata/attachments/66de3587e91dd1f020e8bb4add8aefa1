@@ -1,0 +1,10 @@
+framework module speech_to_text_macos {
+  umbrella header "speech_to_text_macos-umbrella.h"
+
+  export *
+  module * { export * }
+}
+
+module speech_to_text_macos.__Swift {
+  exclude header "speech_to_text_macos-Swift.h"
+}

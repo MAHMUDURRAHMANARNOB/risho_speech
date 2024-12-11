@@ -12,6 +12,7 @@ import '../../providers/auth_provider.dart';
 import '../../providers/subscriptionStatus_provider.dart';
 import '../../ui/colors.dart';
 import '../LoginScreen.dart';
+import '../Mobile/SubscriptionScreenIOS.dart';
 import '../packages_screen.dart';
 
 class ProfileScreenTablet extends StatefulWidget {
@@ -856,38 +857,37 @@ class _ProfileScreenTabletState extends State<ProfileScreenTablet> {
                   const SizedBox(height: 10),
 
                   /*Purchase Subscription package*/
-                  Visibility(
-                    visible: Platform.isAndroid,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const PackagesScreen()),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryCardColor,
-                        padding: EdgeInsets.all(15.0),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Subscription Plans",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Platform.isIOS
+                                ? SubscriptionScreenIOS()
+                                : PackagesScreen()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryCardColor,
+                      padding: EdgeInsets.all(15.0),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Subscription Plans",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
-                          Icon(
-                            Icons.arrow_circle_right_rounded,
-                            size: 30,
-                            color: AppColors.primaryColor,
-                          ),
-                        ],
-                      ),
+                        ),
+                        Icon(
+                          Icons.arrow_circle_right_rounded,
+                          size: 30,
+                          color: AppColors.primaryColor,
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(height: 10),

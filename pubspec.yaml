@@ -9,7 +9,10 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 #version: 1.1.4+13 #Bug fix home screen Navigator.pop issue
 #version: 1.1.5+14 #Pronunciation Score has been integrated
 #version: 1.1.6+15 #Google+Apple login, Firebase integration, Other Language Learning
-version: 1.1.7+16 #apple login worked lets check
+#version: 1.1.7+16 #apple login worked lets check
+#version: 1.1.8+17 #apple in_app_purchase
+#version: 1.1.9+18 #apple in_app_purchase for tablet, missing in previous update
+version: 1.1.9+19 #apple in_app_purchase for tablet, missing in previous update
 
 
 environment:
@@ -46,11 +49,12 @@ dependencies:
   permission_handler: ^11.3.1
   fluttertoast: ^8.2.5
 
-  rive: ^0.13.12
+  flutter_animate: ^4.5.1
 
+  rive: ^0.13.12
   path_provider: ^2.1.2
-  audioplayers: ^6.0.0
-  just_audio: ^0.9.39
+  audioplayers: ^6.1.0
+  just_audio: ^0.9.42
   record: ^4.4.4
   siri_wave: ^2.0.0+1
   youtube_player_flutter: ^9.0.3

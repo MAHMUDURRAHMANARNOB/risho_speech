@@ -1,0 +1,23 @@
+{
+  'version': 0,
+  'use-external-names': 'false',
+  'case-sensitive': 'false',
+  'roots': [{
+    'type': 'directory',
+    'name': "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Release/GTMAppAuth/GTMAppAuth.framework/Modules"
+    'contents': [{
+      'type': 'file',
+      'name': "module.modulemap",
+      'external-contents': "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/GTMAppAuth.build/unextended-module.modulemap",
+    }]
+    },
+    {
+    'type': 'directory',
+    'name': "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Release/GTMAppAuth/GTMAppAuth.framework/Headers"
+    'contents': [{
+      'type': 'file',
+      'name': "GTMAppAuth-Swift.h",
+      'external-contents': "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/GTMAppAuth.build/unextended-interface-header.h",
+    }]
+    }]
+}

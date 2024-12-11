@@ -58,7 +58,8 @@ class _CallingAgentScreenMobileState extends State<CallingAgentScreenMobile> {
         builder: (BuildContext context) {
           return AlertDialog(
             contentPadding: EdgeInsets.zero,
-            content: Center(
+            content: Padding(
+              padding: const EdgeInsets.all(20.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -150,142 +151,165 @@ class _CallingAgentScreenMobileState extends State<CallingAgentScreenMobile> {
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        child: Container(
-          child: FutureBuilder<void>(
-            future: callingAgentListProvider.fetchCallingAgentListResponse(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                    child: SpinKitThreeInOut(
-                  color: AppColors.primaryColor,
-                ));
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else {
-                // final data = snapshot.data!;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: callingAgentListProvider
-                      .callingAgentListResponse!.agentlist!
-                      .map((countryData) {
-                    return Card(
-                      clipBehavior: Clip.hardEdge,
-                      color: AppColors.backgroundColorDark,
-                      child: Container(
-                        child: Theme(
-                          data: Theme.of(context)
-                              .copyWith(dividerColor: Colors.transparent),
-                          child: ExpansionTile(
-                              iconColor: AppColors.primaryColor,
-                              /*collapsedBackgroundColor:
-                                  Colors.blue.withOpacity(0.1),*/
-                              backgroundColor:
-                                  AppColors.primaryColor.withOpacity(0.2),
-                              title: Text(
-                                countryData.country ?? "",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              children: [
-                                GridView.builder(
-                                  shrinkWrap: true,
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: crossAxisCount,
-                                    crossAxisSpacing: 8.0,
-                                    mainAxisSpacing: 8.0,
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Text(
+                "Level up your language skills by conversing with characters from around the world.",
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Container(
+              child: FutureBuilder<void>(
+                future:
+                    callingAgentListProvider.fetchCallingAgentListResponse(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                        child: SpinKitThreeInOut(
+                      color: AppColors.primaryColor,
+                    ));
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else {
+                    // final data = snapshot.data!;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: callingAgentListProvider
+                          .callingAgentListResponse!.agentlist!
+                          .map((countryData) {
+                        return Card(
+                          clipBehavior: Clip.hardEdge,
+                          color: AppColors.backgroundColorDark,
+                          child: Container(
+                            child: Theme(
+                              data: Theme.of(context)
+                                  .copyWith(dividerColor: Colors.transparent),
+                              child: ExpansionTile(
+                                  iconColor: AppColors.primaryColor,
+                                  collapsedBackgroundColor:
+                                      AppColors.primaryColor2.withOpacity(0.05),
+                                  backgroundColor:
+                                      AppColors.primaryColor.withOpacity(0.2),
+                                  title: Text(
+                                    countryData.country ?? "",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                  physics: BouncingScrollPhysics(),
-                                  itemCount: countryData.agents!.length,
-                                  itemBuilder: (context, index) {
-                                    final agent = countryData.agents![index];
-                                    String agentPicture =
-                                        "assets/images/profile_chat.png";
-                                    return GestureDetector(
-                                      onTap: () {
-                                        fetchSessionId(
-                                            userId,
-                                            agent.id!,
-                                            agent.agentName!,
-                                            agent.agentGender!,
-                                            agent.agentPicture);
-                                      },
-                                      child: Card(
-                                        color: AppColors.primaryColor
-                                            .withOpacity(0.5),
-                                        child: Container(
-                                          padding: EdgeInsets.all(8.0),
-                                          child: Column(
-                                            children: [
-                                              Flexible(
-                                                flex: 3,
-                                                child: Container(
-                                                  child: agent.agentPicture ==
-                                                          null
-                                                      ? Image.asset(
-                                                          "assets/images/profile_chat.png",
-                                                          fit: BoxFit.fitHeight,
-                                                        )
-                                                      : Image.network(
-                                                          agent.agentPicture!,
-                                                          fit: BoxFit.fitHeight,
-                                                          loadingBuilder:
-                                                              (BuildContext
-                                                                      context,
-                                                                  Widget child,
-                                                                  ImageChunkEvent?
-                                                                      loadingProgress) {
-                                                            if (loadingProgress ==
-                                                                null)
-                                                              return child;
-                                                            return Center(
-                                                              child:
-                                                                  CircularProgressIndicator(
-                                                                value: loadingProgress
-                                                                            .expectedTotalBytes !=
-                                                                        null
-                                                                    ? loadingProgress
-                                                                            .cumulativeBytesLoaded /
-                                                                        loadingProgress
-                                                                            .expectedTotalBytes!
-                                                                    : null,
-                                                              ),
-                                                            );
-                                                          },
-                                                        ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Flexible(
-                                                flex: 1,
-                                                child: Text(
-                                                  agent.agentName ?? "",
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  maxLines: 2,
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
+                                  children: [
+                                    GridView.builder(
+                                      shrinkWrap: true,
+                                      gridDelegate:
+                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: crossAxisCount,
+                                        crossAxisSpacing: 8.0,
+                                        mainAxisSpacing: 8.0,
                                       ),
-                                    );
-                                  },
-                                ),
-                              ]),
-                        ),
-                      ),
+                                      physics: BouncingScrollPhysics(),
+                                      itemCount: countryData.agents!.length,
+                                      itemBuilder: (context, index) {
+                                        final agent =
+                                            countryData.agents![index];
+                                        String agentPicture =
+                                            "assets/images/profile_chat.png";
+                                        return GestureDetector(
+                                          onTap: () {
+                                            fetchSessionId(
+                                                userId,
+                                                agent.id!,
+                                                agent.agentName!,
+                                                agent.agentGender!,
+                                                agent.agentPicture);
+                                          },
+                                          child: Card(
+                                            color: AppColors.primaryColor
+                                                .withOpacity(0.5),
+                                            child: Container(
+                                              padding: EdgeInsets.all(8.0),
+                                              child: Column(
+                                                children: [
+                                                  Flexible(
+                                                    flex: 3,
+                                                    child: Container(
+                                                      child:
+                                                          agent.agentPicture ==
+                                                                  null
+                                                              ? Image.asset(
+                                                                  "assets/images/profile_chat.png",
+                                                                  fit: BoxFit
+                                                                      .fitHeight,
+                                                                )
+                                                              : Image.network(
+                                                                  agent
+                                                                      .agentPicture!,
+                                                                  fit: BoxFit
+                                                                      .fitHeight,
+                                                                  loadingBuilder: (BuildContext
+                                                                          context,
+                                                                      Widget
+                                                                          child,
+                                                                      ImageChunkEvent?
+                                                                          loadingProgress) {
+                                                                    if (loadingProgress ==
+                                                                        null)
+                                                                      return child;
+                                                                    return Center(
+                                                                      child:
+                                                                          CircularProgressIndicator(
+                                                                        value: loadingProgress.expectedTotalBytes !=
+                                                                                null
+                                                                            ? loadingProgress.cumulativeBytesLoaded /
+                                                                                loadingProgress.expectedTotalBytes!
+                                                                            : null,
+                                                                      ),
+                                                                    );
+                                                                  },
+                                                                ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Flexible(
+                                                    flex: 1,
+                                                    child: Text(
+                                                      agent.agentName ?? "",
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 2,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ]),
+                            ),
+                          ),
+                        );
+                      }).toList(),
                     );
-                  }).toList(),
-                );
-              }
-            },
-          ),
+                  }
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );

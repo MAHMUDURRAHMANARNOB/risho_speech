@@ -1,0 +1,25 @@
+{
+  "" : {
+    "const-values" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/device_info_plus.build/Objects-normal/x86_64/device_info_plus-master.swiftconstvalues",
+    "dependencies" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/device_info_plus.build/Objects-normal/x86_64/device_info_plus-master.d",
+    "diagnostics" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/device_info_plus.build/Objects-normal/x86_64/device_info_plus-master.dia",
+    "emit-module-dependencies" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/device_info_plus.build/Objects-normal/x86_64/device_info_plus-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/device_info_plus.build/Objects-normal/x86_64/device_info_plus-master-emit-module.dia",
+    "swift-dependencies" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/device_info_plus.build/Objects-normal/x86_64/device_info_plus-master.swiftdeps"
+  },
+  "/Users/mahmudurrahman/.pub-cache/hosted/pub.dev/device_info_plus-10.1.2/macos/Classes/CwlSysctl.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release/device_info_plus.build/Objects-normal/x86_64/CwlSysctl.o",
+    "llvm-bc" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/device_info_plus.build/Objects-normal/x86_64/CwlSysctl.bc",
+    "object" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/device_info_plus.build/Objects-normal/x86_64/CwlSysctl.o"
+  },
+  "/Users/mahmudurrahman/.pub-cache/hosted/pub.dev/device_info_plus-10.1.2/macos/Classes/DeviceInfoPlusMacosPlugin.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release/device_info_plus.build/Objects-normal/x86_64/DeviceInfoPlusMacosPlugin.o",
+    "llvm-bc" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/device_info_plus.build/Objects-normal/x86_64/DeviceInfoPlusMacosPlugin.bc",
+    "object" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/device_info_plus.build/Objects-normal/x86_64/DeviceInfoPlusMacosPlugin.o"
+  },
+  "/Users/mahmudurrahman/.pub-cache/hosted/pub.dev/device_info_plus-10.1.2/macos/Classes/SystemUUID.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release/device_info_plus.build/Objects-normal/x86_64/SystemUUID.o",
+    "llvm-bc" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/device_info_plus.build/Objects-normal/x86_64/SystemUUID.bc",
+    "object" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/device_info_plus.build/Objects-normal/x86_64/SystemUUID.o"
+  }
+}

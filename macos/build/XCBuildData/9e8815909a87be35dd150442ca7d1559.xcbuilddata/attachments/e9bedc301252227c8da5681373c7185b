@@ -1,0 +1,15 @@
+{
+  "" : {
+    "const-values" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/speech_to_text_macos.build/Objects-normal/arm64/speech_to_text_macos-master.swiftconstvalues",
+    "dependencies" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/speech_to_text_macos.build/Objects-normal/arm64/speech_to_text_macos-master.d",
+    "diagnostics" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/speech_to_text_macos.build/Objects-normal/arm64/speech_to_text_macos-master.dia",
+    "emit-module-dependencies" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/speech_to_text_macos.build/Objects-normal/arm64/speech_to_text_macos-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/speech_to_text_macos.build/Objects-normal/arm64/speech_to_text_macos-master-emit-module.dia",
+    "swift-dependencies" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/speech_to_text_macos.build/Objects-normal/arm64/speech_to_text_macos-master.swiftdeps"
+  },
+  "/Users/mahmudurrahman/.pub-cache/hosted/pub.dev/speech_to_text_macos-1.1.0/macos/Classes/SpeechToTextMacosPlugin.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release/speech_to_text_macos.build/Objects-normal/arm64/SpeechToTextMacosPlugin.o",
+    "llvm-bc" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/speech_to_text_macos.build/Objects-normal/arm64/SpeechToTextMacosPlugin.bc",
+    "object" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/speech_to_text_macos.build/Objects-normal/arm64/SpeechToTextMacosPlugin.o"
+  }
+}

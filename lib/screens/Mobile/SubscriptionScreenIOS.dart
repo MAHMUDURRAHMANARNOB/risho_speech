@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -17,13 +20,14 @@ class _SubscriptionScreenIOSState extends State<SubscriptionScreenIOS> {
   List<ProductDetails> _products = [];
   bool _isAvailable = false;
   bool _loading = true;
+  late final StreamSubscription<List<PurchaseDetails>> _subscription;
 
   @override
   void initState() {
     super.initState();
     _initializeInAppPurchase();
 
-    _inAppPurchase.purchaseStream.listen((purchaseDetailsList) {
+    _subscription = _inAppPurchase.purchaseStream.listen((purchaseDetailsList) {
       _handlePurchaseUpdates(purchaseDetailsList);
     });
   }
@@ -41,11 +45,17 @@ class _SubscriptionScreenIOSState extends State<SubscriptionScreenIOS> {
 
   // Query available products
   Future<void> _loadProducts() async {
-    const Set<String> _productIds = {'Starter10', 'Monthly6', 'EnglishSpeak7'};
+    const Set<String> _productIds = {
+      'Starter10',
+      'Monthly6',
+      'EnglishSpeak7',
+      'EnglishTalk8',
+      'FluentEnglish9',
+    };
     final ProductDetailsResponse response =
         await _inAppPurchase.queryProductDetails(_productIds);
 
-    if (response.productDetails.isEmpty) {
+    if (response.productDetails.isEmpty && kDebugMode) {
       _products = [
         ProductDetails(
           id: 'dummy_package',
@@ -75,8 +85,10 @@ class _SubscriptionScreenIOSState extends State<SubscriptionScreenIOS> {
     setState(() {});
   }
 
+  bool _isPurchasing = false;
+
   // Buying a consumable product
-  void _buyProduct(ProductDetails productDetails) {
+  void _buyProduct(ProductDetails productDetails) async {
     // Check if the product is a dummy product based on its ID or other unique attributes
     if (productDetails.title.startsWith("Dummy")) {
       // You can show a dialog or a snackbar for testing purposes
@@ -86,13 +98,25 @@ class _SubscriptionScreenIOSState extends State<SubscriptionScreenIOS> {
       );
       return;
     }
+    setState(() {
+      _isPurchasing = true;
+    });
 
-    final PurchaseParam purchaseParam =
-        PurchaseParam(productDetails: productDetails);
-    _inAppPurchase.buyConsumable(
-      purchaseParam: purchaseParam,
-      autoConsume: true,
-    );
+    try {
+      final purchaseParam = PurchaseParam(productDetails: productDetails);
+      await _inAppPurchase.buyConsumable(
+        purchaseParam: purchaseParam,
+        // autoConsume: true,
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Purchase failed: $e")),
+      );
+    } finally {
+      setState(() {
+        _isPurchasing = false;
+      });
+    }
   }
 
   void _handlePurchaseUpdates(List<PurchaseDetails> purchaseDetailsList) {
@@ -112,6 +136,7 @@ class _SubscriptionScreenIOSState extends State<SubscriptionScreenIOS> {
 
   @override
   void dispose() {
+    _subscription.cancel();
     super.dispose();
   }
 

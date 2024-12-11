@@ -1,0 +1,15 @@
+{
+  "" : {
+    "const-values" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/OrderedSet.build/Objects-normal/arm64/OrderedSet-master.swiftconstvalues",
+    "dependencies" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/OrderedSet.build/Objects-normal/arm64/OrderedSet-master.d",
+    "diagnostics" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/OrderedSet.build/Objects-normal/arm64/OrderedSet-master.dia",
+    "emit-module-dependencies" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/OrderedSet.build/Objects-normal/arm64/OrderedSet-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/OrderedSet.build/Objects-normal/arm64/OrderedSet-master-emit-module.dia",
+    "swift-dependencies" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/OrderedSet.build/Objects-normal/arm64/OrderedSet-master.swiftdeps"
+  },
+  "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/Pods/OrderedSet/Sources/OrderedSet.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release/OrderedSet.build/Objects-normal/arm64/OrderedSet.o",
+    "llvm-bc" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/OrderedSet.build/Objects-normal/arm64/OrderedSet.bc",
+    "object" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/OrderedSet.build/Objects-normal/arm64/OrderedSet.o"
+  }
+}

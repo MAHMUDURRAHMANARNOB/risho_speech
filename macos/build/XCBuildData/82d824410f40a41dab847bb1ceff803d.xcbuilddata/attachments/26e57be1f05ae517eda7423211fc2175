@@ -1,0 +1,20 @@
+{
+  "" : {
+    "const-values" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/shared_preferences_foundation.build/Objects-normal/arm64/shared_preferences_foundation-master.swiftconstvalues",
+    "dependencies" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/shared_preferences_foundation.build/Objects-normal/arm64/shared_preferences_foundation-master.d",
+    "diagnostics" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/shared_preferences_foundation.build/Objects-normal/arm64/shared_preferences_foundation-master.dia",
+    "emit-module-dependencies" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/shared_preferences_foundation.build/Objects-normal/arm64/shared_preferences_foundation-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/shared_preferences_foundation.build/Objects-normal/arm64/shared_preferences_foundation-master-emit-module.dia",
+    "swift-dependencies" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/shared_preferences_foundation.build/Objects-normal/arm64/shared_preferences_foundation-master.swiftdeps"
+  },
+  "/Users/mahmudurrahman/.pub-cache/hosted/pub.dev/shared_preferences_foundation-2.5.3/darwin/shared_preferences_foundation/Sources/shared_preferences_foundation/SharedPreferencesPlugin.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release/shared_preferences_foundation.build/Objects-normal/arm64/SharedPreferencesPlugin.o",
+    "llvm-bc" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/shared_preferences_foundation.build/Objects-normal/arm64/SharedPreferencesPlugin.bc",
+    "object" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/shared_preferences_foundation.build/Objects-normal/arm64/SharedPreferencesPlugin.o"
+  },
+  "/Users/mahmudurrahman/.pub-cache/hosted/pub.dev/shared_preferences_foundation-2.5.3/darwin/shared_preferences_foundation/Sources/shared_preferences_foundation/messages.g.swift" : {
+    "index-unit-output-path" : "/Pods.build/Release/shared_preferences_foundation.build/Objects-normal/arm64/messages.g.o",
+    "llvm-bc" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/shared_preferences_foundation.build/Objects-normal/arm64/messages.g.bc",
+    "object" : "/Users/mahmudurrahman/Documents/Arnob/Flutter Projects/risho_speech/macos/build/Pods.build/Release/shared_preferences_foundation.build/Objects-normal/arm64/messages.g.o"
+  }
+}

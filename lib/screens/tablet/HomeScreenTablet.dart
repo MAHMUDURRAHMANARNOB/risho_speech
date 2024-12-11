@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +9,7 @@ import '../../providers/subscriptionStatus_provider.dart';
 import '../../ui/colors.dart';
 import '../CallingAgentScreen.dart';
 import '../Common/ContainerCard.dart';
+import '../Mobile/SubscriptionScreenIOS.dart';
 import '../PracticeGuidedScreen.dart';
 import '../VocabularyCategoryScreen.dart';
 import '../packages_screen.dart';
@@ -121,7 +124,9 @@ class _HomeScreenTabletState extends State<HomeScreenTablet> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const PackagesScreen()),
+                            builder: (context) => Platform.isIOS
+                                ? SubscriptionScreenIOS()
+                                : PackagesScreen()),
                       );
                     },
                     child: Text(

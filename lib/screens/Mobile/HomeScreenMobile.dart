@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:iconsax_plus/iconsax_plus.dart';
@@ -22,6 +23,7 @@ import '../../providers/auth_provider.dart';
 import '../../providers/subscriptionStatus_provider.dart';
 import '../IELTSHomeScreen.dart';
 import '../packages_screen.dart';
+import 'SubscriptionScreenIOS.dart';
 
 class HomeScreenMobile extends StatefulWidget {
   const HomeScreenMobile({super.key});
@@ -218,8 +220,9 @@ class _HomeScreenMobileState extends State<HomeScreenMobile> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        const PackagesScreen()),
+                                    builder: (context) => Platform.isIOS
+                                        ? SubscriptionScreenIOS()
+                                        : PackagesScreen()),
                               );
                             },
                             child: const Text(
