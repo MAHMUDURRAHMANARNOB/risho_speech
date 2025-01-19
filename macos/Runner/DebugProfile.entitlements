@@ -8,5 +8,7 @@
 	<true/>
 	<key>com.apple.security.network.server</key>
 	<true/>
+	<key>com.apple.developer.networking</key>
+    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 </dict>
 </plist>

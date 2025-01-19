@@ -340,7 +340,8 @@ class _PracticeGuidedScreenTabletState
                               width: MediaQuery.of(context).size.width * 0.4,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8.0),
-                                color: AppColors.primaryColor2.withOpacity(0.5),
+                                color: /*AppColors.primaryColor2*/
+                                    Colors.blue,
                               ),
                               child: Stack(
                                 children: [
@@ -358,27 +359,55 @@ class _PracticeGuidedScreenTabletState
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.all(10.0),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(64),
+                                                color: AppColors
+                                                    .backgroundColorDark
+                                                    .withOpacity(0.5),
+                                              ),
+                                              child: const Icon(
+                                                IconsaxPlusBold.book,
+                                                size: 30.0,
+                                              ),
+                                            ),
+                                            SizedBox(height: 5.0),
+                                            Text(
+                                              lesson.conversationName,
+                                              textAlign: TextAlign.start,
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                         Container(
-                                          padding: EdgeInsets.all(10.0),
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 5.0, horizontal: 10.0),
                                           decoration: BoxDecoration(
                                             borderRadius:
-                                                BorderRadius.circular(64),
+                                                BorderRadius.circular(8.0),
                                             color: AppColors.backgroundColorDark
                                                 .withOpacity(0.5),
                                           ),
-                                          child: const Icon(
-                                            IconsaxPlusBold.book,
-                                            size: 30.0,
-                                          ),
-                                        ),
-                                        SizedBox(height: 10.0),
-                                        Text(
-                                          lesson.conversationName,
-                                          textAlign: TextAlign.start,
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
+                                          child: Text(
+                                            lesson.userLevel,
+                                            textAlign: TextAlign.start,
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
                                       ],

@@ -28,10 +28,11 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
+        /*throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
           'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        );*/
+        return ios;
       case TargetPlatform.windows:
         return windows;
       case TargetPlatform.linux:
@@ -60,7 +61,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '505210270064',
     projectId: 'risho-speech',
     storageBucket: 'risho-speech.firebasestorage.app',
-    iosClientId: '505210270064-45suomudqoj6fi8c2gv9rsm1ad5kdggu.apps.googleusercontent.com',
+    iosClientId:
+        '505210270064-45suomudqoj6fi8c2gv9rsm1ad5kdggu.apps.googleusercontent.com',
     iosBundleId: 'com.rishoguru.rishoSpeech',
   );
 
@@ -73,5 +75,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'risho-speech.firebasestorage.app',
     measurementId: 'G-00BY0C278S',
   );
-
 }

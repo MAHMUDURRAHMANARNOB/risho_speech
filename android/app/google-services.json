@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "505210270064-s5g0u7toflodg1eked2ugf42jm7i4lc3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rishoguru.risho_speech",
+            "certificate_hash": "1e48dc4209550920275084cfc8f58bfc8991c272"
+          }
+        },
+        {
           "client_id": "505210270064-5k6m9jq03vgse9t51luk0euala4vtser.apps.googleusercontent.com",
           "client_type": 3
         }

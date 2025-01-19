@@ -123,8 +123,12 @@ class _SubscriptionScreenIOSState extends State<SubscriptionScreenIOS> {
     for (var purchaseDetails in purchaseDetailsList) {
       if (purchaseDetails.status == PurchaseStatus.purchased) {
         // Unlock content, e.g., add credits to the user’s account
+        print(
+            "${purchaseDetails.status} -- ${purchaseDetails.productID} -- ${purchaseDetails.verificationData}");
       } else if (purchaseDetails.status == PurchaseStatus.error) {
         // Handle purchase error
+        print(
+            "${purchaseDetails.status} -- ${purchaseDetails.productID} -- ${purchaseDetails.verificationData}");
       }
 
       // Complete the purchase (required for consumables)
