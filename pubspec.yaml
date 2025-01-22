@@ -13,7 +13,8 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 #version: 1.1.8+17 #apple in_app_purchase
 #version: 1.1.9+18 #apple in_app_purchase for tablet, missing in previous update
 #version: 1.1.9+19 #apple in_app_purchase for tablet, missing in previous update
-version: 1.1.10+20 #Google login activated
+#version: 1.1.10+20 #Google login activated
+version: 1.1.11+21 #Google login bug fix
 
 
 environment:

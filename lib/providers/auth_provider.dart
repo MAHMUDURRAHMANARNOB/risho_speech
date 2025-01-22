@@ -60,10 +60,15 @@ class AuthProvider with ChangeNotifier {
     try {
       // Navigator.pop(context);
       final GoogleSignIn googleSignIn = GoogleSignIn();
+      // Sign out from any previous Google account
+      await googleSignIn.signOut();
+
+      // Initiate the sign-in process
       final GoogleSignInAccount? googleSignInAccount =
           await googleSignIn.signIn();
 
       if (googleSignInAccount == null) {
+        print('Sign in aborted by user');
         return; // User canceled the sign-in
       }
 
